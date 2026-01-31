@@ -20,6 +20,4 @@ export const sendVerificationEmail = async (to, subject, body) => {
   };
 
   await transporter.sendMail(mailOptions);
-    console.log('hey boy')
-
 };
