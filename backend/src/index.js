@@ -8,6 +8,8 @@ import { SellerRouter } from "./router/SellerRoutes.js";
 import { AdminRouter } from "./router/AdminRoutes.js";
 import { AuthRouter } from "./router/AuthRoutes.js";
 import { UserRouter } from "./router/UserRoutes.js";
+import { SellerProductRouter } from "./router/SellerProductRoutes.js";
+import { ProductRouter } from "./router/ProductRoutes.js";
 
 const app = express();
 
@@ -20,6 +22,10 @@ app.get("/", (req, res) => {
 app.use("/api/auth", AuthRouter);
 app.use("/api/user", UserRouter);
 app.use("/api/seller/", SellerRouter);
+
+app.use("/api/products", ProductRouter);
+app.use("/api/seller/products", SellerProductRouter);
+
 app.use("/api/admin", AdminRouter);
 
 const PORT = process.env.PORT || 3000;
