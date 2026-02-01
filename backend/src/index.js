@@ -10,6 +10,7 @@ import { AuthRouter } from "./router/AuthRoutes.js";
 import { UserRouter } from "./router/UserRoutes.js";
 import { SellerProductRouter } from "./router/SellerProductRoutes.js";
 import { ProductRouter } from "./router/ProductRoutes.js";
+import { CartRouter } from "./router/CartRoutes.js";
 
 const app = express();
 
@@ -25,6 +26,8 @@ app.use("/api/seller/", SellerRouter);
 
 app.use("/api/products", ProductRouter);
 app.use("/api/seller/products", SellerProductRouter);
+
+app.use("/api/cart", CartRouter);
 
 app.use("/api/admin", AdminRouter);
 
