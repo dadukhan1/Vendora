@@ -13,7 +13,7 @@ const cartSchema = new Schema(
     cartItems: [
       {
         type: Schema.Types.ObjectId,
-        ref: "CartItems",
+        ref: "CartItem",
       },
     ],
     totalSellingPrice: {
