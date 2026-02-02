@@ -11,6 +11,8 @@ import { UserRouter } from "./router/UserRoutes.js";
 import { SellerProductRouter } from "./router/SellerProductRoutes.js";
 import { ProductRouter } from "./router/ProductRoutes.js";
 import { CartRouter } from "./router/CartRoutes.js";
+import { OrderRouter } from "./router/OrderRoutes.js";
+import { SellerOrderRouter } from "./router/SellerOrderRoutes.js";
 
 const app = express();
 
@@ -28,6 +30,9 @@ app.use("/api/products", ProductRouter);
 app.use("/api/seller/products", SellerProductRouter);
 
 app.use("/api/cart", CartRouter);
+
+app.use("/api/order", OrderRouter);
+app.use("/api/seller/order", SellerOrderRouter);
 
 app.use("/api/admin", AdminRouter);
 
