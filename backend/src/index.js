@@ -13,6 +13,8 @@ import { ProductRouter } from "./router/ProductRoutes.js";
 import { CartRouter } from "./router/CartRoutes.js";
 import { OrderRouter } from "./router/OrderRoutes.js";
 import { SellerOrderRouter } from "./router/SellerOrderRoutes.js";
+import { TransactionrRouter } from "./router/TransactionRoutes.js";
+import { SellerReportRouter } from "./router/SellerReportRotues.js";
 
 const app = express();
 
@@ -33,6 +35,9 @@ app.use("/api/cart", CartRouter);
 
 app.use("/api/order", OrderRouter);
 app.use("/api/seller/order", SellerOrderRouter);
+
+app.use("/api/transactions", TransactionrRouter);
+app.use("/api/seller/report", SellerReportRouter);
 
 app.use("/api/admin", AdminRouter);
 
