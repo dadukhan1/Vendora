@@ -15,6 +15,7 @@ import { OrderRouter } from "./router/OrderRoutes.js";
 import { SellerOrderRouter } from "./router/SellerOrderRoutes.js";
 import { TransactionrRouter } from "./router/TransactionRoutes.js";
 import { SellerReportRouter } from "./router/SellerReportRotues.js";
+import HomeCategoryRoutes from "./router/HomeCategoryRoutes.js";
 
 const app = express();
 
@@ -40,6 +41,9 @@ app.use("/api/transactions", TransactionrRouter);
 app.use("/api/seller/report", SellerReportRouter);
 
 app.use("/api/admin", AdminRouter);
+
+app.use("/home", HomeCategoryRoutes);
+app.use("admin/deals", dealRoutes);
 
 const PORT = process.env.PORT || 3000;
 

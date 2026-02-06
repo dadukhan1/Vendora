@@ -1,6 +1,7 @@
 /** @format */
 
 import HomeCategoryService from "../service/HomeCategoryService.js";
+import HomeService from "../service/HomeService.js";
 
 class HomeCategoryController {
   async createHomeCategory(req, res) {
@@ -8,7 +9,9 @@ class HomeCategoryController {
       const homeCategory = await HomeCategoryService.createHomeCategory(
         req.body,
       );
-      res.status(201).json(homeCategory);
+      const allCategories = await HomeCategoryService.getAllCategories();
+      const home = await HomeService.createHomePageData(allCategories);
+      res.status(201).json(home);
     } catch (error) {
       res.status(400).json({ message: error.message });
     }

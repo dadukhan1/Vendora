@@ -2,12 +2,13 @@
 
 import express from "express";
 import DealController from "../controller/DealController.js";
+import sellerAuthMiddleware from "../middlewares/SellerAuthMiddleware.js";
 
-const router = express.Router();
+const DealRouter = express.Router();
 
-router.get("/", DealController.getAllDeals);
-router.post("/", DealController.createDeal);
-router.patch("/:id", DealController.updateDeal);
-router.delete("/:id", DealController.deleteDeal);
+DealRouter.get("/", DealController.getAllDeals);
+DealRouter.post("/", sellerAuthMiddleware, DealController.createDeal);
+DealRouter.patch("/:id", sellerAuthMiddleware, DealController.updateDeal);
+DealRouter.delete("/:id", sellerAuthMiddleware, DealController.deleteDeal);
 
-export default DealRouter = router;
+export default DealRouter;
