@@ -7,6 +7,7 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
+  Pagination,
   Select,
 } from "@mui/material";
 import ProductCard from "./ProductCard";
@@ -14,6 +15,7 @@ import ProductCard from "./ProductCard";
 const product = {
   images: [
     "https://images.unsplash.com/photo-1619516388835-2b60acc4049e?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   ],
   sellerDetails: {
     bussinessName: "Rana Clothing",
@@ -35,7 +37,7 @@ const Products = () => {
         </h1>
       </div>
       <div className='lg:flex'>
-        <section className='border-r hidden lg:block w-[20%] min-h-screen border-gray-300'>
+        <section className='hidden lg:block w-[20%] min-h-screen border-gray-300'>
           <FilterSection />
         </section>
 
@@ -63,6 +65,9 @@ const Products = () => {
                 <ProductCard item={product} />
               </div>
             ))}
+          </div>
+          <div className='flex flex-col items-center justify-center'>
+            <Pagination count={10} />
           </div>
         </section>
       </div>
