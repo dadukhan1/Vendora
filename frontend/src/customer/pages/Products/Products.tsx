@@ -66,7 +66,7 @@ const Products = () => {
               </div>
             ))}
           </div>
-          <div className='flex flex-col items-center justify-center'>
+          <div className='flex flex-col items-center justify-center p-5'>
             <Pagination count={10} />
           </div>
         </section>

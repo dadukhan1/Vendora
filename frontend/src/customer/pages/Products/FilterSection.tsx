@@ -88,11 +88,6 @@ const FilterSection = () => {
                 ))}
               </RadioGroup>
             </FormControl>
-            <div>
-              <Button onClick={handleExpandColors}>
-                {expandColors ? "Hide" : `+${colors.length - 5} Expand`}
-              </Button>
-            </div>
           </FormControl>
           <Divider />
           <FormControl sx={{ zIndex: 0 }}>
@@ -120,11 +115,6 @@ const FilterSection = () => {
                 ))}
               </RadioGroup>
             </FormControl>
-            <div>
-              <Button onClick={handleExpandColors}>
-                {expandColors ? "Hide" : `+${colors.length - 5} Expand`}
-              </Button>
-            </div>
           </FormControl>
         </section>
       </div>
