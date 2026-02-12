@@ -1,0 +1,88 @@
+/** @format */
+
+export const electronicLevel2 = [
+  {
+    name: "Mobiles",
+    categoryId: "electronics_mobiles",
+    parentCategoryId: "electronics",
+    parentCategoryName: "Electronics",
+    level: 2,
+  },
+  {
+    name: "Laptops",
+    categoryId: "electronics_laptops",
+    parentCategoryId: "electronics",
+    parentCategoryName: "Electronics",
+    level: 2,
+  },
+  {
+    name: "Tablets",
+    categoryId: "electronics_tablets",
+    parentCategoryId: "electronics",
+    parentCategoryName: "Electronics",
+    level: 2,
+  },
+  {
+    name: "Televisions",
+    categoryId: "electronics_televisions",
+    parentCategoryId: "electronics",
+    parentCategoryName: "Electronics",
+    level: 2,
+  },
+  {
+    name: "Headphones & Earphones",
+    categoryId: "electronics_headphones_and_earphones",
+    parentCategoryId: "electronics",
+    parentCategoryName: "Electronics",
+    level: 2,
+  },
+  {
+    name: "Cameras",
+    categoryId: "electronics_cameras",
+    parentCategoryId: "electronics",
+    parentCategoryName: "Electronics",
+    level: 2,
+  },
+  {
+    name: "Gaming Consoles",
+    categoryId: "electronics_gaming_consoles",
+    parentCategoryId: "electronics",
+    parentCategoryName: "Electronics",
+    level: 2,
+  },
+  {
+    name: "Smart Watches",
+    categoryId: "electronics_smart_watches",
+    parentCategoryId: "electronics",
+    parentCategoryName: "Electronics",
+    level: 2,
+  },
+  {
+    name: "Computer Accessories",
+    categoryId: "electronics_computer_accessories",
+    parentCategoryId: "electronics",
+    parentCategoryName: "Electronics",
+    level: 2,
+  },
+  {
+    name: "Home Appliances",
+    categoryId: "electronics_home_appliances",
+    parentCategoryId: "electronics",
+    parentCategoryName: "Electronics",
+    level: 2,
+  },
+  {
+    name: "Printers & Scanners",
+    categoryId: "electronics_printers_and_scanners",
+    parentCategoryId: "electronics",
+    parentCategoryName: "Electronics",
+    level: 2,
+  },
+  {
+    name: "Networking Devices",
+    categoryId: "electronics_networking_devices",
+    parentCategoryId: "electronics",
+    parentCategoryName: "Electronics",
+    level: 2,
+  },
+];

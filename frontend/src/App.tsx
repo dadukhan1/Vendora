@@ -8,15 +8,17 @@ import Footer from "./customer/Footer";
 import ProductDetails from "./customer/pages/Products/ProductDetails/ProductDetails";
 import Cart from "./customer/pages/Cart/Cart";
 import Checkout from "./customer/pages/Checkout/Checkout";
+import Navbar from "./customer/components/Navbar/Navbar";
 
 function App() {
   return (
     <ThemeProvider theme={customTheme}>
+      <Navbar />
       {/* <Home /> */}
       {/* <Products /> */}
       {/* <ProductDetails /> */}
       {/* <Cart /> */}
-      <Checkout />
+      {/* <Checkout /> */}
       <Footer />
     </ThemeProvider>
   );
