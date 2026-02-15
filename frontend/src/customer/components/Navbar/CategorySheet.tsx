@@ -9,6 +9,7 @@ import { menLevel3 } from "../../../data/category/level3/menLevel3";
 import { womenLevel3 } from "../../../data/category/level3/womenLevel3";
 import { electronicLevel3 } from "../../../data/category/level3/electronicLevel3";
 import { furnitureLevel3 } from "../../../data/category/level3/furnitureLevel3";
+import { useNavigate } from "react-router";
 
 const categoryTwo: { [key: string]: any[] } = {
   men: menLevel2,
@@ -24,6 +25,8 @@ const categoryThree: { [key: string]: any[] } = {
 };
 
 const CategorySheet = ({ selectedCategory }: any) => {
+  const navigate = useNavigate();
+
   const childCategory = (category: any, parentCategoryId: any) => {
     return category.filter(
       (child: any) => child.parentCategoryId == parentCategoryId,
@@ -44,7 +47,11 @@ const CategorySheet = ({ selectedCategory }: any) => {
                 categoryThree[selectedCategory],
                 item.categoryId,
               )?.map((item: any) => (
-                <li key={item.name} className='cursor-pointer'>
+                <li
+                  onClick={() => navigate(`/products/${item.name}`)}
+                  key={item.name}
+                  className='cursor-pointer'
+                >
                   {item.name}
                 </li>
               ))}

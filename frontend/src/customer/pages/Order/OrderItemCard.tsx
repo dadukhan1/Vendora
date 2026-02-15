@@ -2,10 +2,15 @@
 
 import { ElectricBolt } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
+import { useNavigate } from "react-router";
 
 const OrderItemCard = () => {
+  const navigate = useNavigate();
   return (
-    <div className='text-sm bg-white border border-gray-200 p-5 space-y-4 rounded-md cursor-pointer'>
+    <div
+      onClick={() => navigate("/account/orders/1/item/1")}
+      className='text-sm bg-white border border-gray-200 p-5 space-y-4 rounded-md cursor-pointer'
+    >
       <div className='flex items-center gap-3'>
         <Avatar sizes='small' sx={{ bgcolor: "#00927c" }}>
           <ElectricBolt />
@@ -26,7 +31,9 @@ const OrderItemCard = () => {
         <div className='w-full space-y-2 '>
           <h1 className='font-bold'>zosh bazaar</h1>
           <p>Turqouise Blue stonework stain designer saree</p>
-          <p><strong>size : </strong> FREE</p>
+          <p>
+            <strong>size : </strong> FREE
+          </p>
         </div>
       </div>
     </div>

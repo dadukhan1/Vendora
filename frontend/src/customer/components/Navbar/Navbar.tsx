@@ -20,12 +20,14 @@ import {
   Search,
   Storefront,
 } from "@mui/icons-material";
+import { useNavigate } from "react-router";
 
 const Navbar = () => {
   const theme = useTheme();
   const isLarge = useMediaQuery(theme.breakpoints.up("lg"));
   const [showSheet, setShowSheet] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("men");
+  const navigate = useNavigate();
 
   return (
     <Box className='sticky top-0 left-0 right-0 bg-white blur-bg bg-opacity-80'>
@@ -37,7 +39,12 @@ const Navbar = () => {
                 <MenuIcon className='text-gray-700' sx={{ fontSize: 29 }} />
               </IconButton>
             )}
-            <h1 className='text-md md:text-2xl'>Vendora</h1>
+            <h1
+              onClick={() => navigate("/")}
+              className='text-md md:text-2xl cursor-pointer'
+            >
+              Vendora
+            </h1>
           </div>
           <ul className='flex items-center font-medium text-gray-800'>
             {mainCategory.map((item) => (
@@ -59,8 +66,11 @@ const Navbar = () => {
           <IconButton>
             <Search sx={{ fontSize: 29 }} />
           </IconButton>
-          {false ? (
-            <Button className='flex items-center gap-2'>
+          {true ? (
+            <Button
+              onClick={() => navigate("/account")}
+              className='flex items-center gap-2'
+            >
               <Avatar
                 src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAWbnrBYN8xcnSmAOcZViCHoJWz-ipFaFfFg&s'
                 sx={{ height: 29, width: 29 }}
@@ -76,7 +86,10 @@ const Navbar = () => {
             <FavoriteBorder sx={{ fontSize: 29 }} />
           </IconButton>
           <IconButton>
-            <AddShoppingCart sx={{ fontSize: 29 }} />
+            <AddShoppingCart
+              onClick={() => navigate("/cart")}
+              sx={{ fontSize: 29 }}
+            />
           </IconButton>
           <Button variant='outlined' startIcon={<Storefront />}>
             Become a Seller
