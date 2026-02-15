@@ -9,6 +9,7 @@ import ProductDetails from "./customer/pages/Products/ProductDetails/ProductDeta
 import Cart from "./customer/pages/Cart/Cart";
 import Checkout from "./customer/pages/Checkout/Checkout";
 import Navbar from "./customer/components/Navbar/Navbar";
+import Profile from "./customer/pages/Order/Profile";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
       {/* <ProductDetails /> */}
       {/* <Cart /> */}
       {/* <Checkout /> */}
+      <Profile />
       <Footer />
     </ThemeProvider>
   );
