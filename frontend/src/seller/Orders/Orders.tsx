@@ -1,8 +1,14 @@
+/** @format */
+
+import OrderTable from "./OrderTable";
 
 const Orders = () => {
   return (
-    <div>Orders</div>
-  )
-}
+    <>
+      <h1 className='pb-5 font-bold text-2xl'>All Orders</h1>
+      <OrderTable />
+    </>
+  );
+};
 
-export default Orders
+export default Orders;
