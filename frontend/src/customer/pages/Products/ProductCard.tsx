@@ -31,7 +31,7 @@ const ProductCard = ({ item }: any) => {
       <div
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className='card relative w-[250px] sm:w-full h-[350px] overflow-hidden'
+        className='card relative w-62.5 sm:w-full h-87.5 overflow-hidden'
       >
         {item.images.map((image: string, index: number) => (
           <img
