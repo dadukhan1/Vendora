@@ -1,7 +1,11 @@
 /** @format */
 
+import SellerProfile from "./SellerProfile";
+
 const Account = () => {
-  return <div>Account</div>;
+  return <div>
+    <SellerProfile />
+  </div>;
 };
 
 export default Account;
