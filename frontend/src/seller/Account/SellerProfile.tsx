@@ -18,10 +18,12 @@ const SellerProfile = () => {
         </div>
       </div>
       <div>
-        <Avatar
-          sx={{ width: "10rem", height: "10rem" }}
-          src='https://images.unsplash.com/photo-1544979590-37e9b47eb705?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGphZ3VhcnxlbnwwfHwwfHx8MA%3D%3D'
-        />
+        <div className="mb-4">
+          <Avatar
+            sx={{ width: "10rem", height: "10rem" }}
+            src='https://images.unsplash.com/photo-1544979590-37e9b47eb705?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGphZ3VhcnxlbnwwfHwwfHx8MA%3D%3D'
+          />
+        </div>
         <ProfileFieldCard keys={"Seller Name"} value='John Doe' />
         <Divider />
         <ProfileFieldCard keys={"Seller Email"} value='john.doe@example.com' />
