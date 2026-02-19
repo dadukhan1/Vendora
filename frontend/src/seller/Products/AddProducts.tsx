@@ -1,6 +1,6 @@
 /** @format */
 
-import { AddPhotoAlternate, Category, Close } from "@mui/icons-material";
+import { AddPhotoAlternate, Close } from "@mui/icons-material";
 import {
   Button,
   CircularProgress,
