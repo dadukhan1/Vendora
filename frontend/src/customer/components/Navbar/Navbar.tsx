@@ -66,7 +66,7 @@ const Navbar = () => {
           <IconButton>
             <Search sx={{ fontSize: 29 }} />
           </IconButton>
-          {true ? (
+          {false ? (
             <Button
               onClick={() => navigate("/account")}
               className='flex items-center gap-2'
@@ -78,7 +78,11 @@ const Navbar = () => {
               <h1>UName</h1>
             </Button>
           ) : (
-            <Button variant='contained' startIcon={<AccountCircle />}>
+            <Button
+              onClick={() => navigate("/login")}
+              variant='contained'
+              startIcon={<AccountCircle />}
+            >
               Login
             </Button>
           )}
@@ -91,7 +95,11 @@ const Navbar = () => {
               sx={{ fontSize: 29 }}
             />
           </IconButton>
-          <Button variant='outlined' startIcon={<Storefront />}>
+          <Button
+            onClick={() => navigate("/become-seller")}
+            variant='outlined'
+            startIcon={<Storefront />}
+          >
             Become a Seller
           </Button>
         </div>
