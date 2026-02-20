@@ -278,7 +278,7 @@ const AddProducts = () => {
                 {childCategory(
                   categoryThree[
                     formik.values.category as keyof typeof categoryThree
-                  ],
+                  ] || [],
                   formik.values.category2,
                 )?.map((category: any, index: any) => (
                   <MenuItem key={index} value={category.categoryId}>
