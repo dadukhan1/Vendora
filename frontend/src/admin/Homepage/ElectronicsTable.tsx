@@ -1,8 +1,13 @@
+/** @format */
+
+import HomeCategoryTable from "./HomeCategoryTable";
 
 const ElectronicsTable = () => {
   return (
-    <div>ElectronicsTable</div>
-  )
-}
+    <div>
+      <HomeCategoryTable />
+    </div>
+  );
+};
 
-export default ElectronicsTable
+export default ElectronicsTable;

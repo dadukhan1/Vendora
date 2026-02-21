@@ -1,7 +1,13 @@
 /** @format */
 
+import HomeCategoryTable from "./HomeCategoryTable";
+
 const ShopByCategory = () => {
-  return <div>ShopByCategory</div>;
+  return (
+    <div>
+      <HomeCategoryTable />
+    </div>
+  );
 };
 
 export default ShopByCategory;
