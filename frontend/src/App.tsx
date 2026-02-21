@@ -15,6 +15,7 @@ import SellerDashboard from "./seller/SellerDashboard/SellerDashboard";
 import BecomeSeller from "./Auth/BecomeSeller/BecomeSeller";
 import CustomerRoutes from "./routes/CustomerRoutes";
 import Auth from "./Auth/Auth";
+import AdminDashboard from "./admin/Dashboard/AdminDashboard";
 
 function App() {
   return (
@@ -23,11 +24,10 @@ function App() {
       <Routes>
         <Route path='/become-seller' element={<BecomeSeller />} />
         <Route path='/seller/*' element={<SellerDashboard />} />
+        <Route path='/admin/*' element={<AdminDashboard />} />
         <Route path='/login' element={<Auth />} />
         <Route path='/*' element={<CustomerRoutes />} />
       </Routes>
-
-      
     </ThemeProvider>
   );
 }
