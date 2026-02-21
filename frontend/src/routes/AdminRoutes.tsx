@@ -16,7 +16,7 @@ const AdminRoutes = () => {
         <Route path='/' element={<SellerTable />} />
         <Route path='/coupons' element={<Coupon />} />
         <Route path='/add-coupon' element={<CouponForm />} />
-        <Route path='/home-grid' element={<GridTable />} />
+        <Route path='/home-page' element={<GridTable />} />
         <Route path='/electronics-category' element={<ElectronicsTable />} />
         <Route path='/shop-by-category' element={<ShopByCategory />} />
         <Route path='/deal' element={<Deal />} />
