@@ -6,8 +6,8 @@ import HomeCategoryCard from "./HomeCategoryCard";
 const HomeCateogry = () => {
   return (
     <div className='flex justify-center gap-7 flex-wrap'>
-      {[1, 1, 1, 1, 1, 1].map((item) => (
-        <HomeCategoryCard />
+      {[1, 1, 1, 1, 1, 1].map((item, index) => (
+        <HomeCategoryCard key={index} />
       ))}
     </div>
   );

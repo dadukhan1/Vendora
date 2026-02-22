@@ -57,8 +57,8 @@ const electronics = [
 const ElectronicCategory = () => {
   return (
     <div className='flex flex-wrap justify-between py-5 lg:px-20 border-b'>
-      {electronics.map((item) => (
-        <ElectronicCategoryCard item={item} />
+      {electronics.map((item,index) => (
+        <ElectronicCategoryCard key={index} item={item} />
       ))}
     </div>
   );
