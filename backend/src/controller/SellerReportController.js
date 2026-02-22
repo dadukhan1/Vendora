@@ -1,6 +1,6 @@
 /** @format */
 
-import SellerReportService from "../service/SellerReportService";
+import SellerReportService from "../service/SellerReportService.js";
 
 class SellerReportController {
   async getSellerReport(req, res) {

@@ -1,6 +1,6 @@
 /** @format */
 
-import { Deal } from "../models/Deal";
+import { Deal } from "../models/Deal.js";
 import { HomeCategory } from "../models/HomeCategory.js";
 
 class DealService {

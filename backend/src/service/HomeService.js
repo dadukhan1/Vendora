@@ -1,7 +1,7 @@
 /** @format */
 
-import HomeCategorySection from "../domain/HomeCategorySection";
-import DealService from "./DealService";
+import HomeCategorySection from "../domain/HomeCategorySection.js";
+import DealService from "./DealService.js";
 
 class HomeService {
   async createHomePageData(allCategories) {

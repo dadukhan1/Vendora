@@ -1,6 +1,6 @@
 /** @format */
 
-import TransactionService from "../service/TransactionService";
+import TransactionService from "../service/TransactionService.js";
 
 class TransactionController {
   async getTransactionBySeller(req, res) {

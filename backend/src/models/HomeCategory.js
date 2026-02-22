@@ -1,7 +1,7 @@
 /** @format */
 
 import { model, Schema } from "mongoose";
-import HomeCategorySection from "../domain/HomeCategorySection";
+import HomeCategorySection from "../domain/HomeCategorySection.js";
 
 const homeCategorySchema = new Schema(
   {

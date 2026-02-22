@@ -1,7 +1,7 @@
 /** @format */
 
 import { model, Schema } from "mongoose";
-import { PaymentStatus } from "../domain/PaymentStatus";
+import { PaymentStatus } from "../domain/PaymentStatus.js";
 
 const transactionSchema = new Schema(
   {
