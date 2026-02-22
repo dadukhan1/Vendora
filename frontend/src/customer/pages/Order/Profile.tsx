@@ -5,6 +5,9 @@ import Order from "./Order";
 import OrderDetails from "./OrderDetails";
 import { Route, Routes, useNavigate } from "react-router";
 import UserDetails from "../Profile/UserDetails";
+import { useAppDispatch } from "../../../Redux Toolkit/store";
+import { clearUser } from "../../../Redux Toolkit/features/customer/userSlice";
+import { logout } from "../../../Redux Toolkit/features/auth/authSlice";
 
 const menu = [
   { name: "Orders ", path: "/account/orders" },
@@ -15,6 +18,16 @@ const menu = [
 ];
 
 const Profile = () => {
+  const dispatch = useAppDispatch();
+  const handleClick = (path: string) => {
+    if (path === "/") {
+      dispatch(logout());
+      dispatch(clearUser());
+      navigate("/");
+    }
+    navigate(path);
+  };
+
   const navigate = useNavigate();
   return (
     <div className='px-5 lg:px-52 min-h-screen mt-10'>
@@ -26,7 +39,7 @@ const Profile = () => {
         <div className='col-span-1 lg:border-r border-gray-200 lg:pr-5 py-5 h-full flex-row flex-wrap lg:flex-col gap-3'>
           {menu.map((item) => (
             <div
-              onClick={() => navigate(item.path)}
+              onClick={() => handleClick(item.path)}
               key={item.path}
               className='px-5 py-3 bg-[#f7f8fd9f] rounded-md hover:bg-teal-500 hover:text-white cursor-pointer'
             >

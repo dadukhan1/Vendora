@@ -1,6 +1,7 @@
 /** @format */
 
 import { Divider } from "@mui/material";
+import UserDetails from "./UserDetails";
 
 const ProfileFieldCard = ({ keys, value }: any) => {
   return (

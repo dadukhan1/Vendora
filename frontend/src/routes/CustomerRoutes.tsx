@@ -7,8 +7,8 @@ import Products from "../customer/pages/Products/Products";
 import ProductDetails from "../customer/pages/Products/ProductDetails/ProductDetails";
 import CartItemCard from "../customer/pages/Cart/CartItemCard";
 import Checkout from "../customer/pages/Checkout/Checkout";
-import ProfileFieldCard from "../customer/pages/Profile/ProfileFieldCard";
 import Navbar from "../customer/components/Navbar/Navbar";
+import Profile from "../customer/pages/Order/Profile";
 
 const CustomerRoutes = () => {
   return (
@@ -23,7 +23,7 @@ const CustomerRoutes = () => {
         />
         <Route path='/cart' element={<CartItemCard />} />
         <Route path='/checkout/address' element={<Checkout />} />
-        <Route path='/account/*' element={<ProfileFieldCard />} />
+        <Route path='/account/*' element={<Profile />} />
       </Routes>
       <Footer />
     </div>

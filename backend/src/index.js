@@ -17,10 +17,17 @@ import { TransactionrRouter } from "./router/TransactionRoutes.js";
 import { SellerReportRouter } from "./router/SellerReportRotues.js";
 import HomeCategoryRoutes from "./router/HomeCategoryRoutes.js";
 import DealRouter from "./router/DealRoutes.js";
+import cors from "cors";
 
 const app = express();
 
 app.use(express.json());
+app.use(
+  cors({
+    origin: "http://localhost:5173", // ✅ allow your frontend
+    credentials: true, // if you want cookies/auth headers
+  }),
+);
 
 app.get("/", (req, res) => {
   res.send("Welcome to Vendora");

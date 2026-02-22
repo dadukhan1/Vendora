@@ -26,7 +26,7 @@ class AuthService {
     // Now check seller
     const seller = await Seller.findOne({ email });
     const user = await User.findOne({ email });
-    if (!seller && !user) throw new Error("User not found");
+    // if (!seller && !user) throw new Error("User not found");
 
     const existingverificationCode = await VerificationCode.findOne({ email });
 
@@ -45,7 +45,7 @@ class AuthService {
   }
 
   async createUser(req) {
-    const { email, fullName } = req;
+    const { email, fullName } = req.body;
     if (!email || !fullName) {
       throw new Error("All fields are required");
     }
@@ -65,7 +65,7 @@ class AuthService {
   }
 
   async signIn(req) {
-    const { email, otp } = req;
+    const { email, otp } = req.body;
 
     if (!email || !otp) {
       throw new Error("All fields are required");

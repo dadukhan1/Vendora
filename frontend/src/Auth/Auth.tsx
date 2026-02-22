@@ -6,7 +6,7 @@ import LoginForm from "./LoginForm";
 import { Button } from "@mui/material";
 
 const Auth = () => {
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   return (
     <div className='flex justify-center items-center h-[90vh]'>
       <div className='max-w-md h-[85vh] rounded-md shadow-lg'>

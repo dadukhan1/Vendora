@@ -23,7 +23,7 @@ class AuthController {
 
   async createUser(req, res) {
     try {
-      const jwt = await AuthService.createUser(req.body);
+      const jwt = await AuthService.createUser(req);
 
       const response = {
         message: "User created successfully",
@@ -39,7 +39,7 @@ class AuthController {
   }
 
   async signIn(req, res) {
-    const response = await AuthService.signIn(req.body);
+    const response = await AuthService.signIn(req);
 
     res.status(201).json(response);
   }

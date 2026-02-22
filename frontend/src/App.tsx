@@ -1,23 +1,28 @@
 /** @format */
 
-import { Button, ThemeProvider } from "@mui/material";
+import { ThemeProvider } from "@mui/material";
 import { customTheme } from "./theme/customTheme";
-import Home from "./customer/pages/Home/Home";
-import Products from "./customer/pages/Products/Products";
-import Footer from "./customer/Footer";
-import ProductDetails from "./customer/pages/Products/ProductDetails/ProductDetails";
-import Cart from "./customer/pages/Cart/Cart";
-import Checkout from "./customer/pages/Checkout/Checkout";
-import Navbar from "./customer/components/Navbar/Navbar";
-import Profile from "./customer/pages/Order/Profile";
 import { Route, Routes } from "react-router";
 import SellerDashboard from "./seller/SellerDashboard/SellerDashboard";
 import BecomeSeller from "./Auth/BecomeSeller/BecomeSeller";
 import CustomerRoutes from "./routes/CustomerRoutes";
 import Auth from "./Auth/Auth";
 import AdminDashboard from "./admin/Dashboard/AdminDashboard";
+import { useAppDispatch, useAppSelectore } from "./Redux Toolkit/store";
+import { useEffect } from "react";
+import { profile } from "./Redux Toolkit/features/customer/userSlice";
 
 function App() {
+  const dispatch = useAppDispatch();
+  const { auth } = useAppSelectore((store) => store);
+
+  useEffect(() => {
+    const jwt = localStorage.getItem("token");
+    if (!jwt || !auth.jwt) {
+      dispatch(profile(jwt || ""));
+    }
+  }, [auth.jwt]);
+
   return (
     <ThemeProvider theme={customTheme}>
       {/*  Seller Routes */}
