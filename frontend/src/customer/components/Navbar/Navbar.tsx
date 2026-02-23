@@ -21,10 +21,10 @@ import {
   Storefront,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router";
-import { useAppSelectore } from "../../../Redux Toolkit/store";
+import { useAppSelector } from "../../../Redux Toolkit/store";
 
 const Navbar = () => {
-  const { user } = useAppSelectore((store) => store.user);
+  const { user } = useAppSelector((store) => store.user);
   const theme = useTheme();
   const isLarge = useMediaQuery(theme.breakpoints.up("lg"));
   const [showSheet, setShowSheet] = useState(false);

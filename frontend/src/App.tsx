@@ -8,13 +8,13 @@ import BecomeSeller from "./Auth/BecomeSeller/BecomeSeller";
 import CustomerRoutes from "./routes/CustomerRoutes";
 import Auth from "./Auth/Auth";
 import AdminDashboard from "./admin/Dashboard/AdminDashboard";
-import { useAppDispatch, useAppSelectore } from "./Redux Toolkit/store";
+import { useAppDispatch, useAppSelector } from "./Redux Toolkit/store";
 import { useEffect } from "react";
 import { profile } from "./Redux Toolkit/features/customer/userSlice";
 
 function App() {
   const dispatch = useAppDispatch();
-  const { auth } = useAppSelectore((store) => store);
+  const { auth } = useAppSelector((store) => store);
 
   useEffect(() => {
     const jwt = localStorage.getItem("token");

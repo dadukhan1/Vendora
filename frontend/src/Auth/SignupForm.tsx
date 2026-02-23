@@ -2,7 +2,7 @@
 
 import { Button, Snackbar, TextField } from "@mui/material";
 import { useFormik } from "formik";
-import { useAppDispatch, useAppSelectore } from "../Redux Toolkit/store";
+import { useAppDispatch, useAppSelector } from "../Redux Toolkit/store";
 import { useNavigate } from "react-router";
 import {
   sendLoginSignupOTP,
@@ -10,7 +10,7 @@ import {
 } from "../Redux Toolkit/features/auth/authSlice";
 
 const SignupForm = () => {
-  const { auth } = useAppSelectore((state) => state);
+  const { auth } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const formik = useFormik({
