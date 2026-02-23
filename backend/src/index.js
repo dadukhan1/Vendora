@@ -51,7 +51,7 @@ app.use("/api/seller/report", SellerReportRouter);
 app.use("/api/admin", AdminRouter);
 
 app.use("/home", HomeCategoryRoutes);
-app.use("admin/deals", DealRouter);
+app.use("/admin/deals", DealRouter);
 
 const PORT = process.env.PORT || 3000;
 
