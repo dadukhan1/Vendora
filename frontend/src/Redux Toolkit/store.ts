@@ -14,6 +14,11 @@ import orderSlice from "./features/customer/orderSlice.ts";
 import cartSlice from "./features/customer/cartSlice.ts";
 import couponSlice from "./features/customer/couponSlice.ts";
 import homeCategorySlice from "./features/customer/homeCategorySlice.ts";
+import sellerAthSlice from "./features/seller/sellerAuth.ts";
+import sellerOrderSlice from "./features/seller/sellerOrderSlice.ts";
+import sellerProductsSlice from "./features/seller/sellerProductsSlice.ts";
+import sellerSlice from "./features/seller/sellerSlice.ts";
+import transactionSlice from "./features/seller/transactionSlice.ts";
 
 const rootReducer = combineReducers({
   auth: authSlice,
@@ -23,6 +28,13 @@ const rootReducer = combineReducers({
   cart: cartSlice,
   coupon: couponSlice,
   homeCategory: homeCategorySlice,
+
+  sellerAuth: sellerAthSlice,
+  sellerOrder: sellerOrderSlice,
+  sellerProduct: sellerProductsSlice,
+  seller: sellerSlice,
+
+  transaction: transactionSlice,
 });
 
 const store = configureStore({
