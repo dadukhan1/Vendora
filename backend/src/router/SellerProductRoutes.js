@@ -9,6 +9,6 @@ const router = express.Router();
 router.get("/", sellerAuthMiddleware, ProductController.getProductBySellerId);
 router.post("/", sellerAuthMiddleware, ProductController.createProduct);
 router.delete("/", sellerAuthMiddleware, ProductController.deleteProduct);
-router.patch("/", sellerAuthMiddleware, ProductController.updateProduct);
+router.put("/productId", sellerAuthMiddleware, ProductController.updateProduct);
 
 export const SellerProductRouter = router;
