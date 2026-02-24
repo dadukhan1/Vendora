@@ -19,6 +19,8 @@ import sellerOrderSlice from "./features/seller/sellerOrderSlice.ts";
 import sellerProductsSlice from "./features/seller/sellerProductsSlice.ts";
 import sellerSlice from "./features/seller/sellerSlice.ts";
 import transactionSlice from "./features/seller/transactionSlice.ts";
+import adminSlice from "./features/admin/adminSlice.ts";
+import couponAdminSlice from "./features/admin/couponSlice.ts";
 
 const rootReducer = combineReducers({
   auth: authSlice,
@@ -35,6 +37,10 @@ const rootReducer = combineReducers({
   seller: sellerSlice,
 
   transaction: transactionSlice,
+
+  admin: adminSlice,
+  adminCoupon: couponAdminSlice,
+  
 });
 
 const store = configureStore({
