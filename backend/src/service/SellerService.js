@@ -5,32 +5,36 @@ import { Seller } from "../models/Seller.js";
 import JwtProvider from "../utils/jwtProvider.js";
 
 class SellerService {
-  async createSeller(sellerData) {
-    if (
-      !sellerData.sellerName ||
-      !sellerData.mobile ||
-      !sellerData.email ||
-      !sellerData.password ||
-      !sellerData.GSTIN
-    ) {
+  async createSeller(req) {
+    const {
+      sellerName,
+      mobile,
+      email,
+      password,
+      GSTIN,
+      pickupAddress,
+      bankDetails,
+      bussinessDetails,
+    } = req.body;
+    if (!sellerName || !mobile || !email || !password || !GSTIN) {
       throw new Error("All fields are required");
     }
 
-    const existingEmail = await Seller.findOne({ email: sellerData.email });
+    const existingEmail = await Seller.findOne({ email });
 
     if (existingEmail) throw new Error("Email already exists");
 
-    const savedAddress = await Address.create(sellerData.pickUpAddress);
+    const savedAddress = await Address.create(pickupAddress);
 
     const newSeller = new Seller({
-      sellerName: sellerData.sellerName,
-      email: sellerData.email,
-      password: sellerData.password,
-      pickUpAddress: savedAddress._id,
-      GSTIN: sellerData.GSTIN,
-      mobile: sellerData.mobile,
-      bankDetails: sellerData.bankDetails,
-      businessDetails: sellerData.businessDetails,
+      sellerName,
+      email,
+      password,
+      pickupAddress: savedAddress._id,
+      GSTIN,
+      mobile,
+      bankDetails,
+      bussinessDetails,
     });
 
     return await newSeller.save();

@@ -13,7 +13,7 @@ const initialState = {
   profileUpdate: false,
 };
 
-const fetechSellerProfile = createAsyncThunk<any, any>(
+export const fetchSellerProfile = createAsyncThunk<any, any>(
   "sellers/fetchSellerProfile",
   async (jwt, { rejectWithValue }) => {
     try {
@@ -114,15 +114,15 @@ const sellerSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetechSellerProfile.pending, (state) => {
+      .addCase(fetchSellerProfile.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetechSellerProfile.fulfilled, (state, action) => {
+      .addCase(fetchSellerProfile.fulfilled, (state, action) => {
         state.loading = false;
         state.profile = action.payload;
       })
-      .addCase(fetechSellerProfile.rejected, (state, action) => {
+      .addCase(fetchSellerProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message as string;
       });

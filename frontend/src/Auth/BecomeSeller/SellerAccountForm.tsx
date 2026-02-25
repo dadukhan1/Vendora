@@ -7,6 +7,9 @@ import BecomeSellerStep1 from "./BecomeSellerStep1";
 import BecomeSellerStep2 from "./BecomeSellerStep2";
 import BecomeSellerStep3 from "./BecomeSellerStep3";
 import BecomeSellerStep4 from "./BecomeSellerStep4";
+import { signup } from "../../Redux Toolkit/features/seller/sellerAuth";
+import { useAppDispatch } from "../../Redux Toolkit/store";
+import { useNavigate } from "react-router";
 
 const steps = [
   "Tax Details & Mobile",
@@ -16,6 +19,8 @@ const steps = [
 ];
 
 const SellerAccountForm = () => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [activeStep, setActiveStep] = useState(0);
   const formik = useFormik({
     initialValues: {
@@ -48,8 +53,14 @@ const SellerAccountForm = () => {
       },
       password: "",
     },
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       console.log(values);
+      const resultAction = await dispatch(signup(values));
+      if (signup.fulfilled.match(resultAction)) {
+        navigate("/");
+      } else {
+        console.error("Failed to sign up:", resultAction.payload);
+      }
     },
   });
   return (

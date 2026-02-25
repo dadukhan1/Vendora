@@ -3,8 +3,10 @@
 import { Edit } from "@mui/icons-material";
 import { Avatar, Button, Divider } from "@mui/material";
 import ProfileFieldCard from "../../customer/pages/Profile/ProfileFieldCard";
+import { useAppSelector } from "../../Redux Toolkit/store";
 
 const SellerProfile = () => {
+  const { profile } = useAppSelector((store) => store.seller);
   return (
     <div className='lg:px-20 pt-5  pb-20 space-y-20'>
       <div className='w-full lg:w-[70%] '>
@@ -18,17 +20,17 @@ const SellerProfile = () => {
         </div>
       </div>
       <div>
-        <div className="mb-4">
+        <div className='mb-4'>
           <Avatar
             sx={{ width: "10rem", height: "10rem" }}
             src='https://images.unsplash.com/photo-1544979590-37e9b47eb705?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGphZ3VhcnxlbnwwfHwwfHx8MA%3D%3D'
           />
         </div>
-        <ProfileFieldCard keys={"Seller Name"} value='John Doe' />
+        <ProfileFieldCard keys={"Seller Name"} value={profile?.sellerName} />
         <Divider />
-        <ProfileFieldCard keys={"Seller Email"} value='john.doe@example.com' />
+        <ProfileFieldCard keys={"Seller Email"} value={profile?.email} />
         <Divider />
-        <ProfileFieldCard keys={"Seller Phone"} value='+1234567890' />
+        <ProfileFieldCard keys={"Seller Phone"} value={profile?.mobile} />
       </div>
     </div>
   );

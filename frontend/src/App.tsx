@@ -11,6 +11,7 @@ import AdminDashboard from "./admin/Dashboard/AdminDashboard";
 import { useAppDispatch, useAppSelector } from "./Redux Toolkit/store";
 import { useEffect } from "react";
 import { profile } from "./Redux Toolkit/features/customer/userSlice";
+import { fetchSellerProfile } from "./Redux Toolkit/features/seller/sellerSlice";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -18,10 +19,12 @@ function App() {
 
   useEffect(() => {
     const jwt = localStorage.getItem("token");
-    if (!jwt || !auth.jwt) {
-      dispatch(profile(jwt || ""));
+
+    if (jwt && !auth.jwt) {
+      dispatch(profile(jwt));
+      dispatch(fetchSellerProfile(jwt));
     }
-  }, [auth.jwt]);
+  }, [auth.jwt, dispatch]);
 
   return (
     <ThemeProvider theme={customTheme}>

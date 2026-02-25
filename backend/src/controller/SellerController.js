@@ -21,11 +21,12 @@ class SellerController {
 
   async createSeller(req, res) {
     try {
-      const seller = await SellerService.createSeller(req.body);
+      const seller = await SellerService.createSeller(req);
 
       res.status(200).json({ message: "Seller created successfully!" });
     } catch (error) {
-      res
+      console.log(error.message);
+      return res
         .status(error instanceof Error ? 404 : 500)
         .json({ message: error.message });
     }
@@ -106,7 +107,7 @@ class SellerController {
 
       return res.status(200).json(authResponse);
     } catch (error) {
-      res
+      return res
         .status(error instanceof Error ? 404 : 500)
         .json({ message: error.message });
     }

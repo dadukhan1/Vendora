@@ -4,7 +4,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../../config/api";
 
 const initialState = {
-  otpSent: false,
+  otpSent: true,
   jwt: null,
   loading: false,
   error: null as string | null,
@@ -12,9 +12,10 @@ const initialState = {
 
 export const sendLoginOtp = createAsyncThunk<any, any>(
   "seller/sendLoginOtp",
-  async ({ email }, { rejectWithValue }) => {
+  async (values, { rejectWithValue }) => {
     try {
-      const response = await api.post("/seller", { email });
+      const { email } = values;
+      const response = await api.post("/auth/sent/login-signup-otp", { email });
       const data = response.data;
       console.log("OTP sent successfully:", data);
       return data;
@@ -26,14 +27,15 @@ export const sendLoginOtp = createAsyncThunk<any, any>(
 );
 export const verifyLogin = createAsyncThunk<any, any>(
   "seller/verifyLoginOtp",
-  async ({ email, otp }, { rejectWithValue }) => {
+  async ({ email, otp  }, { rejectWithValue }) => {
     try {
+      // const { email, otp } = values;
       const response = await api.post("/seller/verify/login-otp", {
         email,
         otp,
       });
       const data = response.data;
-      localStorage.setItem("sellerJwt", data.jwt);
+      localStorage.setItem("token", data.jwt);
       console.log("OTP sent successfully:", data);
       return data;
     } catch (error) {
@@ -45,12 +47,19 @@ export const verifyLogin = createAsyncThunk<any, any>(
 
 export const signup = createAsyncThunk<any, any>(
   "seller/signup",
-  async ({ name, email, otp }, { rejectWithValue }) => {
+  async (values, { rejectWithValue }) => {
     try {
+      const { mobile, GSTIN, pickupAddress, bankDetails, bussinessDetails } =
+        values;
       const response = await api.post("/seller", {
-        name,
-        email,
-        otp,
+        sellerName: bussinessDetails.sellerName,
+        email: bussinessDetails.bussinessEmail,
+        mobile,
+        GSTIN,
+        pickupAddress,
+        bankDetails,
+        bussinessDetails,
+        password: bussinessDetails.password,
       });
       const data = response.data;
       console.log("Seller Signup successful:", data);

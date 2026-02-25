@@ -6,6 +6,7 @@ import AuthService from "../service/AuthService.js";
 class AuthController {
   async sendLoginOtp(req, res) {
     try {
+      console.log("hahah")
       const { email } = req.body;
 
       if (!email) {
@@ -16,6 +17,7 @@ class AuthController {
 
       res.status(200).json({ message: "OTP send successfully. " });
     } catch (error) {
+      console.log(error.message);
       const statusCode = error.message === "User not found" ? 404 : 500;
       res.status(statusCode).json({ message: error.message });
     }

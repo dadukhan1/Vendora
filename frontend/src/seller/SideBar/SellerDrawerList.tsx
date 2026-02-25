@@ -11,12 +11,15 @@ import {
   ShoppingBag,
 } from "@mui/icons-material";
 import { Divider, ListItemIcon, ListItemText } from "@mui/material";
+import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router";
+import { resetSellerState } from "../../Redux Toolkit/features/seller/sellerAuth";
+import { logout } from "../../Redux Toolkit/features/auth/authSlice";
 
 const menu = [
   {
     name: "DashBoard",
-    path: "/",
+    path: "/seller",
     icon: <Dashboard className='text-teal-600' />,
     activeIcon: <Dashboard className='text-white' />,
   },
@@ -71,9 +74,12 @@ const menu2 = [
 const SellerDrawerList = ({ toggleDrawwer }: any) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogout = () => {
     console.log("logout");
+    dispatch(resetSellerState());
+    dispatch(logout());
   };
 
   const handleClick = (item: any) => {
