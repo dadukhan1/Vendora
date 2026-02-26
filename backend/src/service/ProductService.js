@@ -9,7 +9,6 @@ class ProductService {
     const {
       title,
       description,
-      images,
       sellingPrice,
       mrpPrice,
       size,
@@ -30,10 +29,17 @@ class ProductService {
       category2._id,
     );
 
+    // Upload new images to Cloudinary
+    const uploadedImages = await Promise.all(
+      req.files.map((file) =>
+        uploadOnCloudinary(file.buffer).then((r) => r.secure_url),
+      ),
+    );
+
     const product = await Product.create({
       title,
       description,
-      images,
+      images: uploadedImages,
       sellingPrice,
       mrpPrice,
       discount: discountPercent,
@@ -60,25 +66,51 @@ class ProductService {
   }
 
   async deleteProduct(productId) {
-    const product = await Product.findByIdAndDelete(productId);
+    const product = await Product.findById(productId);
 
     if (!product) {
       throw new Error("Product not found");
     }
+
+    if (product.images && product.images.length > 0) {
+      for (const url of product.images) {
+        const publicId = url.split("/").slice(-2).join("/").split(".")[0]; // extract public_id
+        await deleteOnCloudinary(publicId);
+      }
+    }
+
+    await Product.findByIdAndDelete(productId);
 
     return product;
   }
 
   async updateProduct(productId, updatedProductData) {
-    const product = await Product.findByIdAndUpdate(
+    const product = await Product.findById(productId);
+    if (!product) throw new Error("Product not found");
+
+    // Delete old images if new files provided
+    if (files && files.length > 0 && product.images.length > 0) {
+      for (const url of product.images) {
+        const publicId = url.split("/").slice(-2).join("/").split(".")[0];
+        await deleteOnCloudinary(publicId);
+      }
+
+      // Upload new images
+      const uploadedImages = await Promise.all(
+        files.map((f) =>
+          uploadOnCloudinary(f.buffer).then((r) => r.secure_url),
+        ),
+      );
+      updatedData.images = uploadedImages;
+    }
+
+    // Update product
+    const updatedProduct = await Product.findByIdAndUpdate(
       productId,
-      updatedProductData,
+      updatedData,
       { new: true },
     );
-    if (!product) {
-      throw new Error("Product not found");
-    }
-    return product;
+    return updatedProduct;
   }
 
   async findProductById(productId) {

@@ -51,7 +51,9 @@ class ProductController {
 
   async getProductById(req, res) {
     try {
-      const product = await ProductService.findProductById(req.params.productId);
+      const product = await ProductService.findProductById(
+        req.params.productId,
+      );
 
       return res.status(200).json(product);
     } catch (error) {
@@ -77,8 +79,6 @@ class ProductController {
       res.status(500).json({ message: error.message });
     }
   }
-
-  
 }
 
 export default new ProductController();
