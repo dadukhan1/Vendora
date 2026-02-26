@@ -5,11 +5,12 @@ import api from "../../../config/api";
 
 export const fetchSellerProducts = createAsyncThunk<any, any>(
   "sellerProduct/fetchProducts",
-  async ({ jwt }, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
+      const token = localStorage.getItem("token");
       const response = await api.get(`/seller/products`, {
         headers: {
-          Authorization: `Bearer ${jwt}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       const data = response.data;
@@ -24,11 +25,12 @@ export const fetchSellerProducts = createAsyncThunk<any, any>(
 
 export const createProduct = createAsyncThunk<any, any>(
   "sellerProduct/createProduct",
-  async ({ jwt, productData }, { rejectWithValue }) => {
+  async (productData, { rejectWithValue }) => {
     try {
       const response = await api.post(`/seller/products`, productData, {
         headers: {
-          Authorization: `Bearer ${jwt}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "multipart/form-data",
         },
       });
       const data = response.data;

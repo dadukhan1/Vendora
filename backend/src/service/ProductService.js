@@ -3,6 +3,7 @@
 import { Category } from "../models/Category.js";
 import { Product } from "../models/Product.js";
 import { calculateDiscountPercentage } from "../utils/calculateDiscountPercentage.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 class ProductService {
   async createProduct(req, seller) {
@@ -30,11 +31,13 @@ class ProductService {
     );
 
     // Upload new images to Cloudinary
-    const uploadedImages = await Promise.all(
-      req.files.map((file) =>
-        uploadOnCloudinary(file.buffer).then((r) => r.secure_url),
-      ),
-    );
+    const uploadedImages = req.files?.length
+      ? await Promise.all(
+          req.files.map((file) =>
+            uploadOnCloudinary(file.buffer).then((r) => r.secure_url),
+          ),
+        )
+      : [];
 
     const product = await Product.create({
       title,

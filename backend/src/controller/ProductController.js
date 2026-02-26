@@ -23,6 +23,7 @@ class ProductController {
       const product = await ProductService.createProduct(req, seller);
       return res.status(201).json({ product });
     } catch (error) {
+      console.log(error.message);
       res.status(500).json({ message: error.message });
     }
   }

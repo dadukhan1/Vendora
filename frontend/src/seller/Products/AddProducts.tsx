@@ -24,6 +24,8 @@ import { menLevel3 } from "../../data/category/level3/menLevel3";
 import { womenLevel3 } from "../../data/category/level3/womenLevel3";
 import { furnitureLevel3 } from "../../data/category/level3/furnitureLevel3";
 import { electronicLevel3 } from "../../data/category/level3/electronicLevel3";
+import { createProduct } from "../../Redux Toolkit/features/seller/sellerProductsSlice";
+import { useAppDispatch } from "../../Redux Toolkit/store";
 
 const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
 
@@ -45,7 +47,9 @@ const categoryThree = {
 };
 
 const AddProducts = () => {
+  const dispatch = useAppDispatch();
   const [uploadImage, setUploadImage] = useState(false);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
   const formik = useFormik({
     initialValues: {
       title: "",
@@ -54,25 +58,54 @@ const AddProducts = () => {
       discountPrice: "",
       sellingPrice: "",
       color: "",
-      images: [
-        "https://images.unsplash.com/photo-1761839257870-06874bda71b5?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDF8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw4fHx8ZW58MHx8fHx8",
-      ],
+      images: [""],
       category: "",
       category2: "",
       category3: "",
-      sizes: "",
+      size: "",
+      quantity: "",
     },
-    onSubmit: (value) => {
-      console.log(value);
+    onSubmit: (values) => {
+      const formData = new FormData();
+
+      formData.append("title", values.title);
+      formData.append("description", values.description);
+      formData.append("quantity", values.quantity);
+      formData.append("mrpPrice", values.mrpPrice);
+      formData.append("sellingPrice", values.sellingPrice);
+      formData.append("color", values.color);
+      formData.append("size", values.size);
+      formData.append("category", values.category);
+      formData.append("category2", values.category2);
+      formData.append("category3", values.category3);
+
+      imageFiles.forEach((file) => {
+        formData.append("images", file);
+      });
+
+      dispatch(createProduct(formData));
+      console.log(formData);
     },
   });
 
-  const handleImageChange = () => {
-    console.log("Image changed");
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+
+    const files = Array.from(e.target.files);
+
+    // store real files for upload
+    setImageFiles((prev) => [...prev, ...files]);
+
+    // preview only
+    const previews = files.map((file) => URL.createObjectURL(file));
+
+    formik.setFieldValue("images", [...formik.values.images, ...previews]);
   };
 
   const handleRemoveImage = (index: number) => {
-    console.log("Remove image at index:", index);
+    const newImages = [...formik.values.images];
+    newImages.splice(index, 1);
+    formik.setFieldValue("images", newImages);
   };
 
   const childCategory = (category: any, parentCategoryId: any) => {
@@ -161,6 +194,17 @@ const AddProducts = () => {
           <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
             <TextField
               fullWidth
+              id='quantity'
+              name='quantity'
+              label='quantity'
+              type='number'
+              value={formik.values.quantity}
+              onChange={formik.handleChange}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+            <TextField
+              fullWidth
               id='mrp_price'
               name='mrpPrice'
               label='MRP Price'
@@ -206,7 +250,7 @@ const AddProducts = () => {
               <Select
                 id='size'
                 name='size'
-                value={formik.values.sizes}
+                value={formik.values.size}
                 onChange={formik.handleChange}
                 labelId='size-label'
                 label='Size'

@@ -3,6 +3,7 @@
 import express from "express";
 import ProductController from "../controller/ProductController.js";
 import sellerAuthMiddleware from "../middlewares/SellerAuthMiddleware.js";
+import { upload } from "../utils/multer.js";
 
 const router = express.Router();
 
