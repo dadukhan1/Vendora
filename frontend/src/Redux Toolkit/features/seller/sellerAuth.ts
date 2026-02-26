@@ -4,7 +4,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../../config/api";
 
 const initialState = {
-  otpSent: true,
+  otpSent: false,
   jwt: null,
   loading: false,
   error: null as string | null,
