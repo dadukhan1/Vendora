@@ -2,12 +2,14 @@
 
 import React from "react";
 import HomeCategoryCard from "./HomeCategoryCard";
+import { useAppSelector } from "../../../../Redux Toolkit/store";
 
 const HomeCateogry = () => {
+  const { homeCategories } = useAppSelector((store) => store.homeCategory);
   return (
     <div className='flex justify-center gap-7 flex-wrap'>
-      {[1, 1, 1, 1, 1, 1].map((item, index) => (
-        <HomeCategoryCard key={index} />
+      {homeCategories?.shopByCategories?.map((item, index) => (
+        <HomeCategoryCard key={index} item={item} />
       ))}
     </div>
   );

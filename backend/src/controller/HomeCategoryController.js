@@ -6,13 +6,14 @@ import HomeService from "../service/HomeService.js";
 class HomeCategoryController {
   async createHomeCategory(req, res) {
     try {
-      const homeCategory = await HomeCategoryService.createHomeCategory(
-        req.body,
-      );
-      const allCategories = await HomeCategoryService.getAllCategories();
+      const { category } = req.body;
+      // const homeCategory =
+      //   await HomeCategoryService.createHomeCategories(category);
+      const allCategories = await HomeCategoryService.getAllHomeCategories();
       const home = await HomeService.createHomePageData(allCategories);
-      res.status(201).json(home);
+      return res.status(201).json(home);
     } catch (error) {
+      console.log(error.message);
       res.status(400).json({ message: error.message });
     }
   }

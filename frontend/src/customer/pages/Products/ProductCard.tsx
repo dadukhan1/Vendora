@@ -25,7 +25,9 @@ const ProductCard = ({ item }: any) => {
 
   return (
     <div
-      onClick={() => navigate(`/product-details/${1}/${'men shirt'}/${2}`)}
+      onClick={() =>
+        navigate(`/product-details/${item.category}/${item.title}/${item._id}`)
+      }
       className='group px-4 relative'
     >
       <div
@@ -47,15 +49,19 @@ const ProductCard = ({ item }: any) => {
       </div>
       <div className='details pt-3 space-y-1 group-hover-effect rounded-md'>
         <div className='name-space-y'>
-          <h1>{item.sellerDetails.bussinessName}</h1>
-          <p>Pink Floral Patterened Saree</p>
+          <h1>{item.title}</h1>
+          <p>{item.title}</p>
         </div>
         <div className='price flex items-center gap-3'>
-          <span className='font-semibold text-teal-800'>2499</span>
-          <span className='text font-thin line-through text-gray-400'>
-            3499
+          <span className='font-semibold text-teal-800'>
+            {item.sellingPrice}
           </span>
-          <span className='font-semibold text-teal-600'>34% off</span>
+          <span className='text font-thin line-through text-gray-400'>
+            {item.mrpPrice}
+          </span>
+          <span className='font-semibold text-teal-600'>
+            {item.discount}% off
+          </span>
         </div>
       </div>
     </div>

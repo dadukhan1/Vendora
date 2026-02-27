@@ -142,11 +142,15 @@ class ProductService {
     return await Product.find({ seller: sellerId });
   }
 
-  async getAllProducts(req) {
+  async getAllProducts(query) {
     const filterQuery = {};
 
-    if (req.category) {
-      const category = await Category.findOne({ categoryId: req.category });
+    const pageNumber = Number(query.pageNumber) || 1;
+    const limit = 10;
+
+    if (query.category) {
+      const category = await Category.findOne({ categoryId: query.category });
+
       if (!category) {
         return {
           content: [],
@@ -154,50 +158,54 @@ class ProductService {
           totalElements: 0,
         };
       }
+
       filterQuery.category = category._id;
     }
 
-    if (req.color) {
-      filterQuery.color = req.color;
+    if (query.color) {
+      filterQuery.color = query.color;
     }
 
-    if (req.minPrice && req.maxPrice) {
-      filterQuery.sellingPrice = { $gte: req.minPrice, $lte: req.maxPrice };
+    if (query.minPrice && query.maxPrice) {
+      filterQuery.sellingPrice = {
+        $gte: Number(query.minPrice),
+        $lte: Number(query.maxPrice),
+      };
     }
 
-    if (req.minDiscount) {
-      filterQuery.minDiscount = { $gte: req.minDiscount };
+    if (query.minDiscount) {
+      filterQuery.minDiscount = { $gte: Number(query.minDiscount) };
     }
 
-    if (req.size) {
-      filterQuery.size = req.size;
+    if (query.size) {
+      filterQuery.size = query.size;
     }
 
     let sortQuery = {};
 
-    if (req.sort === "price_low") {
+    if (query.sort === "price_low") {
       sortQuery.sellingPrice = 1;
     }
-    if (req.sort === "price_high") {
+
+    if (query.sort === "price_high") {
       sortQuery.sellingPrice = -1;
     }
 
     const products = await Product.find(filterQuery)
       .sort(sortQuery)
-      .skip(req.pageNumber * 10)
-      .limit(10);
+      .skip((pageNumber - 1) * limit)
+      .limit(limit);
 
     const totalElements = await Product.countDocuments(filterQuery);
 
-    const totalPages = Math.ceil(totalElements / 10);
+    const totalPages = Math.ceil(totalElements / limit);
 
-    const response = {
+    return {
       content: products,
       totalPages,
       totalElements,
+      currentPage: pageNumber,
     };
-
-    return response;
   }
 }
 

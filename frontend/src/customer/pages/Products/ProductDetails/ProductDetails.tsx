@@ -12,18 +12,18 @@ import {
   WorkspacePremium,
 } from "@mui/icons-material";
 import { Button, Divider } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SimilarProduct from "./SimilarProduct";
-
-const images = [
-  "https://images.unsplash.com/photo-1619516388835-2b60acc4049e?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-];
-
-
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../../Redux Toolkit/store";
+import { fetchProductById } from "../../../../Redux Toolkit/features/customer/productSlice";
+import { useParams } from "react-router";
 
 const ProductDetails = () => {
   const [currentImage, setCurrentImage] = useState(0);
+  const { categoryid, productId } = useParams();
   const handleChangeCurrentImage = (index: number) => {
     setCurrentImage(index);
   };
@@ -31,12 +31,19 @@ const ProductDetails = () => {
   const handleQuantityChange = (value: number) => {
     setQuantity(value + quantity);
   };
+  const dispatch = useAppDispatch();
+  const { product } = useAppSelector((store) => store.products);
+
+  useEffect(() => {
+    dispatch(fetchProductById(productId));
+  }, [dispatch]);
+
   return (
     <div className='min-h-screen px-5 lg:px-20 pt-10'>
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-10'>
         <section className='flex flex-col lg:flex-row gap-5'>
           <div className='w-full lg:w-[15%] flex flex-wrap lg:flex-col gap-3'>
-            {images.map((item, index) => (
+            {product?.images?.map((item, index) => (
               <img
                 onClick={() => handleChangeCurrentImage(index)}
                 className='lg:w-full w-[50px] cursor-pointer rounded-md'
@@ -47,14 +54,14 @@ const ProductDetails = () => {
           <div className='w-full lg:w-[85%]'>
             <img
               className='w-full rounded-md'
-              src={images[currentImage]}
+              src={product?.images[currentImage]}
               alt=''
             />
           </div>
         </section>
         <section>
           <h1 className='font-bold text-lg text-teal-500'>Rana Clothing</h1>
-          <p className='text-gray-500'>Pink floral patterned saree</p>
+          <p className='text-gray-500'>{product?.item}</p>
           <div
             className='flex justify-between items-center py-2
             border border-gray-500 w-[180px] px-3 mt-5'
@@ -69,11 +76,15 @@ const ProductDetails = () => {
           <div className='space-y-2 pt-5'>
             <div className='details pt-3 space-y-1 group-hover-effect rounded-md'>
               <div className='price flex items-center gap-3'>
-                <span className='font-semibold text-teal-800'>2499</span>
-                <span className='text font-thin line-through text-gray-400'>
-                  3499
+                <span className='font-semibold text-teal-800'>
+                  {product?.sellingPrice}
                 </span>
-                <span className='font-semibold text-teal-600'>34% off</span>
+                <span className='text font-thin line-through text-gray-400'>
+                  {product?.mrpPrice}
+                </span>
+                <span className='font-semibold text-teal-600'>
+                  {product?.discount}% off
+                </span>
               </div>
               <p className='text-sm'>
                 Inclusive of all taxes. Free Shipping above 1500.
@@ -135,7 +146,7 @@ const ProductDetails = () => {
             </Button>
           </div>
           <div className='mt-5'>
-            <p>Product description here </p>
+            <p>{product?.description} </p>
           </div>
         </section>
       </div>

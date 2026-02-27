@@ -9,6 +9,8 @@ const initialState = {
   loading: false,
   error: null as string | null,
   searchProducts: [],
+  totalElements: 0,
+  totalPages: 0,
 };
 
 export const fetchProductById = createAsyncThunk(
@@ -17,6 +19,7 @@ export const fetchProductById = createAsyncThunk(
     try {
       const response = await api.get(`/products/${productId}`);
       const data = response.data;
+      console.log("product detail", data);
       return data;
     } catch (error: any) {
       return rejectWithValue(error.message);
@@ -94,7 +97,9 @@ const productSlice = createSlice({
     });
     builder.addCase(getAllProducts.fulfilled, (state, action) => {
       state.loading = false;
-      state.products = action.payload;
+      state.products = action.payload.content;
+      state.totalElements = action.payload.totalElements;
+      state.totalPages = action.payload.totalPages;
     });
     builder.addCase(getAllProducts.rejected, (state, action) => {
       state.loading = false;

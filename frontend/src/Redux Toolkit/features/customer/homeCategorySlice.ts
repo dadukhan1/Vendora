@@ -5,9 +5,10 @@ import api from "../../../config/api";
 
 export const homeCategoryData = createAsyncThunk<any, any>(
   "home/fetchHomePageData",
-  async (category: string, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const response = await api.get(`/home`);
+      console.log("home cateogry data", response.data);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -17,10 +18,10 @@ export const homeCategoryData = createAsyncThunk<any, any>(
 
 export const createHomeCategory = createAsyncThunk<any, any>(
   "home/createHomeCategory",
-  async (category: string, { rejectWithValue }) => {
+  async (category, { rejectWithValue }) => {
     try {
       const response = await api.post(`/home`, { category });
-      console.log("Create home category response:", response);
+      console.log("Create home category response:", response.data);
       return response.data;
     } catch (error: any) {
       console.error("Error creating home category:", error);

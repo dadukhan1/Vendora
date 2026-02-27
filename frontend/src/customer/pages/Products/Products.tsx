@@ -1,6 +1,6 @@
 /** @format */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FilterSection from "./FilterSection";
 import {
   Divider,
@@ -11,6 +11,9 @@ import {
   Select,
 } from "@mui/material";
 import ProductCard from "./ProductCard";
+import { useParams } from "react-router";
+import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/store";
+import { getAllProducts } from "../../../Redux Toolkit/features/customer/productSlice";
 
 const product = {
   images: [
@@ -23,11 +26,19 @@ const product = {
 };
 
 const Products = () => {
+  const { products, totalPages } = useAppSelector((store) => store.products);
   const [sort, setSort] = useState("price_low");
+  const { categoryId } = useParams();
+  console.log("categoryid", categoryId);
+  const dispatch = useAppDispatch();
 
   const handleSort = (e: any) => {
     setSort(e.target.value);
   };
+
+  useEffect(() => {
+    dispatch(getAllProducts({}));
+  }, []);
 
   return (
     <div className='z-10 mt-10'>
@@ -60,14 +71,15 @@ const Products = () => {
           </div>
           <Divider />
           <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-5 px-5 justify-center mt-5'>
-            {[1, 1, 1, 1, 1].map((item, index) => (
-              <div key={index}>
-                <ProductCard item={product} />
-              </div>
-            ))}
+            {products.length > 0 &&
+              products.map((item, index) => (
+                <div key={index}>
+                  <ProductCard item={item} />
+                </div>
+              ))}
           </div>
           <div className='flex flex-col items-center justify-center p-5'>
-            <Pagination count={10} />
+            <Pagination count={totalPages} />
           </div>
         </section>
       </div>
