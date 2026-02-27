@@ -48,7 +48,7 @@ export const updateProduct = createAsyncThunk<any, any>(
   async ({ jwt, productData, productId }, { rejectWithValue }) => {
     try {
       const response = await api.put(
-        `/seller/products${productId}`,
+        `/seller/products/${productId}`,
         productData,
         {
           headers: {
@@ -84,7 +84,7 @@ const sellerProductsSlice = createSlice({
       })
       .addCase(fetchSellerProducts.fulfilled, (state, action) => {
         state.loading = false;
-        state.products = action.payload;
+        state.products = action.payload.products;
       })
       .addCase(fetchSellerProducts.rejected, (state, action) => {
         state.loading = false;

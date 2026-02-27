@@ -10,6 +10,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Button, IconButton } from "@mui/material";
 import { Edit } from "@mui/icons-material";
+import { useAppSelector } from "../../Redux Toolkit/store";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -31,25 +32,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
-) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
-
 export default function ProductTable() {
+  const { sellerProduct } = useAppSelector((store) => store);
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label='customized table'>
@@ -64,35 +48,48 @@ export default function ProductTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.name}>
-              <StyledTableCell component='th' scope='row'>
-                <div className='flex gap-1 flex-wrap'>
-                  {[1, 1, 1, 1].map((item, index) => (
-                    <img
-                      key={index}
-                      className='w-20 rounded-md'
-                      src='https://images.unsplash.com/photo-1738618805210-4de160295b34?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDF8fHxlbnwwfHx8fHw%3D'
-                      alt=''
-                    />
-                  ))}
-                </div>
-              </StyledTableCell>
-              <StyledTableCell align='right'>{row.calories}</StyledTableCell>
-              <StyledTableCell align='right'>{row.fat}</StyledTableCell>
-              <StyledTableCell align='right'>{row.carbs}</StyledTableCell>
-              <StyledTableCell align='right'>
-                <Button size="small">
-                    in_stock
-                </Button>
-              </StyledTableCell>
-              <StyledTableCell align='right'>
-                <IconButton color='primary' className='bg-teal-500'>
-                  <Edit />
-                </IconButton>
-              </StyledTableCell>
-            </StyledTableRow>
-          ))}
+          {sellerProduct?.products?.length > 0 ? (
+            sellerProduct.products.map((item) => (
+              <StyledTableRow key={item._id}>
+                <StyledTableCell component='th' scope='row'>
+                  <div className='flex gap-1 flex-wrap'>
+                    {item?.images?.map((image: string, index: number) => (
+                      <img
+                        key={index}
+                        className='w-20 rounded-md'
+                        src={image}
+                        alt=''
+                      />
+                    ))}
+                  </div>
+                </StyledTableCell>
+                <StyledTableCell align='right'>{item.title}</StyledTableCell>
+                <StyledTableCell align='right'>{item.mrpPrice}</StyledTableCell>
+                <StyledTableCell align='right'>
+                  {item.sellingPrice}
+                </StyledTableCell>
+                <StyledTableCell align='right'>
+                  <Button
+                    size='small'
+                    color={item.quantity > 0 ? "success" : "error"}
+                  >
+                    {item.quantity > 0 ? "In Stock" : "Out of Stock"}
+                  </Button>
+                </StyledTableCell>
+                <StyledTableCell align='right'>
+                  <IconButton color='primary' className='bg-teal-500'>
+                    <Edit />
+                  </IconButton>
+                </StyledTableCell>
+              </StyledTableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={6} align='center'>
+                No Products Found
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </TableContainer>
