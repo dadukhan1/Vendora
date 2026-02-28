@@ -7,8 +7,10 @@ import { Button, TextField } from "@mui/material";
 import PricingCard from "./PricingCard";
 import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/store";
 import { fetchCart } from "../../../Redux Toolkit/features/customer/cartSlice";
+import { useNavigate } from "react-router";
 
 const Cart = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { cart } = useAppSelector((store) => store.cart);
   useEffect(() => {
@@ -47,7 +49,12 @@ const Cart = () => {
           <section className='border border-gray-300 rounded-md'>
             <PricingCard />
             <div className='p-5'>
-              <Button sx={{ py: "11px" }} fullWidth variant='contained'>
+              <Button
+                onClick={() => navigate("/checkout/address")}
+                sx={{ py: "11px" }}
+                fullWidth
+                variant='contained'
+              >
                 BUY NOW
               </Button>
             </div>
