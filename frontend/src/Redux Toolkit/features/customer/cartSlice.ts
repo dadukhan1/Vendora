@@ -4,18 +4,19 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../../config/api";
 
 const initialState = {
-  cart: [],
+  cart: null as any,
   loading: false,
   error: null as string | null,
 };
 
 export const fetchCart = createAsyncThunk<any, any>(
   "cart/fetchCart",
-  async (jwt: string, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
+      const token = localStorage.getItem("token");
       const response = await api.get("/cart", {
         headers: {
-          Authorization: `Bearer ${jwt}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       const data = response.data;
@@ -28,13 +29,14 @@ export const fetchCart = createAsyncThunk<any, any>(
   },
 );
 
-const addItemToCart = createAsyncThunk<any, any>(
+export const addItemToCart = createAsyncThunk<any, any>(
   "cart/addItemToCart",
-  async ({ jwt, request }, { rejectWithValue }) => {
+  async (request, { rejectWithValue }) => {
     try {
+      const token = localStorage.getItem("token");
       const response = await api.post("/cart/items", request, {
         headers: {
-          Authorization: `Bearer ${jwt}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       const data = response.data;
@@ -47,13 +49,14 @@ const addItemToCart = createAsyncThunk<any, any>(
   },
 );
 
-const deleteCartItem = createAsyncThunk<any, any>(
+export const deleteCartItem = createAsyncThunk<any, any>(
   "cart/deleteCartItem",
-  async ({ jwt, cartItemId }, { rejectWithValue }) => {
+  async (cartItemId, { rejectWithValue }) => {
     try {
+      const token = localStorage.getItem("token");
       const response = await api.delete(`/cart/items/${cartItemId}`, {
         headers: {
-          Authorization: `Bearer ${jwt}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       const data = response.data;
@@ -66,16 +69,18 @@ const deleteCartItem = createAsyncThunk<any, any>(
   },
 );
 
-const updateCartItem = createAsyncThunk<any, any>(
+export const updateCartItem = createAsyncThunk<any, any>(
   "cart/updateCartItem",
-  async ({ jwt, cartItemId, quantity }, { rejectWithValue }) => {
+  async ({ cartItemId, quantity }, { rejectWithValue }) => {
     try {
+      console.log(cartItemId, quantity);
+      const token = localStorage.getItem("token");
       const response = await api.put(
         `/cart/items/${cartItemId}`,
         { quantity },
         {
           headers: {
-            Authorization: `Bearer ${jwt}`,
+            Authorization: `Bearer ${token}`,
           },
         },
       );
@@ -126,7 +131,9 @@ const cartSlice = createSlice({
     });
     builder.addCase(deleteCartItem.fulfilled, (state, action) => {
       state.loading = false;
-      state.cart = action.payload;
+      state.cart.cartItems = state.cart.cartItems.filter(
+        (item: any) => item._id !== action.meta.arg,
+      );
     });
     builder.addCase(deleteCartItem.rejected, (state, action) => {
       state.loading = false;
@@ -139,7 +146,10 @@ const cartSlice = createSlice({
     });
     builder.addCase(updateCartItem.fulfilled, (state, action) => {
       state.loading = false;
-      state.cart = action.payload;
+      // replace the single item inside cart.cartItems
+      state.cart.cartItems = state.cart.cartItems.map((item: any) =>
+        item._id === action.payload._id ? action.payload : item,
+      );
     });
     builder.addCase(updateCartItem.rejected, (state, action) => {
       state.loading = false;

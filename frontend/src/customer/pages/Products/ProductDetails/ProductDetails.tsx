@@ -19,6 +19,7 @@ import {
   useAppSelector,
 } from "../../../../Redux Toolkit/store";
 import { fetchProductById } from "../../../../Redux Toolkit/features/customer/productSlice";
+import { addItemToCart } from "../../../../Redux Toolkit/features/customer/cartSlice";
 import { useParams } from "react-router";
 
 const ProductDetails = () => {
@@ -37,6 +38,16 @@ const ProductDetails = () => {
   useEffect(() => {
     dispatch(fetchProductById(productId));
   }, [dispatch]);
+
+  const handleAddItemToCart = () => {
+    console.log(product);
+    const request = {
+      size: "M",
+      productId: product?._id,
+      quantity,
+    };
+    dispatch(addItemToCart(request));
+  };
 
   return (
     <div className='min-h-screen px-5 lg:px-20 pt-10'>
@@ -131,10 +142,11 @@ const ProductDetails = () => {
             <Button
               startIcon={<AddShoppingCart />}
               fullWidth
+              onClick={handleAddItemToCart}
               variant='outlined'
               sx={{ py: "1rem" }}
             >
-              Add to bag
+              Add to Cart
             </Button>
             <Button
               startIcon={<Favorite />}

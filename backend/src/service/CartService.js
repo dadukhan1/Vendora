@@ -20,17 +20,17 @@ class CartService {
     let totalDiscountedPrice = 0;
 
     cartItems.forEach((item) => {
-      totalPrice += item.mrpPrice * item.quantity;
-      totalDiscountedPrice += item.sellingPrice * item.quantity;
+      totalPrice += item.totalMrpPrice;
+      totalDiscountedPrice += item.totalSellingPrice;
     });
 
     cart.totalMrpPrice = totalPrice;
     cart.totalSellingPrice = totalDiscountedPrice;
     cart.totalItems = cartItems.length;
-    cart.discount = calculateDiscountPercentage(
-      totalPrice,
-      totalDiscountedPrice,
-    );
+    cart.discount =
+      totalPrice > 0
+        ? calculateDiscountPercentage(totalPrice, totalDiscountedPrice)
+        : 0;
     cart.cartItems = cartItems;
 
     return cart;

@@ -1,5 +1,6 @@
 /** @format */
 
+import mongoose from "mongoose";
 import { CartItem } from "../models/CartItem.js";
 
 class CartItemService {
@@ -16,10 +17,15 @@ class CartItemService {
     return deletedItem;
   }
 
-  async updateCartItem(userId, cartItemId, cartItemData) {
+  async updateCartItem(userId, cartItemId, quantity) {
+    if (quantity === 0) {
+      await CartItem.deleteOne({ _id: cartItemId, user: userId });
+      return { message: "Item removed from cart" };
+    }
+
     const cartItem = await CartItem.findOne({
       _id: cartItemId,
-      userId,
+      userId: userId,
     }).populate("product");
 
     if (!cartItem) {
@@ -27,15 +33,16 @@ class CartItemService {
     }
 
     const update = {
-      quantity: cartItemData.quantity,
-      mrpPrice: cartItemData.quantity * cartItem.product.mrpPrice,
-      sellingPrice: cartItemData.quantity * cartItem.product.sellingPrice,
+      quantity,
+      mrpPrice: quantity * cartItem.product.mrpPrice,
+      sellingPrice: quantity * cartItem.product.sellingPrice,
     };
 
-    const updatedItem = await CartItem.findByIdAndUpdate(cartItemId, update, {
-      new: true,
-      runValidators: true,
-    });
+    const updatedItem = await CartItem.findOneAndUpdate(
+      { _id: cartItemId, userId },
+      update,
+      { new: true, runValidators: true },
+    ).populate("product");
 
     return updatedItem;
   }

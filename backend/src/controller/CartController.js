@@ -19,8 +19,14 @@ class CartController {
 
   async addItemToCart(req, res) {
     try {
-      const user = await req.user;
-      const { size, quantity, productId } = req.body;
+      const user = req.user;
+      let { size, quantity, productId } = req.body;
+
+      quantity = Number(quantity);
+
+      if (!quantity || quantity <= 0) {
+        throw new Error("Quantity must be greater than zero");
+      }
 
       const product = await ProductService.findProductById(productId);
 
@@ -33,6 +39,7 @@ class CartController {
 
       res.status(200).json(cartItem);
     } catch (error) {
+      console.log("ERROR OCCURRED:", error.message);
       res.status(500).json({ message: error.message });
     }
   }
@@ -52,22 +59,23 @@ class CartController {
 
   async updateCartItem(req, res) {
     try {
-      const cartItemId = req.params.cartItemId;
+      const { cartItemId } = req.params;
       const { quantity } = req.body;
       const user = req.user;
 
-      let updatedCartItem;
-
-      if (quantity > 0) {
-        updatedCartItem = await CartItemService.updateCartItem(
-          user._id,
-          cartItemId,
-          { quantity },
-        );
+      if (quantity === undefined || isNaN(quantity) || quantity < 0) {
+        return res.status(400).json({ message: "Invalid quantity" });
       }
 
-      res.status(200).json(updatedCartItem);
+      const result = await CartItemService.updateCartItem(
+        user._id,
+        cartItemId,
+        Number(quantity),
+      );
+
+      return res.status(200).json(result);
     } catch (error) {
+      console.log(error.message);
       res.status(500).json({ message: error.message });
     }
   }
