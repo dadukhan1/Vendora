@@ -53,11 +53,12 @@ export const fetchSellers = createAsyncThunk<any, any>(
 
 export const fetchSellerReport = createAsyncThunk<any, any>(
   "sellers/fetchSellerReport",
-  async (jwt, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
+      const token = localStorage.getItem("token");
       const response = await api.get(`seller/report`, {
         headers: {
-          Authorization: `Bearer ${jwt}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       const data = response.data;
