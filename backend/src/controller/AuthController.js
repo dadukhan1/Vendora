@@ -6,7 +6,6 @@ import AuthService from "../service/AuthService.js";
 class AuthController {
   async sendLoginOtp(req, res) {
     try {
-      console.log("hahah")
       const { email } = req.body;
 
       if (!email) {

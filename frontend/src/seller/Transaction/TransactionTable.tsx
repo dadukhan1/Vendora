@@ -8,8 +8,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Button, IconButton } from "@mui/material";
-import { Edit } from "@mui/icons-material";
+import { useAppDispatch } from "../../Redux Toolkit/store";
+import { useEffect } from "react";
+import { fetchSellerTransactions } from "../../Redux Toolkit/features/seller/transactionSlice";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -50,6 +51,12 @@ const rows = [
 ];
 
 export default function TransactionTable() {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchSellerTransactions());
+  }, [dispatch]);
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label='customized table'>

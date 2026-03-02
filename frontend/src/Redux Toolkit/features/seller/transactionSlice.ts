@@ -9,13 +9,14 @@ const initialState = {
   error: null as string | null,
 };
 
-const fetchSellerTransactions = createAsyncThunk<any, any>(
+export const fetchSellerTransactions = createAsyncThunk<any, any>(
   "seller/fetchSellerTransactions",
-  async (jwt, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
+      const token = localStorage.getItem("token");
       const response = await api.get(`/transactions/seller`, {
         headers: {
-          Authorization: `Bearer ${jwt}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       const data = response.data;

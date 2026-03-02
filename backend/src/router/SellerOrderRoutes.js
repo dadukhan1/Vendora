@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get("/", sellerAuthMiddleware, OrderController.getSellerOrders);
 
-router.patch(
+router.put(
   "/:orderId/status/:orderStatus",
   sellerAuthMiddleware,
   OrderController.updateOrderStatus,

@@ -9,7 +9,12 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Button, Chip, Menu, MenuItem } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../Redux Toolkit/store";
+import {
+  fetchSellerOrders,
+  updateOrderStatus,
+} from "../../Redux Toolkit/features/seller/sellerOrderSlice";
 
 const orderStatus = [
   { color: "#ffa500", label: "PENDING" },
@@ -18,6 +23,7 @@ const orderStatus = [
   { color: "#1E90FF", label: "SHIPPED" },
   { color: "#32CD32", label: "DELIVERED" },
   { color: "#FF0000", label: "CANCELLED" },
+  { color: "green", label: "PAID" },
 ];
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -59,6 +65,8 @@ const rows = [
 ];
 
 export default function OrderTable() {
+  const dispatch = useAppDispatch();
+  const { orders } = useAppSelector((store) => store.sellerOrder);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -70,8 +78,13 @@ export default function OrderTable() {
 
   const handleUpdateItem = (id: any, status: any) => {
     console.log("update item", id, status);
+    dispatch(updateOrderStatus({ orderId: id, status }));
     handleClose();
   };
+
+  useEffect(() => {
+    dispatch(fetchSellerOrders());
+  }, [dispatch]);
 
   return (
     <TableContainer component={Paper}>
@@ -86,33 +99,35 @@ export default function OrderTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.name}>
+          {orders.map((order) => (
+            <StyledTableRow key={order?._id}>
               <StyledTableCell component='th' scope='row'>
-                {row.name}
+                {order?._id}
               </StyledTableCell>
               <StyledTableCell align='right'>
                 <div className='flex gap-1 flex-wrap'>
-                  {[1, 1, 1].map((item, index) => (
+                  {order?.orderItems?.map((orderItem, index) => (
                     <div key={index} className='flex gap-3 flex-wrap'>
                       <img
                         className='w-20 rounded-md'
-                        src='https://images.unsplash.com/photo-1738618805210-4de160295b34?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDF8fHxlbnwwfHx8fHw%3D'
+                        src={orderItem?.product?.images[0]}
                         alt=''
                       />
                       <div className='flex flex-col items-start py-2'>
-                        <h1>Title: Men Shirt</h1>
-                        <h1>Price: Rs.1999</h1>
-                        <h1>Color: Blue</h1>
-                        <h1>Size: M</h1>
+                        <h1>Title: {orderItem?.product?.title}</h1>
+                        <h1>Price: {orderItem?.product?.sellingPrice}</h1>
+                        <h1>Color: {orderItem?.product?.color}</h1>
+                        <h1>Size: {orderItem?.product?.size}</h1>
                       </div>
                     </div>
                   ))}
                 </div>
               </StyledTableCell>
-              <StyledTableCell align='right'>{row.fat}</StyledTableCell>
               <StyledTableCell align='right'>
-                <Chip color='secondary' label='Delivered' />
+                {`${order?.shippingAddress?.address ?? ""} ${order?.shippingAddress?.locality ?? ""}`}
+              </StyledTableCell>
+              <StyledTableCell align='right'>
+                <Chip color='secondary' label={order.orderStatus} />
               </StyledTableCell>
               <StyledTableCell align='right'>
                 <Button onClick={handleClick}>Status</Button>
@@ -130,7 +145,7 @@ export default function OrderTable() {
                 >
                   {orderStatus.map((status) => (
                     <MenuItem
-                      onClick={() => handleUpdateItem(123, status)}
+                      onClick={() => handleUpdateItem(order?._id, status.label)}
                     >
                       {status.label}
                     </MenuItem>

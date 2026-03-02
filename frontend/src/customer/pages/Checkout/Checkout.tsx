@@ -7,13 +7,20 @@ import {
   Modal,
   Radio,
   RadioGroup,
-  Typography,
 } from "@mui/material";
 import AddressCard from "./AddressCard";
 import { Add } from "@mui/icons-material";
-import { useState, type ChangeEvent } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import AddressForm from "./AddressForm";
 import PricingCard from "../Cart/PricingCard";
+import { useNavigate } from "react-router";
+import {
+  createCheckout,
+  createOrder,
+} from "../../../Redux Toolkit/features/customer/orderSlice";
+import { useDispatch } from "react-redux";
+import { useAppSelector } from "../../../Redux Toolkit/store";
+import { fetchAddresses } from "../../../Redux Toolkit/features/customer/addressSlice";
 
 const style = {
   position: "absolute",
@@ -27,15 +34,69 @@ const style = {
 };
 
 const Checkout = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const [selectedAddress, setSelectedAddress] = useState<number>(0);
+  const [selectedAddress, setSelectedAddress] = useState("");
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSelectedAddress(Number(e.target.value));
+    setSelectedAddress(e.target.value);
   };
+
+  const { cart } = useAppSelector((store) => store.cart);
+  const { addresses } = useAppSelector((store) => store.address);
+  const { currentOrder } = useAppSelector((store) => store.order); // 👈 currentOrder lo
+
+  const handlePayment = async () => {
+    if (!selectedAddress) {
+      alert("Pehle address select karo!");
+      return;
+    }
+
+    // Step 1 - pehle order banao
+    const orderResult = await dispatch(
+      createOrder({
+        address: selectedAddress,
+        paymentGateway: "stripe",
+      }) as any,
+    );
+
+    const order = orderResult.payload;
+    console.log("Order created:", order);
+
+    if (!order) {
+      console.error("Order doesn't created!");
+      return;
+    }
+
+    console.log(
+      "before ------------------------------ ",
+      order._id,
+      order.totalSellingPrice,
+    );
+
+    console.log("starting checking out");
+    // Step 2 - phir checkout session banao
+    const checkoutResult = await dispatch(
+      createCheckout({
+        orderId: order._id,
+        totalSellingPrice: order.totalSellingPrice,
+      }) as any,
+    );
+
+    console.log("Checkout result:", checkoutResult.payload);
+
+    if (checkoutResult.payload?.url) {
+      window.location.href = checkoutResult.payload.url; // ✅ Stripe pe bhejo
+    }
+  };
+
+  useEffect(() => {
+    dispatch(fetchAddresses());
+  }, []);
 
   return (
     <div className='pt-10 px-5 sm:px-10 md:px-44 lg:px-60 min-h-screen'>
@@ -50,12 +111,12 @@ const Checkout = () => {
           <div className='text-xs font-medium space-y-5'>
             <p>Saved Addresses</p>
             <div className='space-y-3'>
-              {[1, 2, 3, 4, 5].map((item, index) => (
+              {addresses?.map((address: any) => (
                 <AddressCard
-                  value={item}
+                  address={address}
                   selectedValue={selectedAddress}
                   handleChange={handleChange}
-                  key={index}
+                  key={address._id}
                 />
               ))}
             </div>
@@ -65,7 +126,7 @@ const Checkout = () => {
           </div>
         </div>
         <div className='col-span-1 text-sm space-y-3'>
-          <section className='space-y-3 border p-5 rounded-md'>
+          <section className='space-y-3 border p-5 rounded-lg'>
             <h1 className='text-teal-600 font-medium pb-2 text-center'>
               Choose Payment Gateway
             </h1>
@@ -77,10 +138,15 @@ const Checkout = () => {
               />
             </RadioGroup>
           </section>
-          <section className='border border-gray-300'>
+          <section className='border border-gray-300 rounded-lg'>
             <PricingCard />
             <div className='p-5'>
-              <Button variant='contained' fullWidth sx={{ py: "12px" }}>
+              <Button
+                onClick={handlePayment}
+                variant='contained'
+                fullWidth
+                sx={{ py: "12px" }}
+              >
                 Checkout
               </Button>
             </div>
@@ -94,7 +160,7 @@ const Checkout = () => {
         aria-describedby='modal-modal-description'
       >
         <Box sx={style}>
-          <AddressForm />
+          <AddressForm paymentGateway={"stripe"} />
         </Box>
       </Modal>
     </div>

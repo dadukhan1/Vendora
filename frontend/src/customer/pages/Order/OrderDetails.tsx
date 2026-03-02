@@ -3,16 +3,28 @@
 import { Payment } from "@mui/icons-material";
 import { Box, Button, Divider } from "@mui/material";
 import OrderStepper from "./OrderStepper";
+import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/store";
+import { useEffect } from "react";
+import {
+  orderById,
+  orderItemById,
+} from "../../../Redux Toolkit/features/customer/orderSlice";
+import { useParams } from "react-router";
 
 const OrderDetails = () => {
+  const dispatch = useAppDispatch();
+  const { orderItemId, orderId } = useParams();
+  const { orderItem, currentOrder } = useAppSelector((store) => store.order);
+
+  useEffect(() => {
+    dispatch(orderItemById(orderItemId));
+    dispatch(orderById(orderId));
+  }, []);
+
   return (
     <Box className='space-y-5'>
       <section className='flex flex-col gap-5 justify-center items-center'>
-        <img
-          className='w-40'
-          src='https://images.unsplash.com/photo-1610300433938-afbffd42b040?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDd8fHxlbnwwfHx8fHw%3D'
-          alt=''
-        />
+        <img className='w-40' src={orderItem?.product?.images[0]} alt='' />
         <div className='text-sm space-y-1 text-center'>
           <h1>{"Rana g store"}</h1>
           <p>{"Turquoise Blue Stonework Satin Designer saree"}</p>
@@ -26,11 +38,17 @@ const OrderDetails = () => {
         <h1 className='font-bold pb-3'>Delivery Address</h1>
         <div className='text-sm space-y-2'>
           <div className='flex gap-5 font-medium'>
-            <p>Pablo Reeze </p>
+            {/* <p>{order?.user?.fullName}</p> */}
             <Divider flexItem orientation='vertical' />
             <p>0876786780</p>
           </div>
-          <p>Dummy address NYC new city</p>
+          <p>
+            {currentOrder?.shippingAddress?.address}
+            {currentOrder?.shippingAddress?.locality}
+            {currentOrder?.shippingAddress?.city}
+            {currentOrder?.shippingAddress?.state}
+            {currentOrder?.shippingAddress?.pinCode}
+          </p>
         </div>
       </section>
       <section className='border border-gray-200 space-y-4'>
@@ -39,10 +57,13 @@ const OrderDetails = () => {
             <p className='font-black'>Total Item Price</p>
             <p>
               You saved{" "}
-              <span className='text-green-400'>75000 on this item</span>
+              <span className='text-green-400'>
+                {currentOrder?.mrpPrice - currentOrder?.totalSellingPrice} on
+                this item
+              </span>
             </p>
           </div>
-          <p>12632</p>
+          <p>{currentOrder?.totalSellingPrice}</p>
         </div>
         <div className='px-5'>
           <div className='bg-teal-50 p-4 text-xs font-medium flex items-center gap-3'>

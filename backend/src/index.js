@@ -18,16 +18,29 @@ import { SellerReportRouter } from "./router/SellerReportRotues.js";
 import HomeCategoryRoutes from "./router/HomeCategoryRoutes.js";
 import DealRouter from "./router/DealRoutes.js";
 import cors from "cors";
+import { stripeWebhooks } from "./controller/stripWebhook.js";
+import { createCheckoutSession } from "./controller/createCheckoutSesssion.js";
+import AddressRouter from "./router/AddressRoutes.js";
 
 const app = express();
 
-app.use(express.json());
 app.use(
   cors({
     origin: "http://localhost:5173", // ✅ allow your frontend
     credentials: true, // if you want cookies/auth headers
   }),
 );
+
+// routes file mein
+app.post(
+  "/api/webhook",
+  express.raw({ type: "application/json" }),
+  stripeWebhooks,
+);
+
+app.use(express.json());
+
+app.post("/api/create-checkout", createCheckoutSession);
 
 app.get("/", (req, res) => {
   res.send("Welcome to Vendora");
@@ -41,6 +54,8 @@ app.use("/api/products", ProductRouter);
 app.use("/api/seller/products", SellerProductRouter);
 
 app.use("/api/cart", CartRouter);
+
+app.use("/api/address", AddressRouter);
 
 app.use("/api/order", OrderRouter);
 app.use("/api/seller/order", SellerOrderRouter);

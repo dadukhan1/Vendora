@@ -1,9 +1,12 @@
 /** @format */
 
-import { Box, Grid, TextField } from "@mui/material";
+import { Box, Button, Grid, TextField } from "@mui/material";
 import { useFormik } from "formik";
+import { useAppDispatch } from "../../../Redux Toolkit/store";
+import { addAddress } from "../../../Redux Toolkit/features/customer/addressSlice";
 
-const AddressForm = () => {
+const AddressForm = ({ paymentGateway }) => {
+  const dispatch = useAppDispatch();
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -16,6 +19,7 @@ const AddressForm = () => {
     },
     onSubmit: (value) => {
       console.log("values: ", value);
+      dispatch(addAddress(value));
     },
   });
 
@@ -100,6 +104,11 @@ const AddressForm = () => {
               value={formik.values.state}
               onChange={formik.handleChange}
             />
+          </Grid>
+          <Grid size={{ xs: 12 }}>
+            <Button fullWidth variant='contained' type='submit'>
+              Add Address
+            </Button>
           </Grid>
         </Grid>
       </form>

@@ -1,9 +1,11 @@
+/** @format */
 
-export const OrderStatus = Object.freeze({
-  PENDING: "PENDING",
+// orderStatus.js
+export const OrderStatus = {
   PLACED: "PLACED",
-  CONFIRMED: "CONFIRMED",
+  PENDING: "PENDING",
+  PAID: "PAID",
   SHIPPED: "SHIPPED",
   DELIVERED: "DELIVERED",
-  CANCELED: "CANCELED",
-});
+  CANCELLED: "CANCELLED",
+};

@@ -12,13 +12,14 @@ const intialState = {
   orderPayment: null,
 };
 
-const orderHistory = createAsyncThunk<any, any>(
+export const orderHistory = createAsyncThunk<any, any>(
   "order/orderHistory",
-  async (jwt, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get("/order/history", {
+      const token = localStorage.getItem("token");
+      const response = await api.get("/order/user", {
         headers: {
-          Authorization: `Bearer ${jwt}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       const data = response.data;
@@ -31,13 +32,14 @@ const orderHistory = createAsyncThunk<any, any>(
   },
 );
 
-const orderById = createAsyncThunk<any, any>(
+export const orderById = createAsyncThunk<any, any>(
   "order/orderById",
-  async ({ jwt, orderId }, { rejectWithValue }) => {
+  async (orderId, { rejectWithValue }) => {
     try {
+      const token = localStorage.getItem("token");
       const response = await api.get(`/order/${orderId}`, {
         headers: {
-          Authorization: `Bearer ${jwt}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       const data = response.data;
@@ -50,10 +52,11 @@ const orderById = createAsyncThunk<any, any>(
   },
 );
 
-const createOrder = createAsyncThunk<any, any>(
+export const createOrder = createAsyncThunk<any, any>(
   "order/createOrder",
-  async ({ address, jwt, paymentGateway }, { rejectWithValue }) => {
+  async ({ address, paymentGateway }, { rejectWithValue }) => {
     try {
+      const token = localStorage.getItem("token");
       const response = await api.post(
         "/order",
         { shippingAddress: address },
@@ -62,12 +65,12 @@ const createOrder = createAsyncThunk<any, any>(
             paymentGateway,
           },
           headers: {
-            Authorization: `Bearer ${jwt}`,
+            Authorization: `Bearer ${token}`,
           },
         },
       );
       const data = response.data;
-      console.log("Create order response:", data);
+      console.log("Create order response:", response);
       return data;
     } catch (error) {
       console.error("Error creating order:", error);
@@ -76,13 +79,14 @@ const createOrder = createAsyncThunk<any, any>(
   },
 );
 
-const orderItemById = createAsyncThunk<any, any>(
+export const orderItemById = createAsyncThunk<any, any>(
   "order/orderItemById",
-  async ({ jwt, orderItemId }, { rejectWithValue }) => {
+  async (orderItemId, { rejectWithValue }) => {
     try {
+      const token = localStorage.getItem("token");
       const response = await api.get(`/order/item/${orderItemId}`, {
         headers: {
-          Authorization: `Bearer ${jwt}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       const data = response.data;
@@ -95,29 +99,29 @@ const orderItemById = createAsyncThunk<any, any>(
   },
 );
 
-const paymentSuccess = createAsyncThunk<any, any>(
-  "order/paymentSuccess",
-  async ({ jwt, paymentId, paymentLinkId }, { rejectWithValue }) => {
+export const createCheckout = createAsyncThunk<any, any>(
+  "order/createCheckout",
+  async ({ orderId, totalSellingPrice }, { rejectWithValue }) => {
     try {
-      const response = await api.get(`/order/item/${paymentId}`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
+      console.log("data of checkout", orderId, totalSellingPrice);
+      const token = localStorage.getItem("token");
+      const response = await api.post(
+        "/create-checkout",
+        { orderId, totalSellingPrice },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-        params: {
-          paymentLinkId,
-        },
-      });
-      const data = response.data;
-      console.log("Payment Success response:", data);
-      return data;
+      );
+      return response.data; // { url: "stripe url" }
     } catch (error) {
-      console.error("Error fetching order payment :", error);
       return rejectWithValue(error);
     }
   },
 );
 
-const cancelOrder = createAsyncThunk<any, any>(
+export const cancelOrder = createAsyncThunk<any, any>(
   "order/cancelOrder",
   async ({ orderId, jwt }, { rejectWithValue }) => {
     try {
@@ -151,7 +155,7 @@ const orderSlice = createSlice({
     });
     builder.addCase(orderHistory.fulfilled, (state, action) => {
       state.loading = false;
-      state.orders = action.payload;
+      state.orders = action.payload.orders;
     });
     builder.addCase(orderHistory.rejected, (state, action) => {
       state.loading = false;
@@ -194,15 +198,14 @@ const orderSlice = createSlice({
       state.loading = false;
       state.error = action.error.message as string;
     });
-    builder.addCase(paymentSuccess.pending, (state) => {
+    builder.addCase(createCheckout.pending, (state) => {
       state.loading = true;
-      state.error = null;
     });
-    builder.addCase(paymentSuccess.fulfilled, (state, action) => {
+    builder.addCase(createCheckout.fulfilled, (state, action) => {
       state.loading = false;
       state.orderPayment = action.payload;
     });
-    builder.addCase(paymentSuccess.rejected, (state, action) => {
+    builder.addCase(createCheckout.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message as string;
     });

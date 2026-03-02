@@ -24,6 +24,8 @@ class SellerService {
 
     if (existingEmail) throw new Error("Email already exists");
 
+    console.log("111");
+    console.log(pickupAddress);
     const savedAddress = await Address.create(pickupAddress);
 
     const newSeller = new Seller({

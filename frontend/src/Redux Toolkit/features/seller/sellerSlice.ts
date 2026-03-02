@@ -32,7 +32,7 @@ export const fetchSellerProfile = createAsyncThunk<any, any>(
   },
 );
 
-const fetchSellers = createAsyncThunk<any, any>(
+export const fetchSellers = createAsyncThunk<any, any>(
   "sellers/fetchSellers",
   async (status, { rejectWithValue }) => {
     try {
@@ -51,7 +51,7 @@ const fetchSellers = createAsyncThunk<any, any>(
   },
 );
 
-const fetchSellerReport = createAsyncThunk<any, any>(
+export const fetchSellerReport = createAsyncThunk<any, any>(
   "sellers/fetchSellerReport",
   async (jwt, { rejectWithValue }) => {
     try {
@@ -70,7 +70,7 @@ const fetchSellerReport = createAsyncThunk<any, any>(
   },
 );
 
-const fetchSellerById = createAsyncThunk<any, any>(
+export const fetchSellerById = createAsyncThunk<any, any>(
   "sellers/fetchSellerById",
   async (id, { rejectWithValue }) => {
     try {
@@ -89,7 +89,7 @@ const fetchSellerById = createAsyncThunk<any, any>(
   },
 );
 
-const updateSellerAccountStatus = createAsyncThunk<any, any>(
+export const updateSellerAccountStatus = createAsyncThunk<any, any>(
   "sellers/updateSellerAccountStatus",
   async ({ id, status }, { rejectWithValue }) => {
     try {

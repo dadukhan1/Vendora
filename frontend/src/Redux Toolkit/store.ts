@@ -21,6 +21,7 @@ import sellerSlice from "./features/seller/sellerSlice.ts";
 import transactionSlice from "./features/seller/transactionSlice.ts";
 import adminSlice from "./features/admin/adminSlice.ts";
 import couponAdminSlice from "./features/admin/couponSlice.ts";
+import addressSlice from "./features/customer/addressSlice.ts";
 
 const rootReducer = combineReducers({
   auth: authSlice,
@@ -30,6 +31,7 @@ const rootReducer = combineReducers({
   cart: cartSlice,
   coupon: couponSlice,
   homeCategory: homeCategorySlice,
+  address: addressSlice,
 
   sellerAuth: sellerAthSlice,
   sellerOrder: sellerOrderSlice,
@@ -40,7 +42,6 @@ const rootReducer = combineReducers({
 
   admin: adminSlice,
   adminCoupon: couponAdminSlice,
-  
 });
 
 const store = configureStore({

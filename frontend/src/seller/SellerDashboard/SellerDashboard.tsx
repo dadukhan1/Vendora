@@ -1,10 +1,19 @@
 /** @format */
 
+import { useEffect } from "react";
 import Navbar from "../../common/Navbar";
+import { useAppDispatch } from "../../Redux Toolkit/store.ts";
 import SellerRoutes from "../../routes/SellerRoutes.tsx";
 import SellerDrawerList from "../SideBar/SellerDrawerList.tsx";
+import { fetchSellerReport } from "../../Redux Toolkit/features/seller/sellerSlice.ts";
 
 const SellerDashboard = () => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchSellerReport());
+  }, []);
+
   return (
     <div className='min-h-screen'>
       <Navbar DrawerList={SellerDrawerList} />

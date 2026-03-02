@@ -4,24 +4,17 @@ import mongoose from "mongoose";
 
 const addressSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      // required: true,
     },
-    locality: {
-      type: String,
-    },
-    pinCode: {
-      type: Number,
-    },
-    state: {
-      type: String,
-    },
-    address: {
-      type: String,
-    },
-    mobile: {
-      type: String,
-    },
+    name: String,
+    locality: String,
+    pinCode: Number,
+    state: String,
+    address: String,
+    mobile: String,
   },
   { timestamps: true },
 );

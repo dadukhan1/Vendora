@@ -12,21 +12,28 @@ class OrderService {
     session.startTransaction();
 
     try {
-      //   ADDRESS
-      // create address if needed
-      if (!shippingAddress._id) {
-        shippingAddress = await Address.create([shippingAddress], { session });
-        shippingAddress = shippingAddress[0];
+      // Check if address already exists
+      let existingAddress = await Address.findOne({
+        _id: shippingAddress,
+      }).session(session);
+
+      // Create address if it doesn't exist
+      if (!existingAddress) {
+        console.log(
+          "Address not found. Creating new shipping address:",
+          shippingAddress,
+        );
+        existingAddress = await Address.create(shippingAddress, { session });
+        existingAddress = existingAddress[0]; // create returns an array
       }
 
-      // attach address to user if missing
-      if (!user.addresses.includes(shippingAddress._id)) {
-        user.addresses.push(shippingAddress._id);
+      // Attach address to user if missing
+      if (!user.addresses.includes(existingAddress._id)) {
+        user.addresses.push(existingAddress._id);
         await user.save({ session });
       }
 
-      //   GROUP ITEMS BY SELLER
-
+      // Group items by seller
       const itemsBySeller = cart.cartItems.reduce((acc, item) => {
         const sellerId = item.product.seller.toString();
         acc[sellerId] = acc[sellerId] || [];
@@ -36,7 +43,7 @@ class OrderService {
 
       const orders = [];
 
-      //   CREATE ORDERS
+      // Create orders per seller
       for (const [sellerId, cartItems] of Object.entries(itemsBySeller)) {
         let totalSellingPrice = 0;
         let totalMrpPrice = 0;
@@ -56,7 +63,7 @@ class OrderService {
           };
         });
 
-        // bulk insert order items
+        // Bulk insert order items
         const orderItems = await OrderItem.insertMany(orderItemsPayload, {
           session,
         });
@@ -66,7 +73,7 @@ class OrderService {
             {
               user: user._id,
               seller: sellerId,
-              shippingAddress: shippingAddress._id,
+              shippingAddress: existingAddress._id,
               orderItems: orderItems.map((i) => i._id),
               totalItems,
               totalMrpPrice,
@@ -77,17 +84,17 @@ class OrderService {
           { session },
         );
 
-        orders.push(order[0]._id);
+        orders.push(order[0]);
       }
 
-      //   CLEAR CART
+      // Clear cart
       cart.cartItems = [];
       await cart.save({ session });
 
       await session.commitTransaction();
       session.endSession();
 
-      return orders;
+      return orders[0];
     } catch (error) {
       await session.abortTransaction();
       session.endSession();
@@ -119,7 +126,7 @@ class OrderService {
       throw new Error("Invalid Order Item Id");
     }
 
-    const orderItem = await OrderItem.findById(orderItemId);
+    const orderItem = await OrderItem.findById(orderItemId).populate("product");
     if (!orderItem) {
       throw new Error("Order Item not found");
     }
@@ -134,7 +141,7 @@ class OrderService {
         { path: "shippingAddress" },
       ])
       .exec();
-  } 
+  }
 
   async sellerOrderHistory(sellerId) {
     return await Order.find({ seller: sellerId })
@@ -147,46 +154,43 @@ class OrderService {
       .exec();
   }
 
-  async updateOrderStatus(orderId, status) {
-    if (!orderId) throw new Error("Order ID required");
+  async updateOrderStatus(orderId, newStatus) {
+    if (!orderId) throw new Error("Order ID is required");
 
-    const allowedStatuses = [
-      "PENDING",
-      "PAID",
-      "SHIPPED",
-      "DELIVERED",
-      "CANCELLED",
-    ];
-
-    if (!allowedStatuses.includes(status)) {
+    // Validate newStatus exists in enum
+    if (!Object.values(OrderStatus).includes(newStatus)) {
       throw new Error("Invalid order status");
     }
 
     const order = await Order.findById(orderId);
     if (!order) throw new Error("Order not found");
 
-    const invalidTransitions = {
-      DELIVERED: ["PENDING", "PAID", "SHIPPED"],
-      CANCELLED: ["PENDING", "PAID", "SHIPPED", "DELIVERED"],
+    // Define allowed transitions
+    const allowedTransitions = {
+      [OrderStatus.PLACED]: [OrderStatus.PENDING, OrderStatus.CANCELLED],
+      [OrderStatus.PENDING]: [OrderStatus.PAID, OrderStatus.CANCELLED],
+      [OrderStatus.PAID]: [OrderStatus.SHIPPED, OrderStatus.CANCELLED],
+      [OrderStatus.SHIPPED]: [OrderStatus.DELIVERED],
+      [OrderStatus.DELIVERED]: [],
+      [OrderStatus.CANCELLED]: [],
     };
 
-    if (invalidTransitions[order.status]?.includes(status)) {
+    const currentStatus = order.orderStatus;
+
+    if (!allowedTransitions[currentStatus].includes(newStatus)) {
       throw new Error(
-        `Cannot change order status from ${order.status} to ${status}`,
+        `Cannot change status from ${currentStatus} to ${newStatus}`,
       );
     }
 
-    return await Order.findByIdAndUpdate(
-      orderId,
-      { $set: { status } },
-      { new: true, runValidators: true },
-    )
-      .populate([
-        { path: "seller" },
-        { path: "orderItems", populate: { path: "product" } },
-        { path: "shippingAddress" },
-      ])
-      .exec();
+    order.orderStatus = newStatus;
+    await order.save();
+
+    // Return populated order
+    return await Order.findById(orderId)
+      .populate("seller")
+      .populate({ path: "orderItems", populate: { path: "product" } })
+      .populate("shippingAddress");
   }
 
   async cancelOrder(orderId) {
@@ -201,7 +205,7 @@ class OrderService {
 
     return await Order.findByIdAndUpdate(
       orderId,
-      { $set: { status: OrderStatus.CANCELED } },
+      { $set: { orderStatus: OrderStatus.CANCELED } },
       { new: true, runValidators: true },
     )
       .populate([

@@ -25,6 +25,12 @@ const transactionSchema = new Schema(
       type: Number,
       required: true,
     },
+    stripeSessionId: {
+      type: String,
+    },
+    stripePaymentIntentId: {
+      type: String,
+    },
     type: {
       type: String,
       enum: ["CREDIT", "DEBIT"],

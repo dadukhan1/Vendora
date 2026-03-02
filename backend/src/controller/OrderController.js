@@ -1,12 +1,13 @@
 /** @format */
 
+import { OrderStatus } from "../domain/OrderStatus.js";
 import CartService from "../service/CartService.js";
 import OrderService from "../service/OrderService.js";
 
 class OrderController {
   async createOrder(req, res) {
     const { shippingAddress } = req.body;
-    const { paymentMethod } = req.query;
+    const { paymentMethod } = req.params;
     const jwt = req.headers.authorization;
 
     try {
@@ -20,6 +21,7 @@ class OrderController {
       );
       return res.status(200).json(orders);
     } catch (error) {
+      console.log(error.message);
       return res
         .status(500)
         .json({ message: `Error in creating order: ${error.message}` });
@@ -47,6 +49,7 @@ class OrderController {
   async getItemById(req, res) {
     try {
       const { orderItemId } = req.params;
+      console.log(orderItemId);
       if (!orderItemId) {
         return res.status(400).json({ message: "OrderItem ID is required" });
       }
@@ -58,6 +61,7 @@ class OrderController {
 
       return res.status(200).json(orderItem);
     } catch (error) {
+      console.log("get item by id erro", error.message);
       return res.status(500).json({ message: error.message });
     }
   }
@@ -65,7 +69,6 @@ class OrderController {
   async getSellerOrders(req, res) {
     try {
       const sellerId = req.seller._id;
-      console.log(sellerId); // seller must be authenticated
 
       if (!sellerId) {
         return res.status(400).json({ message: "Seller ID is required" });
@@ -97,21 +100,39 @@ class OrderController {
         orders,
       });
     } catch (error) {
+      console.log(error.message);
       next(error);
     }
   }
 
+  // OrderController.js
+
   async updateOrderStatus(req, res) {
     try {
       const { orderId, orderStatus } = req.params;
-      const updateOrder = await OrderService.updateOrderStatus(
+
+      // Sanitize: trim + uppercase + map to enum
+      const statusMap = {
+        placed: OrderStatus.PLACED,
+        pending: OrderStatus.PENDING,
+        paid: OrderStatus.PAID,
+        shipped: OrderStatus.SHIPPED,
+        delivered: OrderStatus.DELIVERED,
+        cancelled: OrderStatus.CANCELLED,
+      };
+
+      const sanitizedStatus = statusMap[orderStatus.toLowerCase().trim()];
+      if (!sanitizedStatus) throw new Error("Invalid order status");
+
+      const updatedOrder = await OrderService.updateOrderStatus(
         orderId,
-        orderStatus,
+        sanitizedStatus,
       );
 
-      return res.status(200).json(updateOrder);
+      return res.status(200).json(updatedOrder);
     } catch (error) {
-      return res.status(401).json({ error: error.message });
+      console.log(error.message);
+      return res.status(400).json({ error: error.message });
     }
   }
 

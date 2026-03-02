@@ -107,6 +107,7 @@ class SellerController {
 
       return res.status(200).json(authResponse);
     } catch (error) {
+      console.log(error.message);
       return res
         .status(error instanceof Error ? 404 : 500)
         .json({ message: error.message });
