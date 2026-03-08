@@ -92,9 +92,11 @@ export const updateSellerAccountStatus = createAsyncThunk<any, any>(
   "sellers/updateSellerAccountStatus",
   async ({ id, status }, { rejectWithValue }) => {
     try {
+      console.log("the udapte slice", id, status);
+      const token = localStorage.getItem("token");
       const response = await api.put(`admin/seller/${id}/status/${status}`, {
         headers: {
-          Authorization: `Bearer ${jwt}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       const data = response.data;

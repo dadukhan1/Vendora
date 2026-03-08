@@ -10,14 +10,20 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import {
   FormControl,
+  IconButton,
   InputLabel,
+  Menu,
   MenuItem,
   Select,
   type SelectChangeEvent,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../Redux Toolkit/store";
-import { fetchSellers } from "../../Redux Toolkit/features/seller/sellerSlice";
+import {
+  fetchSellers,
+  updateSellerAccountStatus,
+} from "../../Redux Toolkit/features/seller/sellerSlice";
+import { Edit } from "@mui/icons-material";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -90,6 +96,25 @@ export default function SellerTable() {
     setStatus(event.target.value as string);
   };
 
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleUpdateSeller = (id: any, status: any) => {
+    console.log("update item", id, status);
+    dispatch(updateSellerAccountStatus({ id, status }));
+    handleClose();
+  };
+
+  useEffect(() => {
+    // dispatch(fetchSellerOrders());
+  }, [dispatch]);
+
   useEffect(() => {
     dispatch(fetchSellers(status));
   }, [status]);
@@ -142,9 +167,35 @@ export default function SellerTable() {
                   {seller?.bussinessDetails?.bussinessName}
                 </StyledTableCell>
                 <StyledTableCell align='right'>
-                  {seller.accountStatus}
+                  {seller?.accountStatus}
                 </StyledTableCell>
-                <StyledTableCell align='right'>{"w"}</StyledTableCell>
+                <StyledTableCell align='right'>
+                  <IconButton onClick={handleClick}>
+                    <Edit color='warning' />
+                  </IconButton>
+                  <Menu
+                    id='fade-menu'
+                    slotProps={{
+                      list: {
+                        "aria-labelledby": "fade-button",
+                      },
+                    }}
+                    // slots={{ transition: Fade }}
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                  >
+                    {accountStatus.map((status) => (
+                      <MenuItem
+                        onClick={() =>
+                          handleUpdateSeller(seller?._id, status.status)
+                        }
+                      >
+                        {status.title}
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                </StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>

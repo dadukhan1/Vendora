@@ -8,10 +8,8 @@ import {
   ElectricBolt,
   Home,
   IntegrationInstructions,
-  Inventory,
   LocalOffer,
   Logout,
-  Receipt,
 } from "@mui/icons-material";
 import { Divider, ListItemIcon, ListItemText } from "@mui/material";
 import { useLocation, useNavigate } from "react-router";
@@ -21,45 +19,37 @@ const menu = [
   {
     name: "DashBoard",
     path: "/admin",
-    icon: <Dashboard className='text-teal-600' />,
-    activeIcon: <Dashboard className='text-white' />,
+    icon: <Dashboard />,
   },
   {
     name: "Coupons",
     path: "/admin/coupons",
-    icon: <IntegrationInstructions className='text-teal-600' />,
-    activeIcon: <IntegrationInstructions className='text-white' />,
+    icon: <IntegrationInstructions />,
   },
   {
     name: "Add Coupon",
     path: "/admin/add-coupon",
-    icon: <Add className='text-teal-600' />,
-    activeIcon: <Add className='text-white' />,
+    icon: <Add />,
   },
-
   {
     name: "Home Page",
     path: "/admin/home-page",
-    icon: <Home className='text-teal-600' />,
-    activeIcon: <Home className='text-white' />,
+    icon: <Home />,
   },
   {
     name: "Electronics Category",
     path: "/admin/electronics-category",
-    icon: <ElectricBolt className='text-teal-600' />,
-    activeIcon: <ElectricBolt className='text-white' />,
+    icon: <ElectricBolt />,
   },
   {
     name: "Shop By Category",
     path: "/admin/shop-by-category",
-    icon: <Category className='text-teal-600' />,
-    activeIcon: <Category className='text-white' />,
+    icon: <Category />,
   },
   {
     name: "Deals",
     path: "/admin/deals",
-    icon: <LocalOffer className='text-teal-600' />,
-    activeIcon: <LocalOffer className='text-white' />,
+    icon: <LocalOffer />,
   },
 ];
 
@@ -67,7 +57,7 @@ const menu2 = [
   {
     name: "Logout",
     path: "/",
-    icon: <Logout className='text-teal-600' />,
+    icon: <Logout color='primary' />,
     activeIcon: <Logout className='text-white' />,
   },
 ];
@@ -100,12 +90,10 @@ const AdminDrawerList = ({ toggleDrawwer }: any) => {
               className='pr-9 cursor-pointer'
             >
               <p
-                className={`${location.pathname === item.path && "bg-teal-500 text-white"}  flex items-center px-5 py-3 rounded-r-full cursor-pointer`}
+                className={`group ${location.pathname === item.path && "bg-[#0F52FF] text-white"} hover:bg-[#94A3B8] hover:text-white text-[#0F172A] flex items-center px-5 py-3 rounded-r-full cursor-pointer transition-colors duration-200`}
               >
-                <ListItemIcon>
-                  {location.pathname === item.path
-                    ? item.activeIcon
-                    : item.icon}
+                <ListItemIcon sx={{ color: "inherit" }}>
+                  {item.icon}
                 </ListItemIcon>
                 <ListItemText primary={item.name} />
               </p>
@@ -120,9 +108,7 @@ const AdminDrawerList = ({ toggleDrawwer }: any) => {
               key={item.name}
               className='pr-9 cursor-pointer'
             >
-              <p className='p-6 ml-10 text-lg font-bold '>
-                {user?.fullName}
-              </p>
+              <p className='p-6 ml-10 text-lg font-bold '>{user?.fullName}</p>
               <Divider />
               <p
                 className={`${location.pathname === item.path && "bg-teal-500 text-white"}  flex items-center px-5 py-3 rounded-r-full cursor-pointer`}

@@ -77,12 +77,12 @@ const Navbar = () => {
                 src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAWbnrBYN8xcnSmAOcZViCHoJWz-ipFaFfFg&s'
                 sx={{ height: 29, width: 29 }}
               />
-              <h1>{user.fullName}</h1>
+              <h1>{user?.fullName}</h1>
             </Button>
           ) : (
             <Button
               onClick={() => navigate("/login")}
-              variant='contained'
+              variant='outlined'
               startIcon={<AccountCircle />}
             >
               Login
@@ -99,7 +99,7 @@ const Navbar = () => {
           </IconButton>
           <Button
             onClick={() => navigate("/become-seller")}
-            variant='outlined'
+            variant='contained'
             startIcon={<Storefront />}
           >
             Become a Seller
