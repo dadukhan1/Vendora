@@ -44,16 +44,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
-) {
-  return { name, calories, fat, carbs, protein };
-}
-
 const accountStatus = [
   {
     status: "Pending",
@@ -106,7 +96,7 @@ export default function Coupon() {
 
   return (
     <>
-      <div className='pb-5 w-60'>
+      {/* <div className='pb-5 w-60'>
         <FormControl fullWidth>
           <InputLabel id='demo-simple-select-label'>Status</InputLabel>
           <Select
@@ -123,7 +113,7 @@ export default function Coupon() {
             ))}
           </Select>
         </FormControl>
-      </div>
+      </div> */}
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 700 }} aria-label='customized table'>
           <TableHead>
