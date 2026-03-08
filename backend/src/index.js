@@ -21,6 +21,7 @@ import cors from "cors";
 import { stripeWebhooks } from "./controller/stripWebhook.js";
 import { createCheckoutSession } from "./controller/createCheckoutSesssion.js";
 import AddressRouter from "./router/AddressRoutes.js";
+import { CouponRouter } from "./router/CouponRoutes.js";
 
 const app = express();
 
@@ -64,6 +65,7 @@ app.use("/api/transactions", TransactionrRouter);
 app.use("/api/seller/report", SellerReportRouter);
 
 app.use("/api/admin", AdminRouter);
+app.use("/api/admin/coupons", CouponRouter);
 
 app.use("/api/home", HomeCategoryRoutes);
 app.use("/api/admin/deals", DealRouter);

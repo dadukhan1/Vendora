@@ -2,14 +2,16 @@
 
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../../config/api";
+import toast from "react-hot-toast";
 
 export const createCoupon = createAsyncThunk<any, any>(
   "/coupons/createCoupon",
   async (couponData, { rejectWithValue }) => {
     try {
+      const token = localStorage.getItem("token");
       const response = await api.post("/admin/coupons", couponData, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       return response.data;
@@ -70,10 +72,14 @@ const couponSlice = createSlice({
       .addCase(createCoupon.fulfilled, (state, action) => {
         state.coupons.push(action.payload);
         state.loading = false;
+        toast.success("Coupon created successfully!");
       })
       .addCase(createCoupon.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(
+          action.payload?.response?.data?.message || "Failed to create coupon",
+        );
       })
       .addCase(getCoupons.pending, (state) => {
         state.loading = true;

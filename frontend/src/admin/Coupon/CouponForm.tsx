@@ -6,8 +6,11 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import type { Dayjs } from "dayjs";
+import { useAppDispatch } from "../../Redux Toolkit/store";
+import { createCoupon } from "../../Redux Toolkit/features/admin/couponSlice";
 
 const CouponForm = () => {
+  const dispatch = useAppDispatch();
   const formik = useFormik({
     initialValues: {
       code: "",
@@ -16,9 +19,13 @@ const CouponForm = () => {
       validityEndDate: null as Dayjs | null,
       minimumOrderValue: 0,
     },
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       // Handle form submission
       console.log(values);
+      const resultAction = await dispatch(createCoupon(values));
+      if (createCoupon.fulfilled.match(resultAction)) {
+        formik.resetForm();
+      }
     },
   });
   return (
