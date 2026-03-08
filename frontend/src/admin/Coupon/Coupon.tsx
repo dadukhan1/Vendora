@@ -18,8 +18,11 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Delete } from "@mui/icons-material";
-import { useAppDispatch } from "../../Redux Toolkit/store";
-import { getCoupons } from "../../Redux Toolkit/features/admin/couponSlice";
+import { useAppDispatch, useAppSelector } from "../../Redux Toolkit/store";
+import {
+  deleteCoupon,
+  getCoupons,
+} from "../../Redux Toolkit/features/admin/couponSlice";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -50,14 +53,6 @@ function createData(
 ) {
   return { name, calories, fat, carbs, protein };
 }
-
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
 
 const accountStatus = [
   {
@@ -95,13 +90,20 @@ export default function Coupon() {
   const [status, setStatus] = useState("");
   const dispatch = useAppDispatch();
 
+  const { coupons } = useAppSelector((store) => store.adminCoupon);
+
   useEffect(() => {
     dispatch(getCoupons());
-  }, []);
+  }, [coupons]);
 
   const handleChange = (event: SelectChangeEvent) => {
     setStatus(event.target.value as string);
   };
+
+  const handleDelete = (id: string) => {
+    dispatch(deleteCoupon(id));
+  };
+
   return (
     <>
       <div className='pb-5 w-60'>
@@ -131,26 +133,29 @@ export default function Coupon() {
               <StyledTableCell align='right'>End Date</StyledTableCell>
               <StyledTableCell align='right'>Min Order Value</StyledTableCell>
               <StyledTableCell align='right'>Discount</StyledTableCell>
-              <StyledTableCell align='right'>Status</StyledTableCell>
               <StyledTableCell align='right'>Delete</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <StyledTableRow key={row.name}>
+            {coupons.map((coupon) => (
+              <StyledTableRow key={coupon?.code}>
                 <StyledTableCell component='th' scope='row'>
-                  <div className='flex gap-1 flex-wrap'>
-                    <p>January 26</p>
-                    <p>2004 12:32 AM</p>
-                  </div>
+                  <div className='flex gap-1 flex-wrap'>{coupon?.code}</div>
                 </StyledTableCell>
-                <StyledTableCell align='right'>{row.calories}</StyledTableCell>
-                <StyledTableCell align='right'>{row.fat}</StyledTableCell>
-                <StyledTableCell align='right'>{row.carbs}</StyledTableCell>
-                <StyledTableCell align='right'>{row.carbs}</StyledTableCell>
-                <StyledTableCell align='right'>{row.carbs}</StyledTableCell>
                 <StyledTableCell align='right'>
-                  <IconButton>
+                  {coupon?.validityStartDate}
+                </StyledTableCell>
+                <StyledTableCell align='right'>
+                  {coupon?.validityEndDate}
+                </StyledTableCell>
+                <StyledTableCell align='right'>
+                  {coupon?.minimumOrderValue}
+                </StyledTableCell>
+                <StyledTableCell align='right'>
+                  {coupon?.discountPercentage}%
+                </StyledTableCell>
+                <StyledTableCell align='right'>
+                  <IconButton onClick={() => handleDelete(coupon?._id)}>
                     <Delete color='error' />
                   </IconButton>
                 </StyledTableCell>

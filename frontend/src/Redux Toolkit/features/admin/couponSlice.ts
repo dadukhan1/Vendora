@@ -25,7 +25,7 @@ export const getCoupons = createAsyncThunk<any>(
   "/coupons/getCoupons",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get("/admin/coupons", {
+      const response = await api.get("/admin/coupons/all", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -92,6 +92,9 @@ const couponSlice = createSlice({
       .addCase(getCoupons.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(
+          action.payload?.response?.data?.message || "Failed to fetch coupons",
+        );
       })
       .addCase(deleteCoupon.pending, (state) => {
         state.loading = true;
@@ -102,10 +105,14 @@ const couponSlice = createSlice({
           (coupon) => coupon.id !== action.payload.id,
         );
         state.loading = false;
+        toast.success("Coupon deleted successfully!");
       })
       .addCase(deleteCoupon.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(
+          action.payload?.response?.data?.message || "Failed to delete coupon",
+        );
       });
   },
 });

@@ -2,6 +2,15 @@
 
 import { Coupon } from "../models/Coupon.js";
 
+export const getAllCoupons = async (req, res) => {
+  try {
+    const coupons = await Coupon.find().sort({ createdAt: -1 });
+    res.status(200).json(coupons);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const createCoupon = async (req, res) => {
   try {
     const {
@@ -98,4 +107,21 @@ export const applyCoupon = async (req, res) => {
 // Mark coupon as used (call after payment)
 export const markCouponUsed = async (couponId, userId) => {
   await Coupon.findByIdAndUpdate(couponId, { $push: { usedBy: userId } });
+};
+
+// Delete coupon (Admin)
+export const deleteCoupon = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const coupon = await Coupon.findById(id);
+    if (!coupon) {
+      return res.status(404).json({ message: "Coupon not found" });
+    }
+
+    await coupon.deleteOne(); // or Coupon.findByIdAndDelete(id)
+    res.status(200).json({ message: "Coupon deleted successfully", id });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
