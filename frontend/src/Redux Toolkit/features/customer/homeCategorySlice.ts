@@ -8,7 +8,7 @@ export const homeCategoryData = createAsyncThunk<any, any>(
   async (_, { rejectWithValue }) => {
     try {
       const response = await api.get(`/home`);
-      console.log("home cateogry data", response.data);
+      console.log("home", response.data);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -21,7 +21,7 @@ export const createHomeCategory = createAsyncThunk<any, any>(
   async (category, { rejectWithValue }) => {
     try {
       const response = await api.post(`/home`, { category });
-      console.log("Create home category response:", response.data);
+      console.log("home", response.data);
       return response.data;
     } catch (error: any) {
       console.error("Error creating home category:", error);
@@ -39,18 +39,32 @@ const homeCategorySlice = createSlice({
   },
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(createHomeCategory.pending, (state) => {
-      state.loading = true;
-      state.error = null;
-    });
-    builder.addCase(createHomeCategory.fulfilled, (state, action) => {
-      state.loading = false;
-      state.homeCategories = action.payload;
-    });
-    builder.addCase(createHomeCategory.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload as string;
-    });
+    builder
+      .addCase(createHomeCategory.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createHomeCategory.fulfilled, (state, action) => {
+        state.loading = false;
+        state.homeCategories = action.payload;
+      })
+      .addCase(createHomeCategory.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
+    builder
+      .addCase(homeCategoryData.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(homeCategoryData.fulfilled, (state, action) => {
+        state.loading = false;
+        state.homeCategories = action.payload;
+      })
+      .addCase(homeCategoryData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
   },
 });
 

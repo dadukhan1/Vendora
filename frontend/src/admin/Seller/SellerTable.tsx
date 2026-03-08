@@ -15,7 +15,9 @@ import {
   Select,
   type SelectChangeEvent,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../Redux Toolkit/store";
+import { fetchSellers } from "../../Redux Toolkit/features/seller/sellerSlice";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -47,23 +49,15 @@ function createData(
   return { name, calories, fat, carbs, protein };
 }
 
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
-
 const accountStatus = [
   {
-    status: "Pending",
+    status: "PENDING_VERIFICATION",
     title: "Pending Verification",
     description: "The seller's account is pending verification.",
   },
   {
-    status: "Active",
-    title: "ACTIVE",
+    status: "ACTIVE",
+    title: "Active",
     description: "The seller's account is active.",
   },
   {
@@ -88,11 +82,18 @@ const accountStatus = [
   },
 ];
 export default function SellerTable() {
-  const [status, setStatus] = useState("");
+  const dispatch = useAppDispatch();
+  const { sellers } = useAppSelector((store) => store.seller);
+  const [status, setStatus] = useState(accountStatus[0].status);
 
   const handleChange = (event: SelectChangeEvent) => {
     setStatus(event.target.value as string);
   };
+
+  useEffect(() => {
+    dispatch(fetchSellers(status));
+  }, [status]);
+
   return (
     <>
       <div className='pb-5 w-60'>
@@ -127,20 +128,23 @@ export default function SellerTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <StyledTableRow key={row.name}>
+            {sellers.map((seller) => (
+              <StyledTableRow key={seller?._id}>
                 <StyledTableCell component='th' scope='row'>
                   <div className='flex gap-1 flex-wrap'>
-                    <p>January 26</p>
-                    <p>2004 12:32 AM</p>
+                    <p>{seller?.sellerName}</p>
                   </div>
                 </StyledTableCell>
-                <StyledTableCell align='right'>{row.calories}</StyledTableCell>
-                <StyledTableCell align='right'>{row.fat}</StyledTableCell>
-                <StyledTableCell align='right'>{row.carbs}</StyledTableCell>
-                <StyledTableCell align='right'>{row.carbs}</StyledTableCell>
-                <StyledTableCell align='right'>{row.carbs}</StyledTableCell>
-                <StyledTableCell align='right'>{row.carbs}</StyledTableCell>
+                <StyledTableCell align='right'>{seller?.email}</StyledTableCell>
+                <StyledTableCell align='right'>{seller.mobile}</StyledTableCell>
+                <StyledTableCell align='right'>{seller.GSTIN}</StyledTableCell>
+                <StyledTableCell align='right'>
+                  {seller?.bussinessDetails?.bussinessName}
+                </StyledTableCell>
+                <StyledTableCell align='right'>
+                  {seller.accountStatus}
+                </StyledTableCell>
+                <StyledTableCell align='right'>{"w"}</StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>

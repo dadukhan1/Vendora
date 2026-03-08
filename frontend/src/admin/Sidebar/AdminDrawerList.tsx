@@ -15,6 +15,7 @@ import {
 } from "@mui/icons-material";
 import { Divider, ListItemIcon, ListItemText } from "@mui/material";
 import { useLocation, useNavigate } from "react-router";
+import { useAppSelector } from "../../Redux Toolkit/store";
 
 const menu = [
   {
@@ -72,6 +73,7 @@ const menu2 = [
 ];
 
 const AdminDrawerList = ({ toggleDrawwer }: any) => {
+  const { user } = useAppSelector((store) => store.user);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -118,6 +120,10 @@ const AdminDrawerList = ({ toggleDrawwer }: any) => {
               key={item.name}
               className='pr-9 cursor-pointer'
             >
+              <p className='p-6 ml-10 text-lg font-bold '>
+                {user?.fullName}
+              </p>
+              <Divider />
               <p
                 className={`${location.pathname === item.path && "bg-teal-500 text-white"}  flex items-center px-5 py-3 rounded-r-full cursor-pointer`}
               >

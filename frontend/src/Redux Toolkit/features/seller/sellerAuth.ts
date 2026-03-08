@@ -17,7 +17,6 @@ export const sendLoginOtp = createAsyncThunk<any, any>(
       const { email } = values;
       const response = await api.post("/auth/sent/login-signup-otp", { email });
       const data = response.data;
-      console.log("OTP sent successfully:", data);
       return data;
     } catch (error) {
       console.error("Error sending OTP:", error);
@@ -27,7 +26,7 @@ export const sendLoginOtp = createAsyncThunk<any, any>(
 );
 export const verifyLogin = createAsyncThunk<any, any>(
   "seller/verifyLoginOtp",
-  async ({ email, otp  }, { rejectWithValue }) => {
+  async ({ email, otp }, { rejectWithValue }) => {
     try {
       // const { email, otp } = values;
       const response = await api.post("/seller/verify/login-otp", {
@@ -36,7 +35,6 @@ export const verifyLogin = createAsyncThunk<any, any>(
       });
       const data = response.data;
       localStorage.setItem("token", data.jwt);
-      console.log("OTP sent successfully:", data);
       return data;
     } catch (error) {
       console.error("Error sending OTP:", error);
@@ -49,10 +47,8 @@ export const signup = createAsyncThunk<any, any>(
   "seller/signup",
   async (values, { rejectWithValue }) => {
     try {
-
       const { mobile, GSTIN, pickupAddress, bankDetails, bussinessDetails } =
         values;
-        console.log('hahahahahahahah')
       const response = await api.post("/seller", {
         sellerName: bussinessDetails.sellerName,
         email: bussinessDetails.bussinessEmail,
@@ -64,7 +60,6 @@ export const signup = createAsyncThunk<any, any>(
         password: bussinessDetails.password,
       });
       const data = response;
-      console.log("Seller Signup successful:", data);
       return data;
     } catch (error) {
       console.error("Error during seller signup:", error);

@@ -37,9 +37,8 @@ const SellerAccountForm = () => {
         locality: "",
       },
       bankDetails: {
-        accountHOlderName: "",
+        accountHolderName: "",
         accountNumber: "",
-        ifsCode: "",
       },
       sellerName: "",
       email: "",

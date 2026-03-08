@@ -8,7 +8,6 @@ export const updateHomeCategory = createAsyncThunk<any, any>(
   async ({ id, data }, { rejectWithValue }) => {
     try {
       const response = await api.patch(`/home/${id}`, data, {});
-      console.log("updateHomeCategory response:", response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error);
@@ -22,7 +21,6 @@ export const fetchHomeCategory = createAsyncThunk<any, any>(
     try {
       const response = await api.get("/home");
       const data = response.data;
-      console.log("fetchHomeCategory response:", data);
       return data;
     } catch (error) {
       return rejectWithValue(error);
@@ -31,7 +29,7 @@ export const fetchHomeCategory = createAsyncThunk<any, any>(
 );
 
 const initialState = {
-  categories: [],
+  categories: [] as any,
   loading: false,
   error: null,
 };

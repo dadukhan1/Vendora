@@ -18,6 +18,7 @@ class DealController {
       const newDeal = await DealService.createDeal(deal);
       res.status(201).json(newDeal);
     } catch (error) {
+      console.log(error.message);
       res.status(400).json({ message: error.message });
     }
   }

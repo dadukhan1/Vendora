@@ -3,7 +3,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../../config/api";
 
-const createCoupon = createAsyncThunk<any, any>(
+export const createCoupon = createAsyncThunk<any, any>(
   "/coupons/createCoupon",
   async (couponData, { rejectWithValue }) => {
     try {
@@ -19,7 +19,7 @@ const createCoupon = createAsyncThunk<any, any>(
   },
 );
 
-const getCoupons = createAsyncThunk<any>(
+export const getCoupons = createAsyncThunk<any>(
   "/coupons/getCoupons",
   async (_, { rejectWithValue }) => {
     try {
@@ -35,7 +35,7 @@ const getCoupons = createAsyncThunk<any>(
   },
 );
 
-const deleteCoupon = createAsyncThunk<any, string>(
+export const deleteCoupon = createAsyncThunk<any, string>(
   "/coupons/deleteCoupon",
   async (id, { rejectWithValue }) => {
     try {

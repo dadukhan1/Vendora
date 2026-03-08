@@ -5,7 +5,7 @@ import { useState } from "react";
 import SellerLogin from "./SellerLogin";
 import SellerAccountForm from "./SellerAccountForm";
 
-const BecomeSeller = () => {
+const   BecomeSeller = () => {
   const [isLogin, setIsLogin] = useState(false);
   return (
     <div className='grid md:gap-10 grid-cols-3 min-h-screen'>

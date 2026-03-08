@@ -3,11 +3,12 @@
 import express from "express";
 import DealController from "../controller/DealController.js";
 import sellerAuthMiddleware from "../middlewares/SellerAuthMiddleware.js";
+import authMiddleware from "../middlewares/AuthMiddleware.js";
 
 const DealRouter = express.Router();
 
 DealRouter.get("/", DealController.getAllDeals);
-DealRouter.post("/", sellerAuthMiddleware, DealController.createDeal);
+DealRouter.post("/", authMiddleware, DealController.createDeal);
 DealRouter.patch("/:id", sellerAuthMiddleware, DealController.updateDeal);
 DealRouter.delete("/:id", sellerAuthMiddleware, DealController.deleteDeal);
 

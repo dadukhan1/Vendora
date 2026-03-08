@@ -25,17 +25,17 @@ const sellerSchema = new mongoose.Schema(
       required: true,
       select: false,
     },
-    businessDetails: {
-      businessName: {
+    bussinessDetails: {
+      bussinessName: {
         type: String,
       },
-      businessEmail: {
+      bussinessEmail: {
         type: String,
       },
-      businessMobile: {
+      bussinessMobile: {
         type: String,
       },
-      businessAddress: {
+      bussinessAddress: {
         type: String,
       },
     },

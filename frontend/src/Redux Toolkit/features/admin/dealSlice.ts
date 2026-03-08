@@ -9,15 +9,21 @@ const initialState = {
   error: null,
 };
 
-const createDeal = createAsyncThunk<any, any>(
+export const createDeal = createAsyncThunk<any, any>(
   "/deals/createDeal",
   async (deal, { rejectWithValue }) => {
     try {
-      const response = await api.post("/admin/deals", deal, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+      console.log(deal);
+      const token = localStorage.getItem("token");
+      const response = await api.post(
+        "/admin/deals",
+        { deal },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
       console.log("createDeal response:", response.data);
       return response.data;
     } catch (error) {
@@ -27,7 +33,7 @@ const createDeal = createAsyncThunk<any, any>(
   },
 );
 
-const getAllDeals = createAsyncThunk<any, any>(
+export const getAllDeals = createAsyncThunk<any, any>(
   "/deals/getAllDeals",
   async (_, { rejectWithValue }) => {
     try {
@@ -45,7 +51,7 @@ const getAllDeals = createAsyncThunk<any, any>(
   },
 );
 
-const deleteDeal = createAsyncThunk<any, any>(
+export const deleteDeal = createAsyncThunk<any, any>(
   "/deals/deleteDeal",
   async (id, { rejectWithValue }) => {
     try {
@@ -63,7 +69,7 @@ const deleteDeal = createAsyncThunk<any, any>(
   },
 );
 
-const updateDeal = createAsyncThunk<any, any>(
+export const updateDeal = createAsyncThunk<any, any>(
   "/deals/updateDeal",
   async ({ id, data }, { rejectWithValue }) => {
     try {
@@ -141,6 +147,5 @@ const dealSlice = createSlice({
       });
   },
 });
-
 
 export default dealSlice.reducer;

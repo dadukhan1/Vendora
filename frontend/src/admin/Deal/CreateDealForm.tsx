@@ -11,9 +11,16 @@ import {
   Typography,
 } from "@mui/material";
 import { useFormik } from "formik";
-import { menLevel2 } from "../../data/category/level2/menLevel2";
+import { useAppDispatch, useAppSelector } from "../../Redux Toolkit/store";
+import { createDeal } from "../../Redux Toolkit/features/admin/dealSlice";
+import { useEffect } from "react";
+import { homeCategoryData } from "../../Redux Toolkit/features/customer/homeCategorySlice";
 
 const CreateDealForm = () => {
+  const dispatch = useAppDispatch();
+
+  const { homeCategories } = useAppSelector((store) => store.homeCategory);
+
   const formik = useFormik({
     initialValues: {
       discount: 0,
@@ -21,8 +28,14 @@ const CreateDealForm = () => {
     },
     onSubmit: (values) => {
       console.log(values);
+      dispatch(createDeal(values));
     },
   });
+
+  useEffect(() => {
+    dispatch(homeCategoryData());
+  }, []);
+
   return (
     <Box
       component={"form"}
@@ -51,9 +64,9 @@ const CreateDealForm = () => {
             label='Category'
           >
             <MenuItem value='none'>None</MenuItem>
-            {menLevel2.map((category, index) => (
-              <MenuItem key={index} value={category.categoryId}>
-                {category.name}
+            {homeCategories?.map((category, index) => (
+              <MenuItem key={index} value={category?.categoryId}>
+                {category?.name}
               </MenuItem>
             ))}
           </Select>

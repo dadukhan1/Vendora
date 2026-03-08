@@ -16,8 +16,10 @@ import {
   Select,
   type SelectChangeEvent,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Delete } from "@mui/icons-material";
+import { useAppDispatch } from "../../Redux Toolkit/store";
+import { getCoupons } from "../../Redux Toolkit/features/admin/couponSlice";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -91,6 +93,11 @@ const accountStatus = [
 ];
 export default function Coupon() {
   const [status, setStatus] = useState("");
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getCoupons());
+  }, []);
 
   const handleChange = (event: SelectChangeEvent) => {
     setStatus(event.target.value as string);

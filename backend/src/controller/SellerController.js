@@ -39,6 +39,7 @@ class SellerController {
 
       res.status(200).json(sellers);
     } catch (error) {
+      console.error("Error fetching sellers:", error);
       res
         .status(error instanceof Error ? 404 : 500)
         .json({ message: error.message });

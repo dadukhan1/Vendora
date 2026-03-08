@@ -23,7 +23,11 @@ const LoginForm = () => {
       if (auth.otpSent) {
         const resultAction = await dispatch(signin(values));
         if (signin.fulfilled.match(resultAction)) {
-          navigate("/");
+          if (resultAction?.payload?.role === "ROLE_ADMIN") {
+            navigate("/admin");
+          } else {
+            navigate("/");
+          }
         } else {
           console.error("Failed to sign in:", resultAction.payload);
         }

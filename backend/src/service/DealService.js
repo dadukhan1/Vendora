@@ -10,6 +10,7 @@ class DealService {
 
   async createDeal(deal) {
     try {
+      console.log("checkind deal lasd;klfjlkasdjf'", deal);
       // Mongoose will handle the reference if you just pass the ID
       const newDeal = await Deal.create({
         ...deal,

@@ -23,7 +23,6 @@ export const fetchSellerProfile = createAsyncThunk<any, any>(
         },
       });
       const data = response.data;
-      console.log("Fetching seller profile data", data);
       return data;
     } catch (error) {
       console.error("Fetch sellers profile error :", error);
@@ -42,7 +41,6 @@ export const fetchSellers = createAsyncThunk<any, any>(
         },
       });
       const data = response.data;
-      console.log("Fetch all sellers", data);
       return data;
     } catch (error) {
       console.error("Error in fetching all profiles", error);
@@ -100,7 +98,6 @@ export const updateSellerAccountStatus = createAsyncThunk<any, any>(
         },
       });
       const data = response.data;
-      console.log("Update seller account status", data);
       return data;
     } catch (error) {
       console.error("Error in updating seller account status", error);
