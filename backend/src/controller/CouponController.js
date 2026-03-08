@@ -20,14 +20,6 @@ export const createCoupon = async (req, res) => {
       validityEndDate,
       minimumOrderValue,
     } = req.body;
-    console.log(
-      "checking ---------------------------------------",
-      code,
-      discountPercentage,
-      validityStartDate,
-      validityEndDate,
-      minimumOrderValue,
-    );
 
     const startDate = new Date(validityStartDate);
     const endDate = new Date(validityEndDate);
@@ -56,7 +48,6 @@ export const createCoupon = async (req, res) => {
 
     res.status(201).json({ message: "Coupon created successfully", coupon });
   } catch (error) {
-    console.log(error.message);
     res.status(500).json({ message: error.message });
   }
 };
