@@ -17,6 +17,7 @@ import {
   homeCategoryData,
 } from "./Redux Toolkit/features/customer/homeCategorySlice";
 import { homeCategories } from "./data/homeCategory";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -37,6 +38,7 @@ function App() {
 
   return (
     <ThemeProvider theme={customTheme}>
+      <Toaster position='top-center' />
       {/*  Seller Routes */}
       <Routes>
         <Route path='/become-seller' element={<BecomeSeller />} />

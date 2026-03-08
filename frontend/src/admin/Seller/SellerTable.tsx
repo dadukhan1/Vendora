@@ -39,115 +39,88 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
   },
-  // hide last border
   "&:last-child td, &:last-child th": {
     border: 0,
   },
 }));
 
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
-) {
-  return { name, calories, fat, carbs, protein };
-}
-
 const accountStatus = [
-  {
-    status: "PENDING_VERIFICATION",
-    title: "Pending Verification",
-    description: "The seller's account is pending verification.",
-  },
-  {
-    status: "ACTIVE",
-    title: "Active",
-    description: "The seller's account is active.",
-  },
-  {
-    status: "SUSPENDED",
-    title: "Suspended",
-    description: "The seller's account is suspended.",
-  },
-  {
-    status: "DEACTIVATED",
-    title: "Deactivated",
-    description: "The seller's account is deactivated.",
-  },
-  {
-    status: "BANNED",
-    title: "Banned",
-    description: "The seller's account is banned.",
-  },
-  {
-    status: "CLOSED",
-    title: "Closed",
-    description: "The seller's account is closed.",
-  },
+  { status: "PENDING_VERIFICATION", title: "Pending Verification" },
+  { status: "ACTIVE", title: "Active" },
+  { status: "SUSPENDED", title: "Suspended" },
+  { status: "DEACTIVATED", title: "Deactivated" },
+  { status: "BANNED", title: "Banned" },
+  { status: "CLOSED", title: "Closed" },
 ];
+
 export default function SellerTable() {
   const dispatch = useAppDispatch();
   const { sellers } = useAppSelector((store) => store.seller);
   const [status, setStatus] = useState(accountStatus[0].status);
 
-  const handleChange = (event: SelectChangeEvent) => {
+  // Menu and Selection State
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedSellerId, setSelectedSellerId] = useState<string | null>(null);
+  const open = Boolean(anchorEl);
+
+  const handleStatusFilterChange = (event: SelectChangeEvent) => {
     setStatus(event.target.value as string);
   };
 
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>, id: string) => {
     setAnchorEl(event.currentTarget);
+    setSelectedSellerId(id);
   };
-  const handleClose = () => {
+
+  const handleCloseMenu = () => {
     setAnchorEl(null);
+    setSelectedSellerId(null);
   };
 
-  const handleUpdateSeller = (id: any, status: any) => {
-    console.log("update item", id, status);
-    dispatch(updateSellerAccountStatus({ id, status }));
-    handleClose();
+  const handleUpdateSeller = async (newStatus: string) => {
+    if (selectedSellerId) {
+      await dispatch(
+        updateSellerAccountStatus({ id: selectedSellerId, status: newStatus }),
+      );
+      dispatch(fetchSellers(status));
+      handleCloseMenu();
+    }
   };
-
-  useEffect(() => {
-    // dispatch(fetchSellerOrders());
-  }, [dispatch]);
 
   useEffect(() => {
     dispatch(fetchSellers(status));
-  }, [status]);
+  }, [status, dispatch]);
 
   return (
     <>
       <div className='pb-5 w-60'>
         <FormControl fullWidth>
-          <InputLabel id='demo-simple-select-label'>Status</InputLabel>
+          <InputLabel id='status-filter-label'>Filter Status</InputLabel>
           <Select
-            labelId='demo-simple-select-label'
-            id='demo-simple-select'
+            labelId='status-filter-label'
+            id='status-filter'
             value={status}
-            label='Status'
-            onChange={handleChange}
+            label='Filter Status'
+            onChange={handleStatusFilterChange}
           >
-            {accountStatus.map((status) => (
-              <MenuItem key={status.status} value={status.status}>
-                {status.title}
+            {accountStatus.map((item) => (
+              <MenuItem key={item.status} value={item.status}>
+                {item.title}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
       </div>
+
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 700 }} aria-label='customized table'>
+        <Table sx={{ minWidth: 700 }} aria-label='seller table'>
           <TableHead>
             <TableRow>
               <StyledTableCell>Seller Name</StyledTableCell>
               <StyledTableCell align='right'>Email</StyledTableCell>
               <StyledTableCell align='right'>Mobile</StyledTableCell>
               <StyledTableCell align='right'>GSTIN</StyledTableCell>
-              <StyledTableCell align='right'>Bussiness Name</StyledTableCell>
+              <StyledTableCell align='right'>Business Name</StyledTableCell>
               <StyledTableCell align='right'>Account Status</StyledTableCell>
               <StyledTableCell align='right'>Change Status</StyledTableCell>
             </TableRow>
@@ -156,13 +129,13 @@ export default function SellerTable() {
             {sellers.map((seller) => (
               <StyledTableRow key={seller?._id}>
                 <StyledTableCell component='th' scope='row'>
-                  <div className='flex gap-1 flex-wrap'>
-                    <p>{seller?.sellerName}</p>
-                  </div>
+                  {seller?.sellerName}
                 </StyledTableCell>
                 <StyledTableCell align='right'>{seller?.email}</StyledTableCell>
-                <StyledTableCell align='right'>{seller.mobile}</StyledTableCell>
-                <StyledTableCell align='right'>{seller.GSTIN}</StyledTableCell>
+                <StyledTableCell align='right'>
+                  {seller?.mobile}
+                </StyledTableCell>
+                <StyledTableCell align='right'>{seller?.GSTIN}</StyledTableCell>
                 <StyledTableCell align='right'>
                   {seller?.bussinessDetails?.bussinessName}
                 </StyledTableCell>
@@ -170,37 +143,40 @@ export default function SellerTable() {
                   {seller?.accountStatus}
                 </StyledTableCell>
                 <StyledTableCell align='right'>
-                  <IconButton onClick={handleClick}>
+                  <IconButton onClick={(e) => handleOpenMenu(e, seller?._id)}>
                     <Edit color='warning' />
                   </IconButton>
-                  <Menu
-                    id='fade-menu'
-                    slotProps={{
-                      list: {
-                        "aria-labelledby": "fade-button",
-                      },
-                    }}
-                    // slots={{ transition: Fade }}
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={handleClose}
-                  >
-                    {accountStatus.map((status) => (
-                      <MenuItem
-                        onClick={() =>
-                          handleUpdateSeller(seller?._id, status.status)
-                        }
-                      >
-                        {status.title}
-                      </MenuItem>
-                    ))}
-                  </Menu>
                 </StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/* Single Menu Instance Shared by All Rows */}
+      <Menu
+        id='status-menu'
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleCloseMenu}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        {accountStatus.map((item) => (
+          <MenuItem
+            key={item.status}
+            onClick={() => handleUpdateSeller(item.status)}
+          >
+            {item.title}
+          </MenuItem>
+        ))}
+      </Menu>
     </>
   );
 }

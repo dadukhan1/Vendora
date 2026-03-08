@@ -78,7 +78,12 @@ class SellerController {
         req.params.status,
       );
 
-      res.status(200).json(updateSeller);
+      res
+        .status(200)
+        .json({
+          message: "Seller status updated successfully!",
+          seller: updateSeller,
+        });
     } catch (error) {
       res
         .status(error instanceof Error ? 404 : 500)

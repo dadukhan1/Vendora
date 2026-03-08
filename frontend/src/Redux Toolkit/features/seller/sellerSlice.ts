@@ -2,6 +2,7 @@
 
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../../config/api";
+import { toast } from "react-hot-toast";
 
 const initialState = {
   sellers: [],
@@ -15,14 +16,16 @@ const initialState = {
 
 export const fetchSellerProfile = createAsyncThunk<any, any>(
   "sellers/fetchSellerProfile",
-  async (jwt, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
+      const token = localStorage.getItem("token");
       const response = await api.get(`/seller/profile`, {
         headers: {
-          Authorization: `Bearer ${jwt}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       const data = response.data;
+      console.log(data);
       return data;
     } catch (error) {
       console.error("Fetch sellers profile error :", error);
@@ -73,9 +76,10 @@ export const fetchSellerById = createAsyncThunk<any, any>(
   "sellers/fetchSellerById",
   async (id, { rejectWithValue }) => {
     try {
+      const token = localStorage.getItem("token");
       const response = await api.get(`seller/${id}`, {
         headers: {
-          Authorization: `Bearer ${jwt}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       const data = response.data;
@@ -94,12 +98,18 @@ export const updateSellerAccountStatus = createAsyncThunk<any, any>(
     try {
       console.log("the udapte slice", id, status);
       const token = localStorage.getItem("token");
-      const response = await api.put(`admin/seller/${id}/status/${status}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await api.put(
+        `admin/seller/${id}/status/${status}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
       const data = response.data;
+      console.log(data);
+      toast.success(data.message);
       return data;
     } catch (error) {
       console.error("Error in updating seller account status", error);
@@ -173,11 +183,12 @@ const sellerSlice = createSlice({
       })
       .addCase(updateSellerAccountStatus.fulfilled, (state, action) => {
         state.loading = false;
+        const updatedSeller = action.payload.seller;
         const index = state.sellers.findIndex(
-          (seller) => seller.id === action.payload.id,
+          (seller) => seller._id === updatedSeller._id,
         );
         if (index !== -1) {
-          state.sellers[index] = action.payload;
+          state.sellers[index] = updatedSeller;
         }
       })
       .addCase(updateSellerAccountStatus.rejected, (state, action) => {
