@@ -57,8 +57,7 @@ const menu2 = [
   {
     name: "Logout",
     path: "/",
-    icon: <Logout color='primary' />,
-    activeIcon: <Logout className='text-white' />,
+    icon: <Logout />,
   },
 ];
 
@@ -111,12 +110,10 @@ const AdminDrawerList = ({ toggleDrawwer }: any) => {
               <p className='p-6 ml-10 text-lg font-bold '>{user?.fullName}</p>
               <Divider />
               <p
-                className={`${location.pathname === item.path && "bg-teal-500 text-white"}  flex items-center px-5 py-3 rounded-r-full cursor-pointer`}
+                className={`group ${location.pathname === item.path && "bg-[#0F52FF] text-white"} hover:bg-[#94A3B8] hover:text-white text-[#0F172A] flex items-center px-5 py-3 rounded-r-full cursor-pointer transition-colors duration-200`}
               >
-                <ListItemIcon>
-                  {location.pathname === item.path
-                    ? item.activeIcon
-                    : item.icon}
+                <ListItemIcon sx={{ color: "inherit" }}>
+                  {item.icon}
                 </ListItemIcon>
                 <ListItemText primary={item.name} />
               </p>

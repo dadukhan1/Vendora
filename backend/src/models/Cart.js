@@ -27,7 +27,7 @@ const cartSchema = new Schema(
     totalMrpPrice: {
       type: Number,
       default: 0,
-      min: [1, "MRP Price should be greater than zero"],
+      min: 0,
     },
     discount: {
       type: Number,

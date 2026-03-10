@@ -36,6 +36,7 @@ export const createCheckoutSession = async (req, res) => {
     });
 
     res.json({ url: session.url });
+    console.log('done first')
   } catch (error) {
     console.error("Stripe session error:", error);
     res.status(500).json({ error: "Failed to create checkout session" });

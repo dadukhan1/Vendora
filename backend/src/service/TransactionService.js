@@ -37,7 +37,17 @@ class TransactionService {
   }
 
   async getTransactionBySellerId(sellerId) {
-    return await Transaction.find({ seller: sellerId }).populate("order");
+    const transactions = await Transaction.find({ seller: sellerId })
+      .populate("order")
+      .populate("user");
+
+    const totalTransactions = transactions.length;
+    const totalEarnings = transactions.reduce(
+      (sum, t) => sum + (t.amount || 0),
+      0,
+    );
+
+    return { transactions, totalEarnings, totalTransactions };
   }
   async getAllTransactions() {
     return await Transaction.find().populate("seller order customer");

@@ -1,7 +1,7 @@
 /** @format */
 
 import { useAppSelector } from "../../../Redux Toolkit/store";
-import ProfileFieldCard from "./ProfileFieldCard";
+import ProfileFieldCard from "./ProfileFieldCard.tsx";
 
 const UserDetails = () => {
   const { user } = useAppSelector((store) => store.user);

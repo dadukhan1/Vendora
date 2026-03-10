@@ -41,6 +41,7 @@ export const stripeWebhooks = async (req, res) => {
     await order.save();
 
     // Create Transaction
+    console.log("order done")
     await Transaction.create({
       user: order.user,
       order: order._id,

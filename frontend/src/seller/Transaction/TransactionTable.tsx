@@ -8,7 +8,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { useAppDispatch } from "../../Redux Toolkit/store";
+import { useAppDispatch, useAppSelector } from "../../Redux Toolkit/store";
 import { useEffect } from "react";
 import { fetchSellerTransactions } from "../../Redux Toolkit/features/seller/transactionSlice";
 
@@ -51,6 +51,7 @@ const rows = [
 ];
 
 export default function TransactionTable() {
+  const { transactions } = useAppSelector((store) => store.transaction);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -69,17 +70,24 @@ export default function TransactionTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.name}>
+          {transactions?.map((transaction) => (
+            <StyledTableRow key={transaction?._id}>
               <StyledTableCell component='th' scope='row'>
                 <div className='flex gap-1 flex-wrap'>
-                  <p>January 26</p>
-                  <p>2004 12:32 AM</p>
+                  {transaction?.createdAt}
                 </div>
               </StyledTableCell>
-              <StyledTableCell align='right'>{row.calories}</StyledTableCell>
-              <StyledTableCell align='right'>{row.fat}</StyledTableCell>
-              <StyledTableCell align='right'>{row.carbs}</StyledTableCell>
+              <StyledTableCell align='right'>
+                {transaction?.user?.fullName}
+                <br />
+                {transaction?.user?.email}
+              </StyledTableCell>
+              <StyledTableCell align='right'>
+                {transaction?.order?._id}
+              </StyledTableCell>
+              <StyledTableCell align='right'>
+                {transaction?.amount}
+              </StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

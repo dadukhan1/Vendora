@@ -3,9 +3,9 @@
 import { useAppSelector } from "../../../../Redux Toolkit/store";
 
 const Grid = () => {
-  const { grid } = useAppSelector((store) => store.homeCategory.homeCategories);
+  const { homeCategories } = useAppSelector((store) => store.homeCategory);
 
-  if (!grid?.length) {
+  if (!homeCategories?.grid?.length) {
     return <div>Loading...</div>;
   }
 
@@ -14,43 +14,43 @@ const Grid = () => {
       <div className='col-span-3 row-span-12 text-white rounded-md'>
         <img
           className='w-full h-full object-cover rounded-md'
-          src={grid[0]?.image}
-          alt={grid[0]?.title}
+          src={homeCategories?.grid[0]?.image}
+          alt={homeCategories?.grid[0]?.title}
         />
       </div>
       <div className='col-span-2 row-span-6 text-white rounded-md'>
         <img
           className='w-full h-full object-cover rounded-md'
-          src={grid[2]?.image}
-          alt={grid[2]?.title}
+          src={homeCategories?.grid[2]?.image}
+          alt={homeCategories?.grid[2]?.title}
         />
       </div>
       <div className='col-span-4 row-span-6 text-white rounded-md'>
         <img
           className='w-full h-full object-cover rounded-md'
-          src={grid[1]?.image}
-          alt={grid[1]?.title}
+          src={homeCategories?.grid[1]?.image}
+          alt={homeCategories?.grid[1]?.title}
         />
       </div>
       <div className='col-span-3 row-span-12 text-white rounded-md'>
         <img
           className='w-full h-full object-cover rounded-md'
-          src={grid[5]?.image}
-          alt={grid[5]?.title}
+          src={homeCategories?.grid[5]?.image}
+          alt={homeCategories?.grid[5]?.title}
         />
       </div>
       <div className='col-span-4 row-span-6 text-white rounded-md'>
         <img
           className='w-full h-full object-cover rounded-md'
-          src={grid[4]?.image}
-          alt={grid[4]?.title}
+          src={homeCategories?.grid[4]?.image}
+          alt={homeCategories?.grid[4]?.title}
         />
       </div>
       <div className='col-span-2 row-span-6 text-white rounded-md'>
         <img
           className='w-full h-full object-cover rounded-md'
-          src={grid[6]?.image}
-          alt={grid[6]?.title}
+          src={homeCategories?.grid[6]?.image}
+          alt={homeCategories?.grid[6]?.title}
         />
       </div>
     </div>

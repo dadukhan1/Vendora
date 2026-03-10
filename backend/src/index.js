@@ -34,7 +34,7 @@ app.use(
 
 // routes file mein
 app.post(
-  "/api/webhook",
+  "/api/payment/webhook",
   express.raw({ type: "application/json" }),
   stripeWebhooks,
 );
@@ -70,7 +70,7 @@ app.use("/api/admin/coupons", CouponRouter);
 app.use("/api/home", HomeCategoryRoutes);
 app.use("/api/admin/deals", DealRouter);
 
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
 const startServer = async () => {
   await connectToDB();

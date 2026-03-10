@@ -11,6 +11,7 @@ import Paper from "@mui/material/Paper";
 import { Button, IconButton } from "@mui/material";
 import { Edit } from "@mui/icons-material";
 import { useAppSelector } from "../../Redux Toolkit/store";
+import { useNavigate } from "react-router";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -32,18 +33,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
-) {
-  return { name, calories, fat, carbs, protein };
-}
-
 export default function HomeCategoryTable({ cateogry }) {
-
+  const navigate = useNavigate();
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label='customized table'>
@@ -70,7 +61,10 @@ export default function HomeCategoryTable({ cateogry }) {
                 {item?.categoryId}
               </StyledTableCell>
               <StyledTableCell align='right'>
-                <IconButton color='warning'>
+                <IconButton
+                  color='warning'
+                  onClick={() => navigate(`/admin/home-page/update/${item._id}`)}
+                >
                   <Edit />
                 </IconButton>
               </StyledTableCell>
