@@ -10,43 +10,43 @@ import {
   Receipt,
   ShoppingBag,
 } from "@mui/icons-material";
-import { Divider, ListItemIcon, ListItemText } from "@mui/material";
+import { Avatar, Divider } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router";
 import { resetSellerState } from "../../Redux Toolkit/features/seller/sellerAuth";
 import { logout } from "../../Redux Toolkit/features/auth/authSlice";
+import { useAppSelector } from "../../Redux Toolkit/store";
 
 const menu = [
   {
     name: "DashBoard",
     path: "/seller",
-    icon: <Dashboard />,
+    icon: <Dashboard sx={{ fontSize: 22 }} />,
   },
   {
     name: "Orders",
     path: "/seller/orders",
-    icon: <ShoppingBag />,
+    icon: <ShoppingBag sx={{ fontSize: 22 }} />,
   },
   {
     name: "Products",
     path: "/seller/products",
-    icon: <Inventory />,
+    icon: <Inventory sx={{ fontSize: 22 }} />,
   },
-
   {
     name: "Add Product",
     path: "/seller/add-product",
-    icon: <Add />,
+    icon: <Add sx={{ fontSize: 22 }} />,
   },
   {
     name: "Payment",
     path: "/seller/payment",
-    icon: <AccountBalanceWallet />,
+    icon: <AccountBalanceWallet sx={{ fontSize: 22 }} />,
   },
   {
     name: "Transaction",
     path: "/seller/transaction",
-    icon: <Receipt />,
+    icon: <Receipt sx={{ fontSize: 22 }} />,
   },
 ];
 
@@ -54,73 +54,118 @@ const menu2 = [
   {
     name: "Account",
     path: "/seller/account",
-    icon: <AccountBox />,
-  },
-  {
-    name: "Logout",
-    path: "/",
-    icon: <Logout />,
+    icon: <AccountBox sx={{ fontSize: 22 }} />,
   },
 ];
 
 const SellerDrawerList = ({ toggleDrawwer }: any) => {
+  const { user } = useAppSelector((store) => store.user);
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleLogout = () => {
-    console.log("logout");
     dispatch(resetSellerState());
     dispatch(logout());
   };
 
   const handleClick = (item: any) => {
-    if (item.name === "Logout") {
-      handleLogout();
-    }
+    if (item.name === "Logout") handleLogout();
     navigate(item.path);
     toggleDrawwer(false);
   };
 
   return (
-    <div className='h-full'>
-      <div className='flex flex-col justify-between h-full w-75 border-r border-gray-300 py-5'>
-        <div className='space-y-2'>
-          {menu.map((item) => (
+    <div className='flex flex-col justify-between h-full w-68 bg-white border-r border-gray-200'>
+      {/* Top: Menu */}
+      <div className='px-3 pt-5 space-y-1'>
+        {menu.map((item) => {
+          const isActive = location.pathname === item.path;
+          return (
             <div
-              onClick={() => handleClick(item)}
               key={item.name}
-              className='pr-9 cursor-pointer'
+              onClick={() => handleClick(item)}
+              className={`flex items-center gap-3 px-5 py-3.5 rounded-lg cursor-pointer transition-all duration-150 group
+                ${
+                  isActive
+                    ? "bg-[#0F52FF] text-white"
+                    : "text-gray-500 hover:bg-gray-100 hover:text-gray-900"
+                }`}
             >
-              <p
-                className={`group ${location.pathname === item.path && "bg-[#0F52FF] text-white"} hover:bg-[#94A3B8] hover:text-white text-[#0F172A] flex items-center px-5 py-3 rounded-r-full cursor-pointer transition-colors duration-200`}
+              <span
+                className={
+                  isActive
+                    ? "text-white"
+                    : "text-gray-400 group-hover:text-gray-600"
+                }
               >
-                <ListItemIcon sx={{ color: "inherit" }}>
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText primary={item.name} />
-              </p>
+                {item.icon}
+              </span>
+              <span className='text-[0.925rem] font-medium'>{item.name}</span>
             </div>
-          ))}
+          );
+        })}
+      </div>
+
+      {/* Bottom: Account + User + Logout */}
+      <div className='px-3 pb-5'>
+        <Divider sx={{ mb: 2 }} />
+
+        {/* Account */}
+        {menu2.map((item) => {
+          const isActive = location.pathname === item.path;
+          return (
+            <div
+              key={item.name}
+              onClick={() => handleClick(item)}
+              className={`flex items-center gap-3 px-5 py-3.5 rounded-lg cursor-pointer transition-all duration-150 group mb-1
+                ${
+                  isActive
+                    ? "bg-[#0F52FF] text-white"
+                    : "text-gray-500 hover:bg-gray-100 hover:text-gray-900"
+                }`}
+            >
+              <span
+                className={
+                  isActive
+                    ? "text-white"
+                    : "text-gray-400 group-hover:text-gray-600"
+                }
+              >
+                {item.icon}
+              </span>
+              <span className='text-[0.925rem] font-medium'>{item.name}</span>
+            </div>
+          );
+        })}
+
+        {/* User Info */}
+        <div className='flex items-center gap-3 px-3 py-2.5 mb-1'>
+          <Avatar
+            sx={{
+              width: 34,
+              height: 34,
+              backgroundColor: "#0F52FF",
+              fontSize: "0.875rem",
+            }}
+          >
+            {user?.fullName?.charAt(0) || "S"}
+          </Avatar>
+          <div className='overflow-hidden'>
+            <p className='text-sm font-semibold text-gray-900 truncate'>
+              {user?.fullName}
+            </p>
+            <p className='text-[11px] text-gray-400'>Seller</p>
+          </div>
         </div>
-        <div className='space-y-2'>
-          <Divider />
-          {menu2.map((item) => (
-            <div
-              onClick={() => handleClick(item)}
-              key={item.name}
-              className='pr-9 cursor-pointer'
-            >
-              <p
-                className={`group ${location.pathname === item.path && "bg-[#0F52FF] text-white"} hover:bg-[#94A3B8] hover:text-white text-[#0F172A] flex items-center px-5 py-3 rounded-r-full cursor-pointer transition-colors duration-200`}
-              >
-                <ListItemIcon sx={{ color: "inherit" }}>
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText primary={item.name} />
-              </p>
-            </div>
-          ))}
+
+        {/* Logout */}
+        <div
+          onClick={() => handleClick({ name: "Logout", path: "/" })}
+          className='flex items-center gap-3 px-5 py-3.5 rounded-lg cursor-pointer text-gray-500 hover:bg-red-50 hover:text-red-500 transition-all duration-150'
+        >
+          <Logout sx={{ fontSize: 22 }} />
+          <span className='text-[0.925rem] font-medium'>Logout</span>
         </div>
       </div>
     </div>

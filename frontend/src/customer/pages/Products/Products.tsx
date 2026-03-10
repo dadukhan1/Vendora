@@ -15,21 +15,10 @@ import { useParams } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/store";
 import { getAllProducts } from "../../../Redux Toolkit/features/customer/productSlice";
 
-const product = {
-  images: [
-    "https://images.unsplash.com/photo-1619516388835-2b60acc4049e?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  ],
-  sellerDetails: {
-    bussinessName: "Rana Clothing",
-  },
-};
-
 const Products = () => {
   const { products, totalPages } = useAppSelector((store) => store.products);
   const [sort, setSort] = useState("price_low");
   const { categoryId } = useParams();
-  console.log("categoryid", categoryId);
   const dispatch = useAppDispatch();
 
   const handleSort = (e: any) => {
@@ -41,45 +30,81 @@ const Products = () => {
   }, []);
 
   return (
-    <div className='z-10 mt-10'>
-      <div>
-        <h1 className='text-3xl text-center font-bold text-gray-700 pb-5 px-9 uppercase space-x-2'>
-          womansarees
+    <div className='mt-10'>
+      {/* Header */}
+      <div className='text-center py-6 px-9'>
+        <p className='text-xs font-semibold tracking-[0.3em] text-gray-400 uppercase mb-2'>
+          Collection
+        </p>
+        <h1 className='text-4xl font-bold text-gray-900 uppercase tracking-wide'>
+          {categoryId || "Woman Sarees"}
         </h1>
+        <div className='mt-3 mx-auto w-16 h-0.5 bg-gray-900 rounded-full' />
       </div>
+
       <div className='lg:flex'>
-        <section className='hidden lg:block w-[20%] min-h-screen border-gray-300'>
+        {/* Filter Sidebar */}
+        <section className='hidden lg:block w-[20%] min-h-screen border-r border-gray-100 px-4 pt-4'>
           <FilterSection />
         </section>
 
+        {/* Products Section */}
         <section className='lg:w-[80%] space-y-5'>
-          <div className='flex justify-between items-center px-9 h-10'>
-            <div></div>
-            <FormControl>
-              <InputLabel id='demo-simple-select-label'>Sort</InputLabel>
+          {/* Sort Bar */}
+          <div className='flex justify-between items-center px-6 py-3 bg-gray-50 rounded-xl mx-5'>
+            <p className='text-sm text-gray-500'>
+              <span className='font-semibold text-gray-800'>
+                {products.length}
+              </span>{" "}
+              products
+            </p>
+            <FormControl size='medium' sx={{ minWidth: 200 }}>
+              <InputLabel id='sort-label'>Sort By</InputLabel>
               <Select
-                labelId='sort'
-                id='sort'
+                labelId='sort-label'
                 value={sort}
-                label='Sort'
+                label='Sort By'
                 onChange={handleSort}
+                sx={{ borderRadius: "10px", fontSize: "0.875rem" }}
               >
-                <MenuItem value={"price_low"}>Price : Low to High</MenuItem>
-                <MenuItem value={"price_high"}>Price : Hight to low</MenuItem>
+                <MenuItem value='price_low'>Price: Low to High</MenuItem>
+                <MenuItem value='price_high'>Price: High to Low</MenuItem>
               </Select>
             </FormControl>
           </div>
+
           <Divider />
-          <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-5 px-5 justify-center mt-5'>
-            {products.length > 0 &&
+
+          {/* Product Grid */}
+          <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8 px-5 mt-5'>
+            {products.length > 0 ? (
               products.map((item, index) => (
-                <div key={index}>
-                  <ProductCard item={item} />
-                </div>
-              ))}
+                <ProductCard key={index} item={item} />
+              ))
+            ) : (
+              <div className='col-span-4 flex flex-col items-center justify-center py-24 text-gray-400'>
+                <p className='text-lg font-medium'>No products found</p>
+                <p className='text-sm mt-1'>Try adjusting your filters</p>
+              </div>
+            )}
           </div>
-          <div className='flex flex-col items-center justify-center p-5'>
-            <Pagination count={totalPages} />
+
+          {/* Pagination */}
+          <div className='flex justify-center py-10'>
+            <Pagination
+              count={totalPages}
+              shape='rounded'
+              sx={{
+                "& .MuiPaginationItem-root": {
+                  borderRadius: "8px",
+                  fontWeight: 500,
+                },
+                "& .Mui-selected": {
+                  backgroundColor: "#111 !important",
+                  color: "#fff",
+                },
+              }}
+            />
           </div>
         </section>
       </div>

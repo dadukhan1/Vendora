@@ -21,7 +21,7 @@ const FilterSection = () => {
   };
 
   return (
-    <div className='-z-50 space-y-5 bg-white'>
+    <div className='space-y-5 bg-white'>
       <div className='flex items-center justify-between h-[40px] px-9 lg:border-r'>
         <p className='text-lg font-semibold'>Filters</p>
         <Button>Clear all</Button>
@@ -29,12 +29,12 @@ const FilterSection = () => {
       <Divider />
       <div className='px-9 space-y-6 mt-5'>
         <section>
-          <FormControl sx={{ zIndex: 0 }}>
+          <FormControl sx={{ zIndex: 0, paddingTop: 4 }}>
             <FormLabel
               sx={{
                 fontSize: "16px",
                 fontWeight: "bold",
-                color: "teal",
+                color: "#0F52FF",
               }}
             >
               Colors
@@ -63,12 +63,12 @@ const FilterSection = () => {
             </div>
           </FormControl>
           <Divider />
-          <FormControl sx={{ zIndex: 0 }}>
+          <FormControl sx={{ zIndex: 0, paddingTop: 4 }}>
             <FormLabel
               sx={{
                 fontSize: "16px",
                 fontWeight: "bold",
-                color: "teal",
+                color: "#0F52FF",
               }}
             >
               Price
@@ -90,12 +90,12 @@ const FilterSection = () => {
             </FormControl>
           </FormControl>
           <Divider />
-          <FormControl sx={{ zIndex: 0 }}>
+          <FormControl sx={{ zIndex: 0, paddingTop: 4 }}>
             <FormLabel
               sx={{
                 fontSize: "16px",
                 fontWeight: "bold",
-                color: "teal",
+                color: "#0F52FF",
               }}
             >
               Discount

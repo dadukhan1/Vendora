@@ -1,7 +1,6 @@
 /** @format */
 
 import {
-  AccountBalanceWallet,
   Add,
   Category,
   Dashboard,
@@ -11,7 +10,7 @@ import {
   LocalOffer,
   Logout,
 } from "@mui/icons-material";
-import { Divider, ListItemIcon, ListItemText } from "@mui/material";
+import { Avatar, Divider } from "@mui/material";
 import { useLocation, useNavigate } from "react-router";
 import { useAppSelector } from "../../Redux Toolkit/store";
 
@@ -19,45 +18,37 @@ const menu = [
   {
     name: "DashBoard",
     path: "/admin",
-    icon: <Dashboard />,
+    icon: <Dashboard sx={{ fontSize: 22 }} />,
   },
   {
     name: "Coupons",
     path: "/admin/coupons",
-    icon: <IntegrationInstructions />,
+    icon: <IntegrationInstructions sx={{ fontSize: 22 }} />,
   },
   {
     name: "Add Coupon",
     path: "/admin/add-coupon",
-    icon: <Add />,
+    icon: <Add sx={{ fontSize: 22 }} />,
   },
   {
     name: "Home Page",
     path: "/admin/home-page",
-    icon: <Home />,
+    icon: <Home sx={{ fontSize: 22 }} />,
   },
   {
     name: "Electronics Category",
     path: "/admin/electronics-category",
-    icon: <ElectricBolt />,
+    icon: <ElectricBolt sx={{ fontSize: 22 }} />,
   },
   {
     name: "Shop By Category",
     path: "/admin/shop-by-category",
-    icon: <Category />,
+    icon: <Category sx={{ fontSize: 22 }} />,
   },
   {
     name: "Deals",
     path: "/admin/deals",
-    icon: <LocalOffer />,
-  },
-];
-
-const menu2 = [
-  {
-    name: "Logout",
-    path: "/",
-    icon: <Logout />,
+    icon: <LocalOffer sx={{ fontSize: 22 }} />,
   },
 ];
 
@@ -66,59 +57,75 @@ const AdminDrawerList = ({ toggleDrawwer }: any) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    console.log("logout");
-  };
+  const handleLogout = () => console.log("logout");
 
   const handleClick = (item: any) => {
-    if (item.name === "Logout") {
-      handleLogout();
-    }
+    if (item.name === "Logout") handleLogout();
     navigate(item.path);
     toggleDrawwer(false);
   };
 
   return (
-    <div className='h-full'>
-      <div className='flex flex-col justify-between h-full w-75 border-r border-gray-300 py-5'>
-        <div className='space-y-2'>
-          {menu.map((item) => (
+    <div className='flex flex-col justify-between h-full w-68 bg-white border-r border-gray-200'>
+      {/* Top: Menu */}
+      <div className='px-3 pt-5 space-y-1'>
+        {menu.map((item) => {
+          const isActive = location.pathname === item.path;
+          return (
             <div
-              onClick={() => handleClick(item)}
               key={item.name}
-              className='pr-9 cursor-pointer'
+              onClick={() => handleClick(item)}
+              className={`flex items-center gap-3 px-5 py-4 rounded-lg cursor-pointer transition-all duration-150 group
+                ${
+                  isActive
+                    ? "bg-[#0F52FF] text-white"
+                    : "text-gray-500 hover:bg-gray-100 hover:text-gray-900"
+                }`}
             >
-              <p
-                className={`group ${location.pathname === item.path && "bg-[#0F52FF] text-white"} hover:bg-[#94A3B8] hover:text-white text-[#0F172A] flex items-center px-5 py-3 rounded-r-full cursor-pointer transition-colors duration-200`}
+              <span
+                className={
+                  isActive
+                    ? "text-white"
+                    : "text-gray-400 group-hover:text-gray-600"
+                }
               >
-                <ListItemIcon sx={{ color: "inherit" }}>
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText primary={item.name} />
-              </p>
+                {item.icon}
+              </span>
+              <span className='text-[0.925rem] font-medium'>{item.name}</span>
             </div>
-          ))}
+          );
+        })}
+      </div>
+
+      {/* Bottom: User + Logout */}
+      <div className='px-3 pb-5'>
+        <Divider sx={{ mb: 2 }} />
+
+        <div className='flex items-center gap-3 px-3 py-2.5 mb-1'>
+          <Avatar
+            sx={{
+              width: 34,
+              height: 34,
+              backgroundColor: "#0F52FF",
+              fontSize: "0.875rem",
+            }}
+          >
+            {user?.fullName?.charAt(0) || "A"}
+          </Avatar>
+          <div className='overflow-hidden'>
+            <p className='text-sm font-semibold text-gray-900 truncate'>
+              {user?.fullName}
+            </p>
+            <p className='text-[11px] text-gray-400'>Administrator</p>
+          </div>
         </div>
-        <div className='space-y-2'>
-          <Divider />
-          {menu2.map((item) => (
-            <div
-              onClick={() => handleClick(item)}
-              key={item.name}
-              className='pr-9 cursor-pointer'
-            >
-              <p className='p-6 ml-10 text-lg font-bold '>{user?.fullName}</p>
-              <Divider />
-              <p
-                className={`group ${location.pathname === item.path && "bg-[#0F52FF] text-white"} hover:bg-[#94A3B8] hover:text-white text-[#0F172A] flex items-center px-5 py-3 rounded-r-full cursor-pointer transition-colors duration-200`}
-              >
-                <ListItemIcon sx={{ color: "inherit" }}>
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText primary={item.name} />
-              </p>
-            </div>
-          ))}
+
+        <div
+          onClick={() => handleClick({ name: "Logout", path: "/" })}
+          className='flex items-center gap-3 px-5 py-3.5 rounded-lg cursor-pointer text-gray-500 hover:bg-red-50 hover:text-red-500 transition-all duration-150'
+        >
+          <Logout sx={{ fontSize: 22 }} />
+          <span className='text-[0.925rem] font-medium'>Logout</span>
         </div>
       </div>
     </div>
