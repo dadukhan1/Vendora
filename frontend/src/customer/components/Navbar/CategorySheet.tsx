@@ -41,7 +41,9 @@ const CategorySheet = ({ selectedCategory }: any) => {
             key={index}
             className={`p-8 lg:w-[20%] ${index % 2 == 0 ? "bg-slate-50" : "bg-white"}`}
           >
-            <p className='text-teal-500 font-semibold mt-5 mb-1'>{item.name}</p>
+            <p className='text-[#0F52FF] font-semibold mt-5 mb-1'>
+              {item.name}
+            </p>
             <ul className='space-y-3'>
               {childCategory(
                 categoryThree[selectedCategory],
@@ -50,7 +52,7 @@ const CategorySheet = ({ selectedCategory }: any) => {
                 <li
                   onClick={() => navigate(`/products/${item.name}`)}
                   key={item.name}
-                  className='cursor-pointer'
+                  className='cursor-pointer text-[#0F172A]'
                 >
                   {item.name}
                 </li>

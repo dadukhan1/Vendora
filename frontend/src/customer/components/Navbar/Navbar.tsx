@@ -32,7 +32,10 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   return (
-    <Box className='sticky top-0 left-0 right-0 bg-white blur-bg bg-opacity-80'>
+    <Box
+      className='sticky top-0 left-0 right-0 bg-white blur-bg bg-opacity-80'
+      sx={{ zIndex: 1100 }}
+    >
       <div className='flex justify-between items-center px-5 lg:px-20 h-17.5 border-b border-gray-200'>
         <div className='flex items-center gap-9'>
           <div className='flex items-center gap-2'>
@@ -57,7 +60,7 @@ const Navbar = () => {
                 }}
                 onMouseLeave={() => setShowSheet(false)}
                 key={item.categoryId}
-                className='mainCateogry flex items-center hover:text-teal-500 cursor-pointer hover:border-b-2 h-17.5 px-4 border-teal-500 '
+                className='mainCateogry flex items-center hover:text-[#0F52FF] cursor-pointer hover:border-b-2 h-17.5 px-4 border-[#0F52FF] transition-colors duration-100'
               >
                 {item.name}
               </li>
