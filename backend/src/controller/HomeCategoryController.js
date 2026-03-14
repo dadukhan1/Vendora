@@ -38,6 +38,21 @@ class HomeCategoryController {
       res.status(400).json({ message: error.message });
     }
   }
+
+  async getSingleHomeCategory(req, res) {
+    try {
+      console.log("1");
+      const homeCategory = await HomeCategoryService.getSingleHomeCategory(
+        req.params.id,
+      );
+      console.log(homeCategory);
+      if (!homeCategory)
+        return res.status(404).json({ message: "Category not found" });
+      res.status(200).json(homeCategory);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  }
 }
 
 export default new HomeCategoryController();

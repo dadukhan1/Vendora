@@ -8,5 +8,6 @@ const HomeCategoryRouter = express.Router();
 HomeCategoryRouter.get("/", HomeCategoryController.getAllHomeCategories);
 HomeCategoryRouter.post("/", HomeCategoryController.createHomeCategory);
 HomeCategoryRouter.patch("/:id", HomeCategoryController.updateHomeCategory);
+HomeCategoryRouter.get("/:id", HomeCategoryController.getSingleHomeCategory);
 
 export default HomeCategoryRouter;

@@ -18,6 +18,11 @@ class HomeCategoryService {
   async updateHomeCategory(id, updateData) {
     return await HomeCategory.findByIdAndUpdate(id, updateData, { new: true });
   }
+
+  async getSingleHomeCategory(id) {
+    console.log("2");
+    return await HomeCategory.findById(id);
+  }
 }
 
 export default new HomeCategoryService();
