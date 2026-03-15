@@ -1,6 +1,7 @@
 /** @format */
 
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, CircularProgress, Alert } from "@mui/material";
+import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { useFormik } from "formik";
 import { useAppDispatch, useAppSelector } from "../../Redux Toolkit/store";
 import {
@@ -9,24 +10,35 @@ import {
 } from "../../Redux Toolkit/features/seller/sellerAuth";
 import { useNavigate } from "react-router";
 
+const inputSx = {
+  "& .MuiOutlinedInput-root": {
+    borderRadius: "10px",
+    fontSize: "0.9rem",
+    color: "#0F172A",
+    background: "#F8FAFC",
+    "& fieldset": { borderColor: "#E2E8F0" },
+    "&:hover fieldset": { borderColor: "#94A3B8" },
+    "&.Mui-focused fieldset": { borderColor: "#0F52FF", borderWidth: "1.5px" },
+  },
+  "& .MuiInputLabel-root": { color: "#94A3B8", fontSize: "0.88rem" },
+  "& .MuiInputLabel-root.Mui-focused": { color: "#0F52FF" },
+  "& input::placeholder": { color: "#94A3B8", opacity: 1 },
+};
+
 const SellerLogin = () => {
   const { sellerAuth } = useAppSelector((store) => store);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const formik = useFormik({
-    initialValues: {
-      email: "",
-      otp: "",
-    },
+    initialValues: { email: "", otp: "" },
     onSubmit: async (values) => {
-      console.log(values);
       if (sellerAuth.otpSent) {
         const resultAction = await dispatch(verifyLogin(values));
         if (verifyLogin.fulfilled.match(resultAction)) {
           navigate("/");
         } else {
-          console.error("Failed to Login :", resultAction.payload);
+          console.error("Failed to Login:", resultAction.payload);
         }
       } else {
         dispatch(sendLoginOtp(values));
@@ -36,42 +48,108 @@ const SellerLogin = () => {
 
   return (
     <div>
-      <h1 className='text-2xl text-center font-bold text-teal-500 mb-5'>
-        Seller Login
-      </h1>
-      <form onSubmit={formik.handleSubmit} className='flex flex-col gap-6'>
-        <TextField
-          fullWidth
-          label=' Email'
-          id='email'
-          name='email'
-          value={formik.values.email}
-          onChange={formik.handleChange}
-          error={formik.touched.email && Boolean(formik.errors.email)}
-          helperText={
-            formik.touched.email && typeof formik.errors.email === "string"
-              ? formik.errors.email
-              : ""
-          }
-        />
-        {sellerAuth.otpSent && (
+      {/* OTP sent notice */}
+      {sellerAuth.otpSent && (
+        <Alert
+          severity='info'
+          sx={{
+            mb: 3,
+            borderRadius: "10px",
+            fontSize: "0.8rem",
+            background: "#eff6ff",
+            border: "1px solid #bfdbfe",
+            color: "#1d4ed8",
+            "& .MuiAlert-icon": { color: "#0F52FF" },
+          }}
+        >
+          OTP sent to <strong>{formik.values.email}</strong>. Check your inbox.
+        </Alert>
+      )}
+
+      <form onSubmit={formik.handleSubmit} className='flex flex-col gap-4'>
+        {/* Email */}
+        <div>
+          <label className='block text-xs font-semibold text-[#64748B] mb-1.5 tracking-wide'>
+            Email Address
+          </label>
           <TextField
             fullWidth
-            label='OTP'
-            id='otp'
-            name='otp'
-            value={formik.values.otp}
+            id='email'
+            name='email'
+            placeholder='you@example.com'
+            value={formik.values.email}
             onChange={formik.handleChange}
-            error={formik.touched.otp && Boolean(formik.errors.otp)}
+            disabled={sellerAuth.otpSent}
+            error={formik.touched.email && Boolean(formik.errors.email)}
             helperText={
-              formik.touched.otp && typeof formik.errors.otp === "string"
-                ? formik.errors.otp
+              formik.touched.email && typeof formik.errors.email === "string"
+                ? formik.errors.email
                 : ""
             }
+            sx={inputSx}
           />
+        </div>
+
+        {/* OTP */}
+        {sellerAuth.otpSent && (
+          <div>
+            <label className='block text-xs font-semibold text-[#64748B] mb-1.5 tracking-wide'>
+              One-Time Password
+            </label>
+            <TextField
+              fullWidth
+              id='otp'
+              name='otp'
+              placeholder='Enter 6-digit OTP'
+              value={formik.values.otp}
+              onChange={formik.handleChange}
+              inputProps={{ maxLength: 6, letterSpacing: "0.3em" }}
+              error={formik.touched.otp && Boolean(formik.errors.otp)}
+              helperText={
+                formik.touched.otp && typeof formik.errors.otp === "string"
+                  ? formik.errors.otp
+                  : ""
+              }
+              sx={inputSx}
+            />
+          </div>
         )}
-        <Button sx={{ py: "12px" }} type='submit' variant='contained'>
-          {sellerAuth.otpSent ? "Login" : "Send OTP"}
+
+        {/* Submit */}
+        <Button
+          type='submit'
+          fullWidth
+          variant='contained'
+          disabled={sellerAuth.loading}
+          endIcon={
+            sellerAuth.loading ? (
+              <CircularProgress size={16} color='inherit' />
+            ) : (
+              <ArrowForward sx={{ fontSize: "18px !important" }} />
+            )
+          }
+          sx={{
+            mt: 1,
+            py: "12px",
+            textTransform: "none",
+            borderRadius: "10px",
+            background: "#0F52FF",
+            fontWeight: 600,
+            fontSize: "0.9rem",
+            boxShadow: "none",
+            "&:hover": { background: "#0a42d4", boxShadow: "none" },
+            "&:disabled": {
+              background: "#E2E8F0",
+              color: "#94A3B8",
+              boxShadow: "none",
+            },
+          }}
+        >
+          {sellerAuth.loading
+            ? "Please wait..."
+            : sellerAuth.otpSent
+              ? "Verify & Login"
+              : "Send OTP"}
         </Button>
       </form>
     </div>
