@@ -9,6 +9,7 @@ import Checkout from "../customer/pages/Checkout/Checkout";
 import Navbar from "../customer/components/Navbar/Navbar";
 import Profile from "../customer/pages/Profile/Profile";
 import Cart from "../customer/pages/Cart/Cart";
+import { ComingSoon } from "../customer/components/CommingSoon";
 
 const CustomerRoutes = () => {
   return (
@@ -24,6 +25,21 @@ const CustomerRoutes = () => {
         <Route path='/cart' element={<Cart />} />
         <Route path='/checkout/address' element={<Checkout />} />
         <Route path='/account/*' element={<Profile />} />
+        {/* Footer informational pages */}
+        <Route path='/help' element={<ComingSoon />} />
+        <Route path='/returns' element={<ComingSoon />} />
+        <Route path='/contact' element={<ComingSoon />} />
+        <Route path='/about' element={<ComingSoon />} />
+        <Route path='/privacy' element={<ComingSoon />} />
+        <Route path='/terms' element={<ComingSoon />} />
+        <Route path='/cookies' element={<ComingSoon />} />
+        <Route path='/size-guide' element={<ComingSoon />} />
+        <Route path='/sustainability' element={<ComingSoon />} />
+        <Route path='/affiliates' element={<ComingSoon />} />
+        <Route path='/careers' element={<ComingSoon />} />
+        <Route path='/press' element={<ComingSoon />} />
+        <Route path='/new-arrivals' element={<ComingSoon />} />
+        <Route path='/sale' element={<ComingSoon />} />
       </Routes>
       <Footer />
     </div>
