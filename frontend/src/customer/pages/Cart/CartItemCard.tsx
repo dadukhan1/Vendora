@@ -1,7 +1,7 @@
 /** @format */
 
 import { Add, Close, Remove } from "@mui/icons-material";
-import { Button, Divider, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { useAppDispatch } from "../../../Redux Toolkit/store";
 import {
   deleteCartItem,
@@ -11,65 +11,82 @@ import {
 const CartItemCard = ({ item }) => {
   const dispatch = useAppDispatch();
 
-  const handleUpdateCartItem = (quantity) => {
+  const handleUpdateCartItem = (quantity: number) => {
     dispatch(updateCartItem({ cartItemId: item?._id, quantity }));
   };
+
   const handleDeleteCartItem = () => {
     dispatch(deleteCartItem(item?._id));
   };
 
   return (
-    <div className='border border-gray-300 rounded-md relative'>
-      <div className='p-5 flex gap-3'>
+    <div className='bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl relative overflow-hidden'>
+      {/* Delete button */}
+      <div className='absolute top-2 right-2'>
+        <IconButton
+          onClick={handleDeleteCartItem}
+          size='small'
+          sx={{
+            color: "#94A3B8",
+            "&:hover": { color: "#FF4F00", background: "rgba(255,79,0,0.08)" },
+          }}
+        >
+          <Close fontSize='small' />
+        </IconButton>
+      </div>
+
+      {/* Main content */}
+      <div className='p-4 flex gap-4 pr-10'>
         <img
-          className='w-[90px] rounded-md'
           src={item.product?.images[0]}
           alt=''
+          className='w-20 h-20 rounded-xl object-cover flex-shrink-0'
         />
-        <div className='space-y-2 m-1'>
-          <h1 className='font-semibold text-lg'>Zosh Clothing</h1>
-          <p className='text-gray-600 font-medium text-sm'>
+        <div className='space-y-1 min-w-0'>
+          <p className='text-xs font-bold text-[#0F52FF] uppercase tracking-wide'>
+            Zosh Clothing
+          </p>
+          <h2 className='font-semibold text-[#0F172A] text-sm leading-snug truncate'>
             {item?.product?.title}
+          </h2>
+          <p className='text-[#94A3B8] text-xs truncate'>
+            Sold by: Natural Lifestyle Products Pvt. Ltd.
           </p>
-          <p className='text-gray-400 text-xs'>
-            <strong>Sold by:</strong> Natural Lifestyle Products Private Limited
-          </p>
-          <p className='text-xs'>
-            <strong>7 days replacement</strong> available
-          </p>
-          <p className='text-xm text-gray-500'>
-            <strong>Quantity</strong> : {item?.quantity}
+          <p className='text-[#64748B] text-xs'>
+            <span className='font-semibold text-[#0F172A]'>7 days</span>{" "}
+            replacement available
           </p>
         </div>
       </div>
-      <Divider />
-      <div className='px-5 py-2 flex justify-between items-center'>
-        <div className='flex items-center gap-2 w-[140px] justify-between'>
-          <Button
+
+      {/* Footer: qty + price */}
+      <div className='border-t border-[#E2E8F0] px-4 py-3 flex items-center justify-between'>
+        {/* Stepper */}
+        <div className='flex items-center border border-[#E2E8F0] rounded-xl overflow-hidden bg-white'>
+          <button
             disabled={item?.quantity === 1}
             onClick={() => handleUpdateCartItem(item?.quantity - 1)}
-            size='small'
+            className='px-3 py-1.5 text-[#0F52FF] disabled:text-[#E2E8F0]
+              hover:bg-[#F8FAFC] transition-colors border-none bg-transparent cursor-pointer'
           >
-            <Remove />
-          </Button>
-          <span className='px-3 font-semibold'>{item?.quantity}</span>
-          <Button
+            <Remove fontSize='small' />
+          </button>
+          <span className='px-3 text-sm font-bold text-[#0F172A]'>
+            {item?.quantity}
+          </span>
+          <button
             onClick={() => handleUpdateCartItem(item?.quantity + 1)}
-            size='small'
+            className='px-3 py-1.5 text-[#0F52FF] hover:bg-[#F8FAFC]
+              transition-colors border-none bg-transparent cursor-pointer'
           >
-            <Add />
-          </Button>
+            <Add fontSize='small' />
+          </button>
         </div>
-        <div>
-          <p className='text-gray-700 font-semibold'>
-            {item?.product?.sellingPrice}
-          </p>
-        </div>
-      </div>
-      <div className='absolute top-1 right-1'>
-        <IconButton onClick={() => handleDeleteCartItem()} color='primary'>
-          <Close />
-        </IconButton>
+
+        {/* Price */}
+        <p className='text-base font-bold text-[#0F172A]'>
+          ${item?.product?.sellingPrice}
+        </p>
       </div>
     </div>
   );

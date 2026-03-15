@@ -1,13 +1,6 @@
 /** @format */
 
-import {
-  Box,
-  Button,
-  FormControlLabel,
-  Modal,
-  Radio,
-  RadioGroup,
-} from "@mui/material";
+import { FormControlLabel, Modal, Radio, RadioGroup } from "@mui/material";
 import AddressCard from "./AddressCard";
 import { Add } from "@mui/icons-material";
 import { useEffect, useState, type ChangeEvent } from "react";
@@ -22,24 +15,10 @@ import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../../Redux Toolkit/store";
 import { fetchAddresses } from "../../../Redux Toolkit/features/customer/addressSlice";
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 500,
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  p: 4,
-};
-
 const Checkout = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
   const [selectedAddress, setSelectedAddress] = useState("");
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -48,49 +27,29 @@ const Checkout = () => {
 
   const { cart } = useAppSelector((store) => store.cart);
   const { addresses } = useAppSelector((store) => store.address);
-  const { currentOrder } = useAppSelector((store) => store.order); // 👈 currentOrder lo
 
   const handlePayment = async () => {
     if (!selectedAddress) {
-      alert("Pehle address select karo!");
+      alert("Please select a delivery address.");
       return;
     }
-
-    // Step 1 - pehle order banao
     const orderResult = await dispatch(
       createOrder({
         address: selectedAddress,
         paymentGateway: "stripe",
       }) as any,
     );
-
     const order = orderResult.payload;
-    console.log("Order created:", order);
+    if (!order) return;
 
-    if (!order) {
-      console.error("Order doesn't created!");
-      return;
-    }
-
-    console.log(
-      "before ------------------------------ ",
-      order._id,
-      order.totalSellingPrice,
-    );
-
-    console.log("starting checking out");
-    // Step 2 - phir checkout session banao
     const checkoutResult = await dispatch(
       createCheckout({
         orderId: order._id,
         totalSellingPrice: order.totalSellingPrice,
       }) as any,
     );
-
-    console.log("Checkout result:", checkoutResult.payload);
-
     if (checkoutResult.payload?.url) {
-      window.location.href = checkoutResult.payload.url; // ✅ Stripe pe bhejo
+      window.location.href = checkoutResult.payload.url;
     }
   };
 
@@ -99,69 +58,114 @@ const Checkout = () => {
   }, []);
 
   return (
-    <div className='pt-10 px-5 sm:px-10 md:px-44 lg:px-60 min-h-screen'>
-      <div className='space-y-5 lg:space-y-0 lg:grid grid-cols-3 lg:gap-9'>
-        <div className='col-span-2 space-y-5'>
+    <div className='min-h-screen bg-white pt-10 px-5 sm:px-10 md:px-24 lg:px-40 pb-20'>
+      <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
+        {/* ── Left: Address section ── */}
+        <div className='lg:col-span-2 space-y-5'>
+          {/* Header row */}
           <div className='flex justify-between items-center'>
-            <span className='font-semibold'>Select Delivery Address</span>
-            <Button onClick={handleOpen} variant='outlined'>
-              Add New Address
-            </Button>
-          </div>
-          <div className='text-xs font-medium space-y-5'>
-            <p>Saved Addresses</p>
-            <div className='space-y-3'>
-              {addresses?.map((address: any) => (
-                <AddressCard
-                  address={address}
-                  selectedValue={selectedAddress}
-                  handleChange={handleChange}
-                  key={address._id}
-                />
-              ))}
+            <div className='flex items-center gap-3'>
+              <span className='inline-block w-1 h-5 rounded bg-gradient-to-b from-[#0F52FF] to-[#FF4F00]' />
+              <h2 className='font-bold text-[#0F172A]'>
+                Select Delivery Address
+              </h2>
             </div>
-            <div className='py-4 px-5 rounded-md border border-gray-300'>
-              <Button startIcon={<Add />}>Add New Address</Button>
-            </div>
+            <button
+              onClick={() => setOpen(true)}
+              className='flex items-center gap-1.5 text-sm font-semibold text-[#0F52FF]
+                border border-[#0F52FF] px-3 py-1.5 rounded-xl hover:bg-[#0F52FF]/10
+                transition-colors'
+            >
+              <Add fontSize='small' />
+              Add New
+            </button>
           </div>
+
+          {/* Saved addresses */}
+          <div className='space-y-3'>
+            <p className='text-xs font-semibold text-[#64748B] uppercase tracking-widest'>
+              Saved Addresses
+            </p>
+            {addresses?.map((address: any) => (
+              <AddressCard
+                key={address._id}
+                address={address}
+                selectedValue={selectedAddress}
+                handleChange={handleChange}
+              />
+            ))}
+          </div>
+
+          {/* Add address inline CTA */}
+          <button
+            onClick={() => setOpen(true)}
+            className='w-full flex items-center justify-center gap-2 py-3.5
+              border border-dashed border-[#E2E8F0] rounded-2xl text-sm
+              text-[#64748B] hover:border-[#0F52FF] hover:text-[#0F52FF]
+              transition-colors bg-[#F8FAFC]'
+          >
+            <Add fontSize='small' />
+            Add New Address
+          </button>
         </div>
-        <div className='col-span-1 text-sm space-y-3'>
-          <section className='space-y-3 border p-5 rounded-lg'>
-            <h1 className='text-teal-600 font-medium pb-2 text-center'>
-              Choose Payment Gateway
-            </h1>
+
+        {/* ── Right: Payment + Pricing ── */}
+        <div className='lg:col-span-1 space-y-4'>
+          {/* Payment gateway */}
+          <div className='bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl px-5 py-4'>
+            <p className='text-xs font-bold uppercase tracking-widest text-[#64748B] mb-3'>
+              Payment Method
+            </p>
             <RadioGroup defaultValue='stripe' name='stripe'>
               <FormControlLabel
                 value='stripe'
-                control={<Radio />}
-                label='Stripe'
+                control={
+                  <Radio
+                    size='small'
+                    sx={{
+                      color: "#94A3B8",
+                      "&.Mui-checked": { color: "#0F52FF" },
+                    }}
+                  />
+                }
+                label={
+                  <span className='text-sm font-medium text-[#0F172A]'>
+                    Stripe
+                  </span>
+                }
               />
             </RadioGroup>
-          </section>
-          <section className='border border-gray-300 rounded-lg'>
+          </div>
+
+          {/* Pricing + Checkout */}
+          <div className='bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl overflow-hidden'>
             <PricingCard />
-            <div className='p-5'>
-              <Button
+            <div className='px-5 pb-5'>
+              <button
                 onClick={handlePayment}
-                variant='contained'
-                fullWidth
-                sx={{ py: "12px" }}
+                disabled={!selectedAddress}
+                className='w-full py-3.5 bg-[#0F52FF] text-white text-sm font-bold
+    rounded-xl tracking-wide shadow-[0_4px_20px_rgba(15,82,255,0.28)]
+    hover:opacity-90 active:scale-[.98] transition-all duration-150
+    disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none
+    disabled:active:scale-100'
               >
-                Checkout
-              </Button>
+                Proceed to Pay
+              </button>
             </div>
-          </section>
+          </div>
         </div>
       </div>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby='modal-modal-title'
-        aria-describedby='modal-modal-description'
-      >
-        <Box sx={style}>
-          <AddressForm paymentGateway={"stripe"} />
-        </Box>
+
+      {/* ── Address Form Modal ── */}
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <div
+          className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+            w-[95vw] max-w-[520px] bg-white rounded-2xl shadow-2xl p-6
+            outline-none max-h-[90vh] overflow-y-auto'
+        >
+          <AddressForm paymentGateway='stripe' onClose={() => setOpen(false)} />
+        </div>
       </Modal>
     </div>
   );
