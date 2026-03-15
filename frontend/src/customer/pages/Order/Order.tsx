@@ -17,14 +17,31 @@ const Order = () => {
   }, [dispatch]);
 
   return (
-    <div className='text-sm min-h-screen'>
-      <div className='pb-5'>
-        <h1 className='font-semibold'>All Orders</h1>
-        <p>from anytime</p>
+    <div style={{ minHeight: "100%", fontSize: 14 }}>
+      {/* Header */}
+      <div
+        style={{
+          marginBottom: 24,
+          paddingBottom: 16,
+          borderBottom: "1px solid #E2E8F0",
+        }}
+      >
+        <h1
+          style={{
+            fontSize: 18,
+            fontWeight: 700,
+            color: "#0F172A",
+            marginBottom: 4,
+          }}
+        >
+          All Orders
+        </h1>
+        <p style={{ fontSize: 13, color: "#94A3B8" }}>From anytime</p>
       </div>
 
-      <div className='space-y-1'>
-        {orders?.map((order, index) =>
+      {/* Orders list */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        {orders?.map((order) =>
           order?.orderItems?.map((orderItem) => (
             <OrderItemCard
               orderItem={orderItem}

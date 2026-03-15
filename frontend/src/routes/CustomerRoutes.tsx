@@ -7,7 +7,7 @@ import Products from "../customer/pages/Products/Products";
 import ProductDetails from "../customer/pages/Products/ProductDetails/ProductDetails";
 import Checkout from "../customer/pages/Checkout/Checkout";
 import Navbar from "../customer/components/Navbar/Navbar";
-import Profile from "../customer/pages/Order/Profile";
+import Profile from "../customer/pages/Profile/Profile";
 import Cart from "../customer/pages/Cart/Cart";
 
 const CustomerRoutes = () => {

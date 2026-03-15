@@ -32,76 +32,108 @@ const OrderStepper = ({ orderStatus }: any) => {
       setCurrentStep(1);
     } else {
       setStatusStep(steps);
-
       const index = steps.findIndex((step) => step.value === orderStatus);
-
       setCurrentStep(index);
     }
   }, [orderStatus]);
 
+  const isCancelled = orderStatus === "CANCELLED";
+  const activeColor = isCancelled ? "#FF4F00" : "#0F52FF";
+  const activeBg = isCancelled ? "rgba(255,79,0,0.08)" : "rgba(15,82,255,0.08)";
+
   return (
-    <Box className='mx-auto my-10'>
-      {statusStep.map((step, index) => (
-        <div key={index} className='flex px-4'>
-          {/* LEFT ICON + LINE */}
-          <div className='flex flex-col items-center'>
-            <Box
-              className={`w-8 h-8 rounded-full flex items-center justify-center
-              ${
-                index <= steps.length
-                  ? orderStatus === "CANCELLED"
-                    ? "bg-red-500 text-white"
-                    : "bg-teal-500 text-white"
-                  : "bg-gray-300 text-gray-600"
-              }`}
-            >
-              {index < currentStep ? (
-                <CheckCircleIcon />
-              ) : (
-                <FiberManualRecordIcon fontSize='small' />
-              )}
-            </Box>
+    <Box style={{ margin: "8px 0" }}>
+      {statusStep.map((step, index) => {
+        const isActive = step.value === orderStatus;
+        const isComplete = index < currentStep;
+        const isLast = index === statusStep.length - 1;
 
-            {/* Vertical Line */}
-            {index < steps.length - 1 && (
-              <div
-                className={`w-0.5 h-20 
-                ${
-                  index < currentStep
-                    ? orderStatus === "CANCELLED"
-                      ? "bg-red-500"
-                      : "bg-teal-500"
-                    : "bg-gray-400"
-                }`}
-              />
-            )}
-          </div>
-
-          {/* RIGHT CONTENT */}
-          <div className='ml-4 w-full'>
+        return (
+          <div
+            key={index}
+            style={{ display: "flex", gap: 16, padding: "0 4px" }}
+          >
+            {/* Icon + line */}
             <div
-              className={`p-2 rounded-md font-medium
-              ${
-                step.value === orderStatus
-                  ? orderStatus === "CANCELLED"
-                    ? "bg-red-500 text-white"
-                    : "bg-primary-color text-white"
-                  : ""
-              }`}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
             >
-              {step.name}
+              <div
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: isComplete || isActive ? activeColor : "#E2E8F0",
+                  color: isComplete || isActive ? "#fff" : "#94A3B8",
+                  flexShrink: 0,
+                  transition: "background 0.2s",
+                }}
+              >
+                {isComplete ? (
+                  <CheckCircleIcon sx={{ fontSize: 18 }} />
+                ) : (
+                  <FiberManualRecordIcon sx={{ fontSize: 12 }} />
+                )}
+              </div>
+
+              {!isLast && (
+                <div
+                  style={{
+                    width: 2,
+                    height: 56,
+                    borderRadius: 99,
+                    background: isComplete ? activeColor : "#E2E8F0",
+                    margin: "4px 0",
+                    transition: "background 0.2s",
+                  }}
+                />
+              )}
             </div>
 
-            <p
-              className={`text-xs ml-2 ${
-                step.value === orderStatus ? "text-gray-200" : "text-gray-500"
-              }`}
-            >
-              {step.description}
-            </p>
+            {/* Content */}
+            <div style={{ paddingBottom: isLast ? 0 : 8, flex: 1 }}>
+              <div
+                style={{
+                  display: "inline-block",
+                  padding: "4px 12px",
+                  borderRadius: 99,
+                  fontSize: 13,
+                  fontWeight: isActive ? 700 : 500,
+                  background: isActive
+                    ? activeColor
+                    : isComplete
+                      ? activeBg
+                      : "transparent",
+                  color: isActive
+                    ? "#fff"
+                    : isComplete
+                      ? activeColor
+                      : "#94A3B8",
+                  marginBottom: 4,
+                  transition: "all 0.2s",
+                }}
+              >
+                {step.name}
+              </div>
+              <p
+                style={{
+                  fontSize: 11,
+                  color: isActive ? "#64748B" : "#94A3B8",
+                  paddingLeft: 4,
+                }}
+              >
+                {step.description}
+              </p>
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </Box>
   );
 };
