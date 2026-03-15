@@ -5,24 +5,24 @@ import { useState } from "react";
 import { useAppSelector } from "../../../Redux Toolkit/store";
 
 const keyIconMap: Record<string, React.ReactNode> = {
-  Name:   <Person sx={{ fontSize: 18, color: "#0F52FF" }} />,
-  Email:  <Email  sx={{ fontSize: 18, color: "#0F52FF" }} />,
-  Mobile: <Phone  sx={{ fontSize: 18, color: "#0F52FF" }} />,
+  Name: <Person sx={{ fontSize: 18, color: "#0F52FF" }} />,
+  Email: <Email sx={{ fontSize: 18, color: "#0F52FF" }} />,
+  Mobile: <Phone sx={{ fontSize: 18, color: "#0F52FF" }} />,
 };
 
 const UserDetails = () => {
   const { user } = useAppSelector((store) => store.user);
 
   const fields = [
-    { key: "Name",   name: "fullName", value: user?.fullName || "" },
-    { key: "Email",  name: "email",    value: user?.email    || "" },
-    { key: "Mobile", name: "mobile",   value: user?.mobile   || "" },
+    { key: "Name", name: "fullName", value: user?.fullName || "" },
+    { key: "Email", name: "email", value: user?.email || "" },
+    { key: "Mobile", name: "mobile", value: user?.mobile || "" },
   ];
 
   const initialForm = Object.fromEntries(fields.map((f) => [f.name, f.value]));
   const [isEditing, setIsEditing] = useState(false);
-  const [form, setForm]           = useState(initialForm);
-  const [saved, setSaved]         = useState(initialForm);
+  const [form, setForm] = useState(initialForm);
+  const [saved, setSaved] = useState(initialForm);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -39,52 +39,33 @@ const UserDetails = () => {
   };
 
   return (
-    <div
-      style={{
-        background: "#fff",
-        border: "1px solid #E2E8F0",
-        borderRadius: 20,
-        overflow: "hidden",
-      }}
-    >
+    <div className='bg-white border border-slate-200 rounded-2xl overflow-hidden'>
       {/* Card header */}
       <div
-        style={{
-          padding: "22px 28px",
-          borderBottom: "1px solid #E2E8F0",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          background: isEditing ? "rgba(15,82,255,0.03)" : "#fff",
-          transition: "background 0.2s",
-        }}
+        className={[
+          "px-7 py-[22px] border-b border-slate-200 flex items-center justify-between transition-colors duration-200",
+          isEditing ? "bg-blue-600/[0.03]" : "bg-white",
+        ].join(" ")}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+        <div className='flex items-center gap-3.5'>
           {/* Avatar initials */}
-          <div
-            style={{
-              width: 50,
-              height: 50,
-              borderRadius: "50%",
-              background: "#0F52FF",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "#fff",
-              fontSize: 17,
-              fontWeight: 700,
-              flexShrink: 0,
-            }}
-          >
+          <div className='w-[50px] h-[50px] rounded-full bg-blue-600 flex items-center justify-center text-white text-[17px] font-bold shrink-0'>
             {saved.fullName
-              ?.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase() || "?"}
+              ?.split(" ")
+              .map((n: string) => n[0])
+              .join("")
+              .slice(0, 2)
+              .toUpperCase() || "?"}
           </div>
+
           <div>
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: "#0F172A" }}>
+            <h2 className='text-[17px] font-bold text-slate-900'>
               Personal Information
             </h2>
-            <p style={{ fontSize: 13, color: "#94A3B8", marginTop: 3 }}>
-              {isEditing ? "Make changes below and save" : "Your account details"}
+            <p className='text-[13px] text-slate-400 mt-[3px]'>
+              {isEditing
+                ? "Make changes below and save"
+                : "Your account details"}
             </p>
           </div>
         </div>
@@ -92,22 +73,7 @@ const UserDetails = () => {
         {!isEditing && (
           <button
             onClick={() => setIsEditing(true)}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 7,
-              padding: "9px 20px",
-              borderRadius: 99,
-              border: "1px solid rgba(15,82,255,0.25)",
-              background: "rgba(15,82,255,0.05)",
-              color: "#0F52FF",
-              fontSize: 13,
-              fontWeight: 600,
-              cursor: "pointer",
-              transition: "background 0.15s",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(15,82,255,0.1)")}
-            onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(15,82,255,0.05)")}
+            className='flex items-center gap-[7px] px-5 py-[9px] rounded-full border border-blue-600/25 bg-blue-600/5 hover:bg-blue-600/10 text-blue-600 text-[13px] font-semibold cursor-pointer transition-colors duration-150'
           >
             <Edit sx={{ fontSize: 15 }} /> Edit
           </button>
@@ -116,53 +82,26 @@ const UserDetails = () => {
 
       {/* View mode */}
       {!isEditing && (
-        <div style={{ padding: "6px 0" }}>
+        <div className='py-1.5'>
           {fields.map((field, i) => (
             <div
               key={field.key}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 18,
-                padding: "18px 28px",
-                borderBottom: i < fields.length - 1 ? "1px solid #F1F5F9" : "none",
-              }}
+              className={[
+                "flex items-center gap-[18px] px-7 py-[18px]",
+                i < fields.length - 1 ? "border-b border-slate-100" : "",
+              ].join(" ")}
             >
               {/* Icon bubble */}
-              <div
-                style={{
-                  width: 44,
-                  height: 44,
-                  borderRadius: 12,
-                  background: "rgba(15,82,255,0.07)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                }}
-              >
+              <div className='w-11 h-11 rounded-xl bg-blue-600/[0.07] flex items-center justify-center shrink-0'>
                 {keyIconMap[field.key]}
               </div>
 
-              <div style={{ flex: 1 }}>
-                <p
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 600,
-                    color: "#94A3B8",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.07em",
-                    marginBottom: 5,
-                  }}
-                >
+              <div className='flex-1'>
+                <p className='text-xs font-semibold text-slate-400 uppercase tracking-[0.07em] mb-[5px]'>
                   {field.key}
                 </p>
                 <p
-                  style={{
-                    fontSize: 15,
-                    fontWeight: 600,
-                    color: saved[field.name] ? "#0F172A" : "#94A3B8",
-                  }}
+                  className={`text-[15px] font-semibold ${saved[field.name] ? "text-slate-900" : "text-slate-400"}`}
                 >
                   {saved[field.name] || "Not set"}
                 </p>
@@ -174,41 +113,22 @@ const UserDetails = () => {
 
       {/* Edit mode */}
       {isEditing && (
-        <div
-          style={{
-            padding: "24px 28px",
-            display: "flex",
-            flexDirection: "column",
-            gap: 22,
-          }}
-        >
+        <div className='px-7 py-6 flex flex-col gap-[22px]'>
           {fields.map((field) => (
             <div key={field.key}>
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 7,
-                  fontSize: 12,
-                  fontWeight: 700,
-                  color: "#0F52FF",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.08em",
-                  marginBottom: 10,
-                }}
-              >
+              <label className='flex items-center gap-[7px] text-xs font-bold text-blue-600 uppercase tracking-[0.08em] mb-2.5'>
                 {keyIconMap[field.key]}
                 {field.key}
               </label>
 
               <TextField
                 fullWidth
-                size="small"
+                size='small'
                 name={field.name}
                 value={form[field.name]}
                 onChange={handleChange}
                 placeholder={`Enter your ${field.key.toLowerCase()}`}
-                variant="outlined"
+                variant='outlined'
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     borderRadius: "12px",
@@ -235,52 +155,16 @@ const UserDetails = () => {
           ))}
 
           {/* Bottom save bar */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              gap: 10,
-              paddingTop: 20,
-              borderTop: "1px solid #E2E8F0",
-              marginTop: 4,
-            }}
-          >
+          <div className='flex justify-end gap-2.5 pt-5 border-t border-slate-200 mt-1'>
             <button
               onClick={handleCancel}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "10px 22px",
-                borderRadius: 99,
-                border: "1px solid #E2E8F0",
-                background: "#fff",
-                color: "#64748B",
-                fontSize: 14,
-                fontWeight: 600,
-                cursor: "pointer",
-              }}
+              className='flex items-center gap-1.5 px-[22px] py-2.5 rounded-full border border-slate-200 bg-white text-slate-500 text-sm font-semibold cursor-pointer hover:bg-slate-50 transition-colors duration-150'
             >
               <Close sx={{ fontSize: 15 }} /> Cancel
             </button>
             <button
               onClick={handleSave}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "10px 24px",
-                borderRadius: 99,
-                border: "none",
-                background: "#0F52FF",
-                color: "#fff",
-                fontSize: 14,
-                fontWeight: 600,
-                cursor: "pointer",
-                transition: "background 0.15s",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = "#0040cc")}
-              onMouseLeave={(e) => (e.currentTarget.style.background = "#0F52FF")}
+              className='flex items-center gap-1.5 px-6 py-2.5 rounded-full border-none bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold cursor-pointer transition-colors duration-150'
             >
               <Check sx={{ fontSize: 15 }} /> Save Changes
             </button>

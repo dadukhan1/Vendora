@@ -20,7 +20,6 @@ const menu = [
     name: "Orders",
     path: "/account/orders",
     icon: <GridView sx={{ fontSize: 18 }} />,
-    badge: 3,
   },
   {
     name: "Profile",
@@ -47,9 +46,9 @@ const menu = [
 
 const Profile = () => {
   const { user } = useAppSelector((store) => store.user);
-  const dispatch  = useAppDispatch();
-  const navigate  = useNavigate();
-  const location  = useLocation();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleClick = (item: (typeof menu)[0]) => {
     if (item.isLogout) {
@@ -67,197 +66,95 @@ const Profile = () => {
     .toUpperCase();
 
   return (
-    <div className="min-h-screen" style={{ background: "#F8FAFC" }}>
-      <div className="max-w-5xl mx-auto px-5 lg:px-8 py-12">
-
+    <div className='min-h-screen bg-slate-50'>
+      <div className='max-w-5xl mx-auto px-5 lg:px-8 py-12'>
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 mb-8">
-          <span style={{ fontSize: 14, color: "#94A3B8" }}>Home</span>
-          <span style={{ fontSize: 14, color: "#94A3B8" }}>/</span>
-          <span style={{ fontSize: 14, color: "#0F52FF", fontWeight: 600 }}>
+        <div className='flex items-center gap-2 mb-8'>
+          <span className='text-sm text-slate-400'>Home</span>
+          <span className='text-sm text-slate-400'>/</span>
+          <span className='text-sm text-blue-600 font-semibold'>
             My Account
           </span>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-6 items-start">
-
+        <div className='grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-6 items-start'>
           {/* ── Sidebar ── */}
-          <div
-            className="lg:sticky lg:top-24"
-            style={{
-              background: "#fff",
-              border: "1px solid #E2E8F0",
-              borderRadius: 20,
-              overflow: "hidden",
-            }}
-          >
+          <div className='lg:sticky lg:top-24 bg-white border border-slate-200 rounded-2xl overflow-hidden'>
             {/* Top accent + avatar */}
-            <div
-              style={{
-                padding: "28px 20px 22px",
-                borderBottom: "1px solid #E2E8F0",
-                textAlign: "center",
-                position: "relative",
-              }}
-            >
-              {/* Blue→orange top bar */}
-              <div
-                style={{
-                  position: "absolute",
-                  top: 0, left: 0, right: 0,
-                  height: 4,
-                  background: "linear-gradient(90deg, #0F52FF, #FF4F00)",
-                  borderRadius: "20px 20px 0 0",
-                }}
-              />
-
+            <div className='px-5 pt-7 pb-[22px] border-b border-slate-200 text-center relative'>
               {/* Avatar */}
-              <div
-                style={{
-                  position: "relative",
-                  display: "inline-block",
-                  marginTop: 10,
-                }}
-              >
-                <div
-                  style={{
-                    width: 76,
-                    height: 76,
-                    borderRadius: "50%",
-                    background: "#0F52FF",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "#fff",
-                    fontSize: 24,
-                    fontWeight: 700,
-                    margin: "0 auto",
-                  }}
-                >
+              <div className='relative inline-block mt-2.5'>
+                <div className='w-[76px] h-[76px] rounded-full bg-blue-600 flex items-center justify-center text-white text-2xl font-bold mx-auto'>
                   {initials}
                 </div>
-                <div
-                  style={{
-                    position: "absolute",
-                    bottom: 2, right: 2,
-                    width: 16, height: 16,
-                    background: "#22c55e",
-                    border: "3px solid #fff",
-                    borderRadius: "50%",
-                  }}
-                />
+                {/* Online dot */}
+                <div className='absolute bottom-0.5 right-0.5 w-4 h-4 bg-green-500 border-[3px] border-white rounded-full' />
               </div>
 
-              <p
-                style={{
-                  fontSize: 16,
-                  fontWeight: 700,
-                  color: "#0F172A",
-                  marginTop: 14,
-                }}
-              >
+              <p className='text-base font-bold text-slate-900 mt-3.5'>
                 {user?.fullName}
               </p>
-              <p style={{ fontSize: 13, color: "#94A3B8", marginTop: 4 }}>
-                {user?.email}
-              </p>
-              <span
-                style={{
-                  display: "inline-block",
-                  marginTop: 12,
-                  background: "rgba(15,82,255,0.08)",
-                  color: "#0F52FF",
-                  fontSize: 12,
-                  fontWeight: 700,
-                  padding: "4px 14px",
-                  borderRadius: 99,
-                  letterSpacing: "0.03em",
-                }}
-              >
+              <p className='text-[13px] text-slate-400 mt-1'>{user?.email}</p>
+
+              {/* Premium badge */}
+              <span className='inline-block mt-3 bg-blue-600/10 text-blue-600 text-xs font-bold px-3.5 py-1 rounded-full tracking-wide'>
                 Premium
               </span>
             </div>
 
             {/* Nav items */}
-            <nav style={{ padding: "12px 10px 16px" }}>
+            <nav className='px-2.5 pt-3 pb-4'>
               {menu.map((item, i) => {
-                const isActive  = location.pathname === item.path;
-                const isLogout  = !!item.isLogout;
+                const isActive = location.pathname === item.path;
+                const isLogout = !!item.isLogout;
                 const isDivider = i === menu.length - 1;
 
                 return (
                   <div key={item.path}>
                     {isDivider && (
-                      <div
-                        style={{
-                          height: 1,
-                          background: "#E2E8F0",
-                          margin: "8px 6px 10px",
-                        }}
-                      />
+                      <div className='h-px bg-slate-200 mx-1.5 my-2' />
                     )}
                     <div
                       onClick={() => handleClick(item)}
-                      style={{
-                        padding: "12px 14px",
-                        borderRadius: 12,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 12,
-                        cursor: "pointer",
-                        marginBottom: 3,
-                        background: isActive
-                          ? "rgba(15,82,255,0.08)"
+                      className={[
+                        "flex items-center gap-3 px-3.5 py-3 rounded-xl cursor-pointer mb-[3px] transition-colors duration-150",
+                        isActive
+                          ? "bg-blue-600/10 border border-transparent"
                           : isLogout
-                          ? "rgba(255,79,0,0.03)"
-                          : "transparent",
-                        border: isLogout
-                          ? "1px solid rgba(255,79,0,0.18)"
-                          : "1px solid transparent",
-                        transition: "background 0.15s",
-                      }}
+                            ? "bg-orange-500/[0.03] border border-orange-500/20"
+                            : "border border-transparent hover:bg-slate-100",
+                      ].join(" ")}
                     >
+                      {/* Icon */}
                       <span
-                        style={{
-                          color: isActive
-                            ? "#0F52FF"
+                        className={
+                          isActive
+                            ? "text-blue-600 flex"
                             : isLogout
-                            ? "#FF4F00"
-                            : "#94A3B8",
-                          display: "flex",
-                        }}
+                              ? "text-orange-600 flex"
+                              : "text-slate-400 flex"
+                        }
                       >
                         {item.icon}
                       </span>
+
+                      {/* Label */}
                       <span
-                        style={{
-                          fontSize: 14.5,
-                          fontWeight: isActive ? 700 : 500,
-                          color: isActive
-                            ? "#0F52FF"
+                        className={[
+                          "flex-1 text-[14.5px]",
+                          isActive
+                            ? "font-bold text-blue-600"
                             : isLogout
-                            ? "#FF4F00"
-                            : "#94A3B8",
-                          flex: 1,
-                        }}
+                              ? "font-medium text-orange-600"
+                              : "font-medium text-slate-400",
+                        ].join(" ")}
                       >
                         {item.name}
                       </span>
+
+                      {/* Badge (optional) */}
                       {"badge" in item && item.badge && (
-                        <span
-                          style={{
-                            background: "#0F52FF",
-                            color: "#fff",
-                            fontSize: 11,
-                            fontWeight: 700,
-                            width: 20,
-                            height: 20,
-                            borderRadius: "50%",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                          }}
-                        >
+                        <span className='bg-blue-600 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center'>
                           {item.badge}
                         </span>
                       )}
@@ -269,12 +166,12 @@ const Profile = () => {
           </div>
 
           {/* ── Main content ── */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+          <div className='flex flex-col gap-5'>
             <Routes>
-              <Route path="/"       element={<UserDetails />} />
-              <Route path="/orders" element={<Order />} />
+              <Route path='/' element={<UserDetails />} />
+              <Route path='/orders' element={<Order />} />
               <Route
-                path="/orders/:orderId/item/:orderItemId"
+                path='/orders/:orderId/item/:orderItemId'
                 element={<OrderDetails />}
               />
             </Routes>

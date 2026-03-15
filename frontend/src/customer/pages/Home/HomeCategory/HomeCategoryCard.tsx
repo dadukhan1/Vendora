@@ -1,16 +1,32 @@
 /** @format */
 
-const HomeCategoryCard = ({ item }) => {
+import { useNavigate } from "react-router";
+
+const HomeCategoryCard = ({ item }: any) => {
+  const navigate = useNavigate();
+
   return (
-    <div className='flex gap-3 flex-col justify-center items-center group cursor-pointer'>
-      <div className='text-center custom-border w-[150px] lg:w-[249px] h-[150px] lg:h-[249px] rounded-full bg-teal-400'>
+    <div
+      onClick={() => navigate(`/products/${item.categoryId}`)}
+      className='group flex flex-col items-center gap-3 cursor-pointer w-24 sm:w-56'
+    >
+      {/* Image */}
+      <div className='w-full aspect-square rounded-2xl overflow-hidden border border-[#E2E8F0] bg-[#F8FAFC] relative group-hover:border-[#0F52FF] transition-all duration-200'>
         <img
-          className='group-hover:scale-95 transition-transform duration-700 object-cover object-top h-full w-full rounded-full'
           src={item.image}
-          alt=''
+          alt={item.name}
+          className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-500'
         />
-        <h1 className='font-medium'>{item.name}</h1>
+        <div className='absolute inset-0 bg-[#0F52FF]/0 group-hover:bg-[#0F52FF]/08 transition-all duration-200' />
       </div>
+
+      {/* Label */}
+      <p
+        className='text-sm text-[#0F172A] text-center group-hover:text-[#0F52FF] transition-colors duration-150 truncate w-full'
+        style={{ fontWeight: 600 }}
+      >
+        {item.name}
+      </p>
     </div>
   );
 };
