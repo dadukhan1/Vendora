@@ -36,12 +36,6 @@ export const ComingSoon = () => {
         {/* Buttons */}
         <div className='flex items-center justify-center gap-3'>
           <button
-            onClick={() => navigate(-1)}
-            className='px-5 py-2.5 rounded-full border border-[#E2E8F0] text-[#64748B] text-sm font-semibold hover:border-[#0F52FF] hover:text-[#0F52FF] transition-all duration-150 cursor-pointer bg-white'
-          >
-            ← Go Back
-          </button>
-          <button
             onClick={() => navigate("/")}
             className='px-5 py-2.5 rounded-full bg-[#0F52FF] text-white text-sm font-semibold hover:bg-[#0040cc] transition-all duration-150 cursor-pointer'
           >
