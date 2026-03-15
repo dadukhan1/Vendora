@@ -117,7 +117,7 @@ class ProductService {
   }
 
   async findProductById(productId) {
-    const product = await Product.findById(productId);
+    const product = await Product.findById(productId).populate("seller");
 
     if (!product) {
       throw new Error("Product not found!");

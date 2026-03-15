@@ -3,6 +3,8 @@
 import {
   Add,
   AddShoppingCart,
+  ArrowBackIos,
+  ArrowForwardIos,
   Favorite,
   LocalShipping,
   Remove,
@@ -11,7 +13,6 @@ import {
   Wallet,
   WorkspacePremium,
 } from "@mui/icons-material";
-import { Button, Divider } from "@mui/material";
 import { useEffect, useState } from "react";
 import SimilarProduct from "./SimilarProduct";
 import {
@@ -24,14 +25,8 @@ import { useParams } from "react-router";
 
 const ProductDetails = () => {
   const [currentImage, setCurrentImage] = useState(0);
-  const { categoryid, productId } = useParams();
-  const handleChangeCurrentImage = (index: number) => {
-    setCurrentImage(index);
-  };
+  const { productId } = useParams();
   const [quantity, setQuantity] = useState(1);
-  const handleQuantityChange = (value: number) => {
-    setQuantity(value + quantity);
-  };
   const dispatch = useAppDispatch();
   const { product } = useAppSelector((store) => store.products);
 
@@ -40,134 +35,238 @@ const ProductDetails = () => {
   }, [dispatch]);
 
   const handleAddItemToCart = () => {
-    console.log(product);
-    const request = {
-      size: "M",
-      productId: product?._id,
-      quantity,
-    };
-    dispatch(addItemToCart(request));
+    dispatch(addItemToCart({ size: "M", productId: product?._id, quantity }));
   };
 
+  const handleQuantityChange = (delta: number) => {
+    setQuantity((q) => Math.max(1, q + delta));
+  };
+
+  const images: string[] = product?.images ?? [];
+
+  const trustBadges = [
+    { icon: <Shield fontSize='small' />, label: "Authentic & Quality Assured" },
+    {
+      icon: <WorkspacePremium fontSize='small' />,
+      label: "100% Money Back Guarantee",
+    },
+    {
+      icon: <LocalShipping fontSize='small' />,
+      label: "Free Shipping & Returns",
+    },
+    { icon: <Wallet fontSize='small' />, label: "Pay on Delivery Available" },
+  ];
+
   return (
-    <div className='min-h-screen px-5 lg:px-20 pt-10'>
-      <div className='grid grid-cols-1 lg:grid-cols-2 gap-10'>
-        <section className='flex flex-col lg:flex-row gap-5'>
-          <div className='w-full lg:w-[15%] flex flex-wrap lg:flex-col gap-3'>
-            {product?.images?.map((item, index) => (
-              <img
-                onClick={() => handleChangeCurrentImage(index)}
-                className='lg:w-full w-[50px] cursor-pointer rounded-md'
-                src={item}
-              />
-            ))}
-          </div>
-          <div className='w-full lg:w-[85%]'>
-            <img
-              className='w-full rounded-md'
-              src={product?.images[currentImage]}
-              alt=''
-            />
-          </div>
-        </section>
-        <section>
-          <h1 className='font-bold text-lg text-teal-500'>Rana Clothing</h1>
-          <p className='text-gray-500'>{product?.item}</p>
-          <div
-            className='flex justify-between items-center py-2
-            border border-gray-500 w-[180px] px-3 mt-5'
-          >
-            <div className='flex gap-1 items-center'>
-              <span>4</span>
-              <Star color='primary' />
+    <div className='min-h-screen bg-white text-[#0F172A] font-sans'>
+      <div className='px-5 lg:px-20 pt-10 pb-24'>
+        {/* Main 2-col grid */}
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-14'>
+          {/* ── Left: Image gallery ── */}
+          <section className='flex flex-col-reverse lg:flex-row gap-4'>
+            {/* Thumbnails */}
+            <div className='flex lg:flex-col gap-3 overflow-x-auto lg:overflow-visible'>
+              {images.map((src, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentImage(i)}
+                  className={`flex-shrink-0 rounded-xl p-0.5 bg-white transition-all duration-200
+                    ${
+                      i === currentImage
+                        ? "border-2 border-[#0F52FF]"
+                        : "border-2 border-[#E2E8F0] hover:border-[#94A3B8]"
+                    }`}
+                >
+                  <img
+                    src={src}
+                    alt=''
+                    className='w-20 h-30 object-cover rounded-lg block'
+                  />
+                </button>
+              ))}
             </div>
-            <Divider orientation='vertical' flexItem />
-            <span>478 Rating</span>
-          </div>
-          <div className='space-y-2 pt-5'>
-            <div className='details pt-3 space-y-1 group-hover-effect rounded-md'>
-              <div className='price flex items-center gap-3'>
-                <span className='font-semibold text-teal-800'>
-                  {product?.sellingPrice}
+
+            {/* Main image */}
+            <div className='relative flex-1 rounded-2xl overflow-hidden bg-white shadow-[0_8px_40px_rgba(15,82,255,0.10)]'>
+              <img
+                src={images[currentImage]}
+                alt=''
+                className='w-full h-full object-cover block min-h-[380px]'
+              />
+
+              {/* Discount badge */}
+              {product?.discount && (
+                <div className='absolute top-4 left-4 bg-[#FF4F00] text-white text-xs font-bold px-3 py-1 rounded-full tracking-wide'>
+                  {product.discount}% OFF
+                </div>
+              )}
+
+              {/* Prev / Next arrows */}
+              {images.length > 1 && (
+                <>
+                  <button
+                    onClick={() => setCurrentImage((p) => Math.max(0, p - 1))}
+                    className='absolute top-1/2 left-3 -translate-y-1/2 w-9 h-9 flex items-center
+                      justify-center bg-white rounded-full shadow-md text-[#0F172A]
+                      hover:bg-[#F8FAFC] transition-colors border-none cursor-pointer'
+                  >
+                    <ArrowBackIos fontSize='small' />
+                  </button>
+                  <button
+                    onClick={() =>
+                      setCurrentImage((p) => Math.min(images.length - 1, p + 1))
+                    }
+                    className='absolute top-1/2 right-3 -translate-y-1/2 w-9 h-9 flex items-center
+                      justify-center bg-white rounded-full shadow-md text-[#0F172A]
+                      hover:bg-[#F8FAFC] transition-colors border-none cursor-pointer'
+                  >
+                    <ArrowForwardIos fontSize='small' />
+                  </button>
+                </>
+              )}
+            </div>
+          </section>
+
+          {/* ── Right: Product info ── */}
+          <section className='flex flex-col gap-5'>
+            {/* Brand pill + product title */}
+            <div>
+              <span
+                className='inline-block bg-[#0F52FF]/10 text-[#0F52FF] text-[11px] font-bold
+                tracking-widest uppercase px-3 py-0.5 rounded-full mb-2'
+              >
+                {product?.seller?.bussinessDetails?.bussinessName ||
+                  product?.seller?.sellerName ||
+                  "Brand"}
+              </span>
+              <h1 className='text-2xl font-bold leading-snug text-[#0F172A]'>
+                {product?.item}
+              </h1>
+            </div>
+
+            {/* Rating */}
+            <div className='flex items-center gap-3'>
+              <div className='flex items-center gap-1 bg-[#0F52FF]/10 px-2.5 py-1 rounded-lg'>
+                <Star className='!text-[#0F52FF] !text-[18px]' />
+                <span className='font-bold text-[#0F52FF] text-sm'>4.0</span>
+              </div>
+              <span className='text-[#64748B] text-sm'>478 Ratings</span>
+              <span className='text-[#64748B] text-sm'>· 124 Reviews</span>
+            </div>
+
+            {/* Price card */}
+            <div className='border border-[#E2E8F0] rounded-2xl px-5 py-4 bg-white'>
+              <div className='flex items-end gap-3 flex-wrap'>
+                <span className='text-3xl font-extrabold text-[#0F172A]'>
+                  ₹{product?.sellingPrice}
                 </span>
-                <span className='text font-thin line-through text-gray-400'>
-                  {product?.mrpPrice}
+                <span className='text-lg text-[#94A3B8] line-through mb-0.5'>
+                  ₹{product?.mrpPrice}
                 </span>
-                <span className='font-semibold text-teal-600'>
+                <span
+                  className='text-sm font-bold text-[#FF4F00] bg-[#FF4F00]/10
+                  px-2.5 py-0.5 rounded-full mb-0.5'
+                >
                   {product?.discount}% off
                 </span>
               </div>
-              <p className='text-sm'>
-                Inclusive of all taxes. Free Shipping above 1500.
+              <p className='text-xs text-[#64748B] mt-1.5'>
+                Inclusive of all taxes &nbsp;·&nbsp; Free shipping above ₹1500
               </p>
             </div>
-            <div className='mt-7 space-y-3'>
-              <div className='flex items-center gap-4'>
-                <Shield color='primary' />
-                <p>Authentic & Quality Assured</p>
-              </div>
-              <div className='flex items-center gap-4'>
-                <WorkspacePremium color='primary' />
-                <p>100% money back guarantee</p>
-              </div>
-              <div className='flex items-center gap-4'>
-                <LocalShipping color='primary' />
-                <p>Free shipping & returns</p>
-              </div>
-              <div className='flex items-center gap-4'>
-                <Wallet color='primary' />
-                <p>Pay on delivery might be available</p>
-              </div>
+
+            {/* Trust badges 2×2 */}
+            <div className='grid grid-cols-2 gap-2.5'>
+              {trustBadges.map(({ icon, label }) => (
+                <div
+                  key={label}
+                  className='flex items-center gap-2.5 bg-white border border-[#E2E8F0]
+                    rounded-xl px-3.5 py-2.5 text-xs text-[#64748B]'
+                >
+                  <span className='text-[#0F52FF] flex'>{icon}</span>
+                  {label}
+                </div>
+              ))}
             </div>
-            <div className='mt-7 space-y-2'>
-              <h1>QUANTITY</h1>
-              <div className='flex items-center gap-2 w-[140px] justify-between'>
-                <Button
+
+            {/* Quantity stepper */}
+            <div>
+              <p className='text-xs font-semibold text-[#64748B] uppercase tracking-widest mb-2.5'>
+                Quantity
+              </p>
+              <div
+                className='inline-flex items-center border-[1.5px] border-[#E2E8F0]
+                rounded-xl overflow-hidden bg-white'
+              >
+                <button
                   onClick={() => handleQuantityChange(-1)}
-                  variant='outlined'
+                  className='px-4 py-2.5 flex items-center justify-center text-[#0F52FF]
+                    hover:bg-[#F8FAFC] transition-colors border-none bg-transparent cursor-pointer'
                 >
-                  <Remove />
-                </Button>
-                <span>{quantity}</span>
-                <Button
-                  onClick={() => handleQuantityChange(+1)}
-                  variant='outlined'
+                  <Remove fontSize='small' />
+                </button>
+                <span className='min-w-[48px] text-center font-bold text-lg text-[#0F172A]'>
+                  {quantity}
+                </span>
+                <button
+                  onClick={() => handleQuantityChange(1)}
+                  className='px-4 py-2.5 flex items-center justify-center text-[#0F52FF]
+                    hover:bg-[#F8FAFC] transition-colors border-none bg-transparent cursor-pointer'
                 >
-                  <Add />
-                </Button>
+                  <Add fontSize='small' />
+                </button>
               </div>
             </div>
+
+            {/* CTA buttons */}
+            <div className='flex gap-4 pt-2'>
+              {/* Add to Cart */}
+              <button
+                onClick={handleAddItemToCart}
+                className='flex-1 flex items-center justify-center gap-2 bg-[#0F52FF] text-white
+                  rounded-[14px] py-4 text-[15px] font-bold tracking-wide cursor-pointer
+                  shadow-[0_4px_20px_rgba(15,82,255,0.35)] hover:opacity-90
+                  active:scale-[.98] transition-all duration-150 border-none'
+              >
+                <AddShoppingCart fontSize='small' />
+                Add to Cart
+              </button>
+
+              {/* Wishlist */}
+              <button
+                className='flex-1 flex items-center justify-center gap-2 bg-white text-[#FF4F00]
+                  border-[1.5px] border-[#FF4F00] rounded-[14px] py-4 text-[15px] font-bold
+                  tracking-wide cursor-pointer hover:bg-[#FF4F00]/10
+                  active:scale-[.98] transition-all duration-150'
+              >
+                <Favorite fontSize='small' />
+                Wishlist
+              </button>
+            </div>
+
+            {/* Description */}
+            {product?.description && (
+              <div className='border-t border-[#E2E8F0] pt-4 text-sm text-[#64748B] leading-relaxed'>
+                <p className='font-semibold text-[#0F172A] mb-1.5'>
+                  About this product
+                </p>
+                {product.description}
+              </div>
+            )}
+          </section>
+        </div>
+
+        {/* Similar Products */}
+        <section className='mt-20'>
+          <div className='flex items-center gap-3 mb-6'>
+            <span className='inline-block w-1 h-6 rounded bg-gradient-to-b from-[#0F52FF] to-[#FF4F00]' />
+            <h2 className='text-xl font-bold text-[#0F172A]'>
+              Similar Products
+            </h2>
           </div>
-          <div className='mt-12 flex items-center gap-5'>
-            <Button
-              startIcon={<AddShoppingCart />}
-              fullWidth
-              onClick={handleAddItemToCart}
-              variant='outlined'
-              sx={{ py: "1rem" }}
-            >
-              Add to Cart
-            </Button>
-            <Button
-              startIcon={<Favorite />}
-              fullWidth
-              variant='outlined'
-              sx={{ py: "1rem" }}
-            >
-              Whishlist
-            </Button>
-          </div>
-          <div className='mt-5'>
-            <p>{product?.description} </p>
-          </div>
+          <SimilarProduct />
         </section>
       </div>
-      <section className='mt-20'>
-        <h1 className='text-lg font-bold'>Similar Product</h1>
-        <div className='pt-5'>
-          <SimilarProduct />
-        </div>
-      </section>
     </div>
   );
 };
