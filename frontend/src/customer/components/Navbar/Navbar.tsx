@@ -91,66 +91,97 @@ const Navbar = () => {
           </IconButton>
 
           {user ? (
-            <Button
-              onClick={() => navigate("/account")}
-              sx={{
-                ml: 1,
-                textTransform: "none",
-                color: "#111",
-                gap: 1,
-                borderRadius: "999px",
-                px: 2,
-                py: 1,
-                "&:hover": { backgroundColor: "#f3f4f6" },
-              }}
-            >
-              <Avatar
-                src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAWbnrBYN8xcnSmAOcZViCHoJWz-ipFaFfFg&s'
-                sx={{ height: 34, width: 34 }}
-              />
-              <span className='text-sm font-semibold hidden md:block'>
-                {user?.fullName}
-              </span>
-            </Button>
+            <>
+              {user?.role === "ROLE_CUSTOMER" ? (
+                <Button
+                  onClick={() => navigate("/account")}
+                  sx={{
+                    ml: 1,
+                    textTransform: "none",
+                    color: "#111",
+                    gap: 1,
+                    borderRadius: "999px",
+                    px: 2,
+                    py: 1,
+                    "&:hover": { backgroundColor: "#f3f4f6" },
+                  }}
+                >
+                  <Avatar
+                    src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAWbnrBYN8xcnSmAOcZViCHoJWz-ipFaFfFg&s'
+                    sx={{ height: 34, width: 34 }}
+                  />
+                  <span className='text-sm font-semibold hidden md:block'>
+                    {user?.fullName}
+                  </span>
+                </Button>
+              ) : (
+                <Button
+                  onClick={() =>
+                    navigate(
+                      `${user?.role === "ROLE_ADMIN" ? "/admin" : "/seller"}`,
+                    )
+                  }
+                  variant='contained'
+                  startIcon={<Storefront sx={{ fontSize: 20 }} />}
+                  sx={{
+                    ml: 1,
+                    textTransform: "none",
+                    borderRadius: "999px",
+                    backgroundColor: "#0F52FF",
+                    fontSize: "0.875rem",
+                    px: 2.5,
+                    py: 1,
+                    boxShadow: "none",
+                    "&:hover": {
+                      backgroundColor: "#0040cc",
+                      boxShadow: "none",
+                    },
+                  }}
+                >
+                  Go To Dashboard
+                </Button>
+              )}
+            </>
           ) : (
-            <Button
-              onClick={() => navigate("/login")}
-              variant='outlined'
-              startIcon={<AccountCircle sx={{ fontSize: 20 }} />}
-              sx={{
-                ml: 1,
-                textTransform: "none",
-                borderRadius: "999px",
-                borderColor: "#d1d5db",
-                color: "#374151",
-                fontSize: "0.875rem",
-                px: 2.5,
-                py: 1,
-                "&:hover": { borderColor: "#0F52FF", color: "#0F52FF" },
-              }}
-            >
-              Login
-            </Button>
+            <>
+              <Button
+                onClick={() => navigate("/login")}
+                variant='outlined'
+                startIcon={<AccountCircle sx={{ fontSize: 20 }} />}
+                sx={{
+                  ml: 1,
+                  textTransform: "none",
+                  borderRadius: "999px",
+                  borderColor: "#d1d5db",
+                  color: "#374151",
+                  fontSize: "0.875rem",
+                  px: 2.5,
+                  py: 1,
+                  "&:hover": { borderColor: "#0F52FF", color: "#0F52FF" },
+                }}
+              >
+                Login
+              </Button>
+              <Button
+                onClick={() => navigate("/become-seller")}
+                variant='contained'
+                startIcon={<Storefront sx={{ fontSize: 20 }} />}
+                sx={{
+                  ml: 1,
+                  textTransform: "none",
+                  borderRadius: "999px",
+                  backgroundColor: "#0F52FF",
+                  fontSize: "0.875rem",
+                  px: 2.5,
+                  py: 1,
+                  boxShadow: "none",
+                  "&:hover": { backgroundColor: "#0040cc", boxShadow: "none" },
+                }}
+              >
+                Become a Seller
+              </Button>
+            </>
           )}
-
-          <Button
-            onClick={() => navigate("/become-seller")}
-            variant='contained'
-            startIcon={<Storefront sx={{ fontSize: 20 }} />}
-            sx={{
-              ml: 1,
-              textTransform: "none",
-              borderRadius: "999px",
-              backgroundColor: "#0F52FF",
-              fontSize: "0.875rem",
-              px: 2.5,
-              py: 1,
-              boxShadow: "none",
-              "&:hover": { backgroundColor: "#0040cc", boxShadow: "none" },
-            }}
-          >
-            Become a Seller
-          </Button>
         </div>
       </div>
 

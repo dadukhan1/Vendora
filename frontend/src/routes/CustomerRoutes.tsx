@@ -10,6 +10,7 @@ import Navbar from "../customer/components/Navbar/Navbar";
 import Profile from "../customer/pages/Profile/Profile";
 import Cart from "../customer/pages/Cart/Cart";
 import { ComingSoon } from "../customer/components/CommingSoon";
+import ProtectedRoute from "./ProtectedRoute";
 
 const CustomerRoutes = () => {
   return (
@@ -17,14 +18,24 @@ const CustomerRoutes = () => {
       <Navbar />
       <Routes>
         <Route path='/' element={<Home />} />
+        <Route
+          path='/*'
+          element={
+            <ProtectedRoute requiredRole='ROLE_CUSTOMER'>
+              <Routes>
+                <Route path='/cart' element={<Cart />} />
+                <Route path='/checkout/address' element={<Checkout />} />
+                <Route path='/account/*' element={<Profile />} />
+              </Routes>
+            </ProtectedRoute>
+          }
+        />
+
         <Route path='/products/:categoryId' element={<Products />} />
         <Route
           path='/product-details/:categoryId/:name/:productId'
           element={<ProductDetails />}
         />
-        <Route path='/cart' element={<Cart />} />
-        <Route path='/checkout/address' element={<Checkout />} />
-        <Route path='/account/*' element={<Profile />} />
         {/* Footer informational pages */}
         <Route path='/help' element={<ComingSoon />} />
         <Route path='/returns' element={<ComingSoon />} />

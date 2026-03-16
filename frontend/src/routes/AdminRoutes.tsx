@@ -9,22 +9,35 @@ import ElectronicsTable from "../admin/Homepage/ElectronicsTable";
 import ShopByCategory from "../admin/Homepage/ShopByCategory";
 import Deal from "../admin/Deal/Deal";
 import UpdateHomeCategory from "../admin/Homepage/UpdateHomeCategory";
+import ProtectedRoute from "./ProtectedRoute";
 
 const AdminRoutes = () => {
   return (
     <div>
       <Routes>
-        <Route path='/' element={<SellerTable />} />
-        <Route path='/coupons' element={<Coupon />} />
-        <Route path='/add-coupon' element={<CouponForm />} />
-        <Route path='/home-page/*' element={<GridTable />} />
         <Route
-          path='/home-page/update/:id'
-          element={<UpdateHomeCategory />}
-        />
-        <Route path='/electronics-category' element={<ElectronicsTable />} />
-        <Route path='/shop-by-category' element={<ShopByCategory />} />
-        <Route path='/deals' element={<Deal />} />
+          path='/*'
+          element={
+            <ProtectedRoute requiredRole='ROLE_ADMIN'>
+              <Routes>
+                <Route path='/' element={<SellerTable />} />
+                <Route path='/coupons' element={<Coupon />} />
+                <Route path='/add-coupon' element={<CouponForm />} />
+                <Route path='/home-page/*' element={<GridTable />} />
+                <Route
+                  path='/home-page/update/:id'
+                  element={<UpdateHomeCategory />}
+                />
+                <Route
+                  path='/electronics-category'
+                  element={<ElectronicsTable />}
+                />
+                <Route path='/shop-by-category' element={<ShopByCategory />} />
+                <Route path='/deals' element={<Deal />} />
+              </Routes>
+            </ProtectedRoute>
+          }
+        ></Route>
       </Routes>
     </div>
   );
