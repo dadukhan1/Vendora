@@ -9,7 +9,6 @@ const API_URL = "/auth";
 const initialState = {
   jwt: null,
   role: null,
-  user: null as any,
   loading: false,
   error: null as string | null,
   otpSent: false,
@@ -114,14 +113,13 @@ const authSlice = createSlice({
       state.loading = false;
       state.jwt = action.payload.jwt;
       state.role = action.payload.role;
-      state.user = action.payload;
       state.otpSent = false;
       toast.success("Signin successful");
     });
     builder.addCase(signin.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload as string;
-      toast.error("Signin failed: " + state.error);
+      toast.error("Signup failed: " + state.error);
     });
   },
 });

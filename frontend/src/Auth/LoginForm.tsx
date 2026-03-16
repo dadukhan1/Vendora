@@ -22,8 +22,10 @@ const LoginForm = () => {
         if (signin.fulfilled.match(resultAction)) {
           if (resultAction?.payload?.role === "ROLE_ADMIN") {
             navigate("/admin");
+            window.location.reload();
           } else {
             navigate("/");
+            window.location.reload();
           }
         }
       } else {

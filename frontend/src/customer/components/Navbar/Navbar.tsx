@@ -25,7 +25,6 @@ import { useAppSelector } from "../../../Redux Toolkit/store";
 
 const Navbar = () => {
   const { user } = useAppSelector((store) => store.user);
-  const { role } = useAppSelector((store) => store.auth);
   const theme = useTheme();
   const isLarge = useMediaQuery(theme.breakpoints.up("lg"));
   const [showSheet, setShowSheet] = useState(false);
