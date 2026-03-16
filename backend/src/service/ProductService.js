@@ -3,7 +3,7 @@
 import { Category } from "../models/Category.js";
 import { Product } from "../models/Product.js";
 import { calculateDiscountPercentage } from "../utils/calculateDiscountPercentage.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { deleteOnCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
 
 class ProductService {
   async createProduct(req, seller) {
@@ -87,18 +87,19 @@ class ProductService {
     return product;
   }
 
-  async updateProduct(productId, updatedProductData) {
+  async updateProduct(productId, updatedData, files = []) {
     const product = await Product.findById(productId);
     if (!product) throw new Error("Product not found");
 
-    // Delete old images if new files provided
-    if (files && files.length > 0 && product.images.length > 0) {
+    if (files.length > 0 && product.images.length > 0) {
       for (const url of product.images) {
-        const publicId = url.split("/").slice(-2).join("/").split(".")[0];
+        const publicId = url
+          .split("/upload/")[1]
+          .replace(/^v\d+\//, "")
+          .replace(/\.[^/.]+$/, "");
         await deleteOnCloudinary(publicId);
       }
 
-      // Upload new images
       const uploadedImages = await Promise.all(
         files.map((f) =>
           uploadOnCloudinary(f.buffer).then((r) => r.secure_url),
@@ -107,7 +108,6 @@ class ProductService {
       updatedData.images = uploadedImages;
     }
 
-    // Update product
     const updatedProduct = await Product.findByIdAndUpdate(
       productId,
       updatedData,

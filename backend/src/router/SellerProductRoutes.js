@@ -14,7 +14,15 @@ router.post(
   sellerAuthMiddleware,
   ProductController.createProduct,
 );
-router.delete("/", sellerAuthMiddleware, ProductController.deleteProduct);
-router.put("/productId", sellerAuthMiddleware, ProductController.updateProduct);
+router.delete(
+  "/:productId",
+  sellerAuthMiddleware,
+  ProductController.deleteProduct,
+);
+router.put(
+  "/:productId",
+  sellerAuthMiddleware,
+  ProductController.updateProduct,
+);
 
 export const SellerProductRouter = router;

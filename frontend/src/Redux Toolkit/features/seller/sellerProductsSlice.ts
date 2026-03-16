@@ -2,6 +2,7 @@
 
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../../config/api";
+import toast from "react-hot-toast";
 
 export const fetchSellerProducts = createAsyncThunk<any, any>(
   "sellerProduct/fetchProducts",
@@ -45,14 +46,15 @@ export const createProduct = createAsyncThunk<any, any>(
 
 export const updateProduct = createAsyncThunk<any, any>(
   "sellerProduct/updateProduct",
-  async ({ jwt, productData, productId }, { rejectWithValue }) => {
+  async ({ productId, productData }, { rejectWithValue }) => {
     try {
+      const token = localStorage.getItem("token");
       const response = await api.put(
         `/seller/products/${productId}`,
-        productData,
+        { productData },
         {
           headers: {
-            Authorization: `Bearer ${jwt}`,
+            Authorization: `Bearer ${token}`,
           },
         },
       );
@@ -62,6 +64,25 @@ export const updateProduct = createAsyncThunk<any, any>(
     } catch (error) {
       console.error("Error updating seller products:", error);
       return rejectWithValue("Failed to update products. Please try again.");
+    }
+  },
+);
+
+export const deleteProduct = createAsyncThunk<string, string>(
+  "sellerProduct/deleteProduct",
+  async (productId, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await api.delete(`/seller/products/${productId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("Seller product deleted successfully:", response.data);
+      return productId;
+    } catch (error) {
+      console.error("Error deleting seller product:", error);
+      return rejectWithValue("Failed to delete product. Please try again.");
     }
   },
 );
@@ -89,6 +110,7 @@ const sellerProductsSlice = createSlice({
       .addCase(fetchSellerProducts.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+        toast.error(action.payload as string);
       });
 
     builder
@@ -99,10 +121,12 @@ const sellerProductsSlice = createSlice({
       .addCase(createProduct.fulfilled, (state, action) => {
         state.loading = false;
         state.products.push(action.payload);
+        toast.success("Product created successfully");
       })
       .addCase(createProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+        toast.error(action.payload as string);
       });
 
     builder
@@ -118,10 +142,27 @@ const sellerProductsSlice = createSlice({
         if (index !== -1) {
           state.products[index] = action.payload;
         }
+        toast.success("Product update successfully");
       })
       .addCase(updateProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+        toast.error("Product update error: ", action.payload.error);
+      });
+    builder
+      .addCase(deleteProduct.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        state.products = state.products.filter((p) => p._id !== action.payload);
+        toast.success("Product deleted successfully");
+      })
+      .addCase(deleteProduct.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+        toast.error(action.payload as string);
       });
   },
 });

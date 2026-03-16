@@ -58,14 +58,14 @@ const AddProducts = () => {
       discountPrice: "",
       sellingPrice: "",
       color: "",
-      images: [""],
+      images: [],
       category: "",
       category2: "",
       category3: "",
       size: "",
       quantity: "",
     },
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       const formData = new FormData();
 
       formData.append("title", values.title);
@@ -83,7 +83,14 @@ const AddProducts = () => {
         formData.append("images", file);
       });
 
-      dispatch(createProduct(formData));
+      const result = await dispatch(createProduct(formData));
+
+      // Clear form after successful creation
+      if (result.type.endsWith("/fulfilled")) {
+        formik.resetForm();
+        setImageFiles([]);
+      }
+
       console.log(formData);
     },
   });
@@ -139,34 +146,35 @@ const AddProducts = () => {
               )}
             </label>
             <div className='flex flex-wrap gap-2 mt-2'>
-              {formik.values.images.map((image, index) => (
-                <div
-                  key={index}
-                  className='w-24 h-24 border rounded-md overflow-hidden relative'
-                >
-                  <img
-                    src={image}
-                    alt={`Product ${index}`}
-                    className='w-full h-full object-cover'
-                  />
-                  <IconButton
-                    size='small'
-                    color='error'
-                    onClick={() => handleRemoveImage(index)}
-                    sx={{
-                      position: "absolute",
-                      top: 0,
-                      right: 0,
-                      outline: "none",
-                    }}
+              {formik.values.images.length > 0 &&
+                formik.values.images.map((image, index) => (
+                  <div
+                    key={index}
+                    className='w-24 h-24 border rounded-md overflow-hidden relative'
                   >
-                    <Close
-                      sx={{ fontSize: "1rem" }}
-                      className='text-gray-700'
+                    <img
+                      src={image}
+                      alt={`Product ${index}`}
+                      className='w-full h-full object-cover'
                     />
-                  </IconButton>
-                </div>
-              ))}
+                    <IconButton
+                      size='small'
+                      color='error'
+                      onClick={() => handleRemoveImage(index)}
+                      sx={{
+                        position: "absolute",
+                        top: 0,
+                        right: 0,
+                        outline: "none",
+                      }}
+                    >
+                      <Close
+                        sx={{ fontSize: "1rem" }}
+                        className='text-gray-700'
+                      />
+                    </IconButton>
+                  </div>
+                ))}
             </div>
           </Grid>
           <Grid size={{ xs: 12 }}>
