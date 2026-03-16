@@ -25,6 +25,8 @@ import { useAppSelector } from "../../../Redux Toolkit/store";
 
 const Navbar = () => {
   const { user } = useAppSelector((store) => store.user);
+  const { seller } = useAppSelector((store) => store.seller);
+  const activeRole = user?.role || (seller ? "ROLE_SELLER" : null);
   const theme = useTheme();
   const isLarge = useMediaQuery(theme.breakpoints.up("lg"));
   const [showSheet, setShowSheet] = useState(false);
@@ -90,7 +92,7 @@ const Navbar = () => {
             <AddShoppingCart sx={{ fontSize: 26 }} />
           </IconButton>
 
-          {user ? (
+          {activeRole ? (
             <>
               {user?.role === "ROLE_CUSTOMER" ? (
                 <Button

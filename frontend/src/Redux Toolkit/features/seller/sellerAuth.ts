@@ -2,6 +2,7 @@
 
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../../config/api";
+import toast from "react-hot-toast";
 
 const initialState = {
   otpSent: false,
@@ -88,10 +89,12 @@ const sellerAthSlice = createSlice({
       .addCase(sendLoginOtp.fulfilled, (state) => {
         state.loading = false;
         state.otpSent = true;
+        toast.success("OTP sent to your email. Please check and enter it.");
       })
       .addCase(sendLoginOtp.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+        toast.error(state.error || "Failed to send OTP. Please try again.");
       });
 
     builder
@@ -102,10 +105,26 @@ const sellerAthSlice = createSlice({
       .addCase(signup.fulfilled, (state, action) => {
         state.loading = false;
         state.jwt = action.payload.jwt;
+        toast.success("Signup successful! You can now log in.");
       })
       .addCase(signup.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+        toast.error(state.error || "Failed to sign up. Please try again.");
+      })
+      .addCase(verifyLogin.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(verifyLogin.fulfilled, (state, action) => {
+        state.loading = false;
+        state.jwt = action.payload.jwt;
+        toast.success("Login successful!");
+      })
+      .addCase(verifyLogin.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+        toast.error(state.error || "Failed to verify OTP. Please try again.");
       });
   },
 });

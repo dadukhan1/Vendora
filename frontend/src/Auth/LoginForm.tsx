@@ -20,13 +20,8 @@ const LoginForm = () => {
       if (auth.otpSent) {
         const resultAction = await dispatch(signin(values));
         if (signin.fulfilled.match(resultAction)) {
-          if (resultAction?.payload?.role === "ROLE_ADMIN") {
-            navigate("/admin");
-            window.location.reload();
-          } else {
-            navigate("/");
-            window.location.reload();
-          }
+          navigate("/");
+          window.location.reload();
         }
       } else {
         await dispatch(sendLoginSignupOTP(values));

@@ -37,6 +37,7 @@ const SellerLogin = () => {
         const resultAction = await dispatch(verifyLogin(values));
         if (verifyLogin.fulfilled.match(resultAction)) {
           navigate("/");
+          window.location.reload();
         } else {
           console.error("Failed to Login:", resultAction.payload);
         }

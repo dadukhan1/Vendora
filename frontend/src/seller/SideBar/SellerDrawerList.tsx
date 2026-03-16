@@ -67,6 +67,8 @@ const SellerDrawerList = ({ toggleDrawwer }: any) => {
   const handleLogout = () => {
     dispatch(resetSellerState());
     dispatch(logout());
+    navigate("/");
+    window.location.reload();
   };
 
   const handleClick = (item: any) => {

@@ -6,6 +6,7 @@ import { toast } from "react-hot-toast";
 
 const initialState = {
   sellers: [],
+  seller: null,
   selectedSeller: null,
   loading: false,
   error: null as string | null,
@@ -25,7 +26,7 @@ export const fetchSellerProfile = createAsyncThunk<any, any>(
         },
       });
       const data = response.data;
-      console.log(data);
+      console.log("seller profile ", data);
       return data;
     } catch (error) {
       console.error("Fetch sellers profile error :", error);
@@ -131,6 +132,7 @@ const sellerSlice = createSlice({
       .addCase(fetchSellerProfile.fulfilled, (state, action) => {
         state.loading = false;
         state.profile = action.payload;
+        state.seller = action.payload;
       })
       .addCase(fetchSellerProfile.rejected, (state, action) => {
         state.loading = false;

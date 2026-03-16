@@ -1,6 +1,6 @@
 /** @format */
 
-// src/components/ProtectedRoute.tsx
+import toast from "react-hot-toast";
 import { useAppSelector } from "../Redux Toolkit/store.ts";
 import { Navigate } from "react-router";
 
@@ -11,12 +11,15 @@ type Props = {
 
 const ProtectedRoute = ({ children, requiredRole }: Props) => {
   const { user } = useAppSelector((store) => store.user);
+  const { seller } = useAppSelector((store) => store.seller);
 
-  if (!user) {
-    return <Navigate to='/login' replace />;
+  const role = user?.role || (seller ? "ROLE_SELLER" : null);
+
+  if (!role) {
+    return <Navigate to='/' replace />;
   }
 
-  if (user.role !== requiredRole) {
+  if (role !== requiredRole) {
     return <Navigate to='/unauthorized' replace />;
   }
 
