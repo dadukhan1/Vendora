@@ -1,6 +1,6 @@
 /** @format */
 
-import { Button, Snackbar, TextField } from "@mui/material";
+import { CircularProgress, Snackbar, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import { useAppDispatch, useAppSelector } from "../Redux Toolkit/store";
 import {
@@ -15,10 +15,7 @@ const LoginForm = () => {
   const navigate = useNavigate();
 
   const formik = useFormik({
-    initialValues: {
-      email: "",
-      otp: "",
-    },
+    initialValues: { email: "", otp: "" },
     onSubmit: async (values) => {
       if (auth.otpSent) {
         const resultAction = await dispatch(signin(values));
@@ -28,8 +25,6 @@ const LoginForm = () => {
           } else {
             navigate("/");
           }
-        } else {
-          console.error("Failed to sign in:", resultAction.payload);
         }
       } else {
         await dispatch(sendLoginSignupOTP(values));
@@ -39,15 +34,22 @@ const LoginForm = () => {
 
   return (
     <div>
-      <h1 className='text-2xl text-center font-bold text-teal-500 mb-5'>
-        Login
-      </h1>
-      <form onSubmit={formik.handleSubmit} className='flex flex-col gap-6'>
+      {/* Heading */}
+      <p className='text-xs font-semibold uppercase tracking-[0.15em] text-[#94A3B8] mb-1'>
+        Welcome back
+      </p>
+      <h2 className='text-xl font-bold text-[#0F172A] mb-6'>
+        Sign in to your account
+      </h2>
+
+      <form onSubmit={formik.handleSubmit} className='flex flex-col gap-4'>
+        {/* Email */}
         <TextField
           fullWidth
-          label=' Email'
+          label='Email address'
           id='email'
           name='email'
+          type='email'
           value={formik.values.email}
           onChange={formik.handleChange}
           error={formik.touched.email && Boolean(formik.errors.email)}
@@ -56,37 +58,103 @@ const LoginForm = () => {
               ? formik.errors.email
               : ""
           }
+          disabled={auth.otpSent}
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              borderRadius: "12px",
+              fontSize: "0.9rem",
+              "&.Mui-focused fieldset": { borderColor: "#0F52FF" },
+            },
+            "& .MuiInputLabel-root.Mui-focused": { color: "#0F52FF" },
+          }}
         />
+
+        {/* OTP field — slides in when sent */}
         {auth.otpSent && (
-          <TextField
-            fullWidth
-            label='OTP'
-            id='otp'
-            name='otp'
-            value={formik.values.otp}
-            onChange={formik.handleChange}
-            error={formik.touched.otp && Boolean(formik.errors.otp)}
-            helperText={
-              formik.touched.otp && typeof formik.errors.otp === "string"
-                ? formik.errors.otp
-                : ""
-            }
-          />
+          <div className='animate-[fadeSlideIn_0.25s_ease_forwards]'>
+            <TextField
+              fullWidth
+              label='Enter OTP'
+              id='otp'
+              name='otp'
+              value={formik.values.otp}
+              onChange={formik.handleChange}
+              inputProps={{ maxLength: 6 }}
+              error={formik.touched.otp && Boolean(formik.errors.otp)}
+              helperText={
+                formik.touched.otp && typeof formik.errors.otp === "string"
+                  ? formik.errors.otp
+                  : "Check your inbox for the 6-digit code"
+              }
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "12px",
+                  fontSize: "0.9rem",
+                  letterSpacing: "0.25em",
+                  "&.Mui-focused fieldset": { borderColor: "#0F52FF" },
+                },
+                "& .MuiInputLabel-root.Mui-focused": { color: "#0F52FF" },
+              }}
+            />
+          </div>
         )}
-        <Button
-          disabled={auth.loading}
-          sx={{ py: "12px" }}
+
+        {/* Submit button */}
+        <button
           type='submit'
-          variant='contained'
+          disabled={auth.loading}
+          className='w-full py-3 mt-1 rounded-xl bg-[#0F52FF] text-white text-sm font-bold
+            tracking-wide shadow-[0_4px_20px_rgba(15,82,255,0.28)]
+            hover:opacity-90 active:scale-[.98] transition-all duration-150
+            disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none
+            flex items-center justify-center gap-2'
         >
-          {auth.loading ? "Loading..." : auth.otpSent ? "Login" : "Send OTP"}
-        </Button>
+          {auth.loading ? (
+            <>
+              <CircularProgress
+                size={16}
+                thickness={5}
+                sx={{ color: "#fff" }}
+              />
+              <span>Please wait...</span>
+            </>
+          ) : auth.otpSent ? (
+            "Login →"
+          ) : (
+            "Send OTP"
+          )}
+        </button>
+
+        {/* Resend hint */}
+        {auth.otpSent && (
+          <p className='text-center text-xs text-[#94A3B8]'>
+            Didn't receive it?{" "}
+            <button
+              type='button'
+              onClick={() =>
+                dispatch(sendLoginSignupOTP({ email: formik.values.email }))
+              }
+              className='text-[#0F52FF] font-semibold hover:underline underline-offset-2'
+            >
+              Resend OTP
+            </button>
+          </p>
+        )}
       </form>
+
       <Snackbar
         open={auth.otpSent}
         autoHideDuration={2000}
-        message='OTP sent successfully!'
+        message='✅ OTP sent to your email'
       />
+
+      {/* Keyframe for OTP field */}
+      <style>{`
+        @keyframes fadeSlideIn {
+          from { opacity: 0; transform: translateY(-8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </div>
   );
 };
