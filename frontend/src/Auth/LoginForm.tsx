@@ -142,12 +142,6 @@ const LoginForm = () => {
         )}
       </form>
 
-      <Snackbar
-        open={auth.otpSent}
-        autoHideDuration={2000}
-        message='✅ OTP sent to your email'
-      />
-
       {/* Keyframe for OTP field */}
       <style>{`
         @keyframes fadeSlideIn {

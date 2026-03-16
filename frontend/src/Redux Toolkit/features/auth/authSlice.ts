@@ -2,12 +2,14 @@
 
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../../config/api";
+import toast from "react-hot-toast";
 
 const API_URL = "/auth";
 
 const initialState = {
   jwt: null,
   role: null,
+  user: null as any,
   loading: false,
   error: null as string | null,
   otpSent: false,
@@ -88,31 +90,38 @@ const authSlice = createSlice({
     builder.addCase(sendLoginSignupOTP.fulfilled, (state) => {
       state.loading = false;
       state.otpSent = true;
+      toast.success("OTP sent to your email");
     });
 
     builder.addCase(sendLoginSignupOTP.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload as string;
+      toast.error("OTP sending failed: " + state.error);
     });
     builder.addCase(signup.fulfilled, (state, action) => {
       state.loading = false;
       state.jwt = action.payload.jwt;
       state.role = action.payload.role;
       state.otpSent = false;
+      toast.success("Signup successful");
     });
     builder.addCase(signup.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload as string;
+      toast.error("Signup failed: " + state.error);
     });
     builder.addCase(signin.fulfilled, (state, action) => {
       state.loading = false;
       state.jwt = action.payload.jwt;
       state.role = action.payload.role;
+      state.user = action.payload;
       state.otpSent = false;
+      toast.success("Signin successful");
     });
     builder.addCase(signin.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload as string;
+      toast.error("Signin failed: " + state.error);
     });
   },
 });

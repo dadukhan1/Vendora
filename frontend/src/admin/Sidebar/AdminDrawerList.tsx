@@ -12,7 +12,8 @@ import {
 } from "@mui/icons-material";
 import { Avatar, Divider } from "@mui/material";
 import { useLocation, useNavigate } from "react-router";
-import { useAppSelector } from "../../Redux Toolkit/store";
+import { useAppDispatch, useAppSelector } from "../../Redux Toolkit/store";
+import { logout } from "../../Redux Toolkit/features/auth/authSlice";
 
 const menu = [
   {
@@ -54,10 +55,15 @@ const menu = [
 
 const AdminDrawerList = ({ toggleDrawwer }: any) => {
   const { user } = useAppSelector((store) => store.user);
+  const dispatch = useAppDispatch();
   const location = useLocation();
   const navigate = useNavigate();
 
-  const handleLogout = () => console.log("logout");
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/");
+    window.location.reload();
+  };
 
   const handleClick = (item: any) => {
     if (item.name === "Logout") handleLogout();

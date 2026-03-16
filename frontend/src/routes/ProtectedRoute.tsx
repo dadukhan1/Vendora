@@ -12,6 +12,12 @@ type Props = {
 const ProtectedRoute = ({ children, requiredRole }: Props) => {
   const { user } = useAppSelector((store) => store.user);
 
+  const { role } = useAppSelector((store) => store.auth);
+
+  if (!role) return <Navigate to='/login' replace />;
+  
+  if (role !== requiredRole) return <Navigate to='/unauthorized' replace />;
+
   if (!user) {
     return <Navigate to='/login' replace />;
   }
