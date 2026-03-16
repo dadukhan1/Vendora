@@ -26,6 +26,15 @@ const orderStatus = [
   { color: "green", label: "PAID" },
 ];
 
+const ALLOWED_TRANSITIONS: Record<string, string[]> = {
+  PLACED: ["PENDING", "CANCELLED"],
+  PENDING: ["PAID", "CANCELLED"],
+  PAID: ["SHIPPED", "CANCELLED"],
+  SHIPPED: ["DELIVERED"],
+  DELIVERED: [],
+  CANCELLED: [],
+};
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -46,32 +55,26 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
-) {
-  return { name, calories, fat, carbs, protein };
-}
-
 export default function OrderTable() {
   const dispatch = useAppDispatch();
   const { orders } = useAppSelector((store) => store.sellerOrder);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
+  const [anchorEls, setAnchorEls] = useState<
+    Record<string, HTMLElement | null>
+  >({});
+  const handleClick = (
+    event: React.MouseEvent<HTMLElement>,
+    orderId: string,
+  ) => {
+    setAnchorEls((prev) => ({ ...prev, [orderId]: event.currentTarget }));
   };
 
-  const handleUpdateItem = (id: any, status: any) => {
-    console.log("update item", id, status);
-    dispatch(updateOrderStatus({ orderId: id, status }));
-    handleClose();
+  const handleClose = (orderId: string) => {
+    setAnchorEls((prev) => ({ ...prev, [orderId]: null }));
+  };
+
+  const handleUpdateItem = (orderId: string, status: string) => {
+    dispatch(updateOrderStatus({ orderId, status }));
+    handleClose(orderId);
   };
 
   useEffect(() => {
@@ -119,29 +122,68 @@ export default function OrderTable() {
                 {`${order?.shippingAddress?.address ?? ""} ${order?.shippingAddress?.locality ?? ""}`}
               </StyledTableCell>
               <StyledTableCell align='right'>
-                <Chip color='secondary' label={order.orderStatus} />
+                <Chip
+                  label={order.orderStatus}
+                  size='small'
+                  sx={{
+                    backgroundColor:
+                      {
+                        PLACED: "#f5bcba",
+                        PENDING: "#ffa500",
+                        PAID: "#22c55e",
+                        SHIPPED: "#1E90FF",
+                        DELIVERED: "#32CD32",
+                        CANCELLED: "#FF0000",
+                      }[order.orderStatus] ?? "#ccc",
+                    color: "#fff",
+                    fontWeight: 600,
+                    fontSize: 11,
+                  }}
+                />
               </StyledTableCell>
               <StyledTableCell align='right'>
-                <Button onClick={handleClick}>Status</Button>
-                <Menu
-                  id='fade-menu'
-                  slotProps={{
-                    list: {
-                      "aria-labelledby": "fade-button",
-                    },
-                  }}
-                  // slots={{ transition: Fade }}
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleClose}
+                <Button
+                  variant='outlined'
+                  size='small'
+                  disabled={
+                    ALLOWED_TRANSITIONS[order.orderStatus]?.length === 0
+                  }
+                  onClick={(e) => handleClick(e, order._id)}
                 >
-                  {orderStatus.map((status) => (
-                    <MenuItem
-                      onClick={() => handleUpdateItem(order?._id, status.label)}
-                    >
-                      {status.label}
-                    </MenuItem>
-                  ))}
+                  Status
+                </Button>
+                <Menu
+                  anchorEl={anchorEls[order._id]}
+                  open={Boolean(anchorEls[order._id])}
+                  onClose={() => handleClose(order._id)}
+                >
+                  {orderStatus
+                    .filter((s) =>
+                      (ALLOWED_TRANSITIONS[order.orderStatus] ?? []).includes(
+                        s.label,
+                      ),
+                    )
+                    .map((status) => (
+                      <MenuItem
+                        key={status.label}
+                        onClick={() =>
+                          handleUpdateItem(order._id, status.label)
+                        }
+                        sx={{ gap: 1.5 }}
+                      >
+                        <span
+                          style={{
+                            width: 10,
+                            height: 10,
+                            borderRadius: "50%",
+                            backgroundColor: status.color,
+                            display: "inline-block",
+                            flexShrink: 0,
+                          }}
+                        />
+                        <span style={{ fontWeight: 500 }}>{status.label}</span>
+                      </MenuItem>
+                    ))}
                 </Menu>
               </StyledTableCell>
             </StyledTableRow>
