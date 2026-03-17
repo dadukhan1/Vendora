@@ -119,6 +119,26 @@ export const updateSellerAccountStatus = createAsyncThunk<any, any>(
   },
 );
 
+export const updateSellerProfile = createAsyncThunk<any, any>(
+  "sellers/updateSellerProfile",
+  async (profileData, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await api.patch(`/seller`, profileData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = response.data;
+      console.log("Seller profile updated successfully:", data);
+      return data;
+    } catch (error) {
+      console.error("Error updating seller profile:", error);
+      return rejectWithValue("Failed to update profile. Please try again.");
+    }
+  },
+);
+
 const sellerSlice = createSlice({
   name: "sellers",
   initialState,
@@ -196,6 +216,23 @@ const sellerSlice = createSlice({
       .addCase(updateSellerAccountStatus.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message as string;
+      });
+
+    builder
+      .addCase(updateSellerProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateSellerProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.profile = action.payload;
+        state.seller = action.payload;
+        toast.success("Profile updated successfully");
+      })
+      .addCase(updateSellerProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+        toast.error(action.payload as string);
       });
   },
 });

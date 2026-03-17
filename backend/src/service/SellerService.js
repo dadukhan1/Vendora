@@ -104,8 +104,23 @@ class SellerService {
   }
 
   async updateSeller(existingSeller, sellerData) {
-    return await Seller.findByIdAndUpdate(existingSeller._id, sellerData, {
+    // Merge nested objects properly
+    const updatedData = {
+      ...existingSeller.toObject(),
+      ...sellerData,
+      bussinessDetails: {
+        ...existingSeller.bussinessDetails,
+        ...sellerData.bussinessDetails,
+      },
+      bankDetails: {
+        ...existingSeller.bankDetails,
+        ...sellerData.bankDetails,
+      },
+    };
+
+    return await Seller.findByIdAndUpdate(existingSeller._id, updatedData, {
       new: true,
+      runValidators: true,
     });
   }
 
