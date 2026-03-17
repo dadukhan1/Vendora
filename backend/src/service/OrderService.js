@@ -140,6 +140,7 @@ class OrderService {
         { path: "orderItems", populate: { path: "product" } },
         { path: "shippingAddress" },
       ])
+      .sort({ createdAt: -1 })
       .exec();
   }
 
@@ -157,33 +158,48 @@ class OrderService {
   async updateOrderStatus(orderId, newStatus) {
     if (!orderId) throw new Error("Order ID is required");
 
-    // Validate newStatus exists in enum
-    if (!Object.values(OrderStatus).includes(newStatus)) {
-      throw new Error("Invalid order status");
-    }
+    const statusMap = {
+      pending: "PENDING",
+      confirmed: "CONFIRMED",
+      processing: "PROCESSING",
+      shipped: "SHIPPED",
+      delivered: "DELIVERED",
+      cancelled: "CANCELLED",
+    };
+
+    console.log(newStatus);
+    const sanitizedStatus = statusMap[newStatus.toLowerCase().trim()];
+    if (!sanitizedStatus) throw new Error("Invalid order status");
 
     const order = await Order.findById(orderId);
     if (!order) throw new Error("Order not found");
 
-    // Define allowed transitions
     const allowedTransitions = {
-      [OrderStatus.PLACED]: [OrderStatus.PENDING, OrderStatus.CANCELLED],
-      [OrderStatus.PENDING]: [OrderStatus.PAID, OrderStatus.CANCELLED],
-      [OrderStatus.PAID]: [OrderStatus.SHIPPED, OrderStatus.CANCELLED],
-      [OrderStatus.SHIPPED]: [OrderStatus.DELIVERED],
-      [OrderStatus.DELIVERED]: [],
-      [OrderStatus.CANCELLED]: [],
+      PENDING: ["CONFIRMED", "CANCELLED"],
+      CONFIRMED: ["PROCESSING", "CANCELLED"],
+      PROCESSING: ["SHIPPED"],
+      SHIPPED: ["DELIVERED"],
+      DELIVERED: [],
+      CANCELLED: [],
     };
 
     const currentStatus = order.orderStatus;
 
-    if (!allowedTransitions[currentStatus].includes(newStatus)) {
+    if (!allowedTransitions[currentStatus]?.includes(sanitizedStatus)) {
       throw new Error(
-        `Cannot change status from ${currentStatus} to ${newStatus}`,
+        `Cannot change status from ${currentStatus} to ${sanitizedStatus}`,
       );
     }
 
-    order.orderStatus = newStatus;
+    if (
+      sanitizedStatus === "CONFIRMED" &&
+      order.paymentStatus !== "COMPLETED" &&
+      order.paymentMethod !== "POD"
+    ) {
+      throw new Error("Payment not completed. Cannot confirm order.");
+    }
+
+    order.orderStatus = sanitizedStatus;
     await order.save();
 
     // Return populated order
@@ -205,7 +221,7 @@ class OrderService {
 
     return await Order.findByIdAndUpdate(
       orderId,
-      { $set: { orderStatus: OrderStatus.CANCELED } },
+      { $set: { orderStatus: OrderStatus.CANCELLED } },
       { new: true, runValidators: true },
     )
       .populate([

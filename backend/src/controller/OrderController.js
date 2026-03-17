@@ -110,28 +110,19 @@ class OrderController {
   async updateOrderStatus(req, res) {
     try {
       const { orderId, orderStatus } = req.params;
-
-      // Sanitize: trim + uppercase + map to enum
-      const statusMap = {
-        placed: OrderStatus.PLACED,
-        pending: OrderStatus.PENDING,
-        paid: OrderStatus.PAID,
-        shipped: OrderStatus.SHIPPED,
-        delivered: OrderStatus.DELIVERED,
-        cancelled: OrderStatus.CANCELLED,
-      };
-
-      const sanitizedStatus = statusMap[orderStatus.toLowerCase().trim()];
-      if (!sanitizedStatus) throw new Error("Invalid order status");
+      if (!orderId || !orderStatus) {
+        return res
+          .status(400)
+          .json({ error: "orderId and status are required" });
+      }
 
       const updatedOrder = await OrderService.updateOrderStatus(
         orderId,
-        sanitizedStatus,
+        orderStatus,
       );
-
       return res.status(200).json(updatedOrder);
     } catch (error) {
-      console.log(error.message);
+      console.error("Error updating order status:", error.message);
       return res.status(400).json({ error: error.message });
     }
   }

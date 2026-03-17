@@ -16,23 +16,33 @@ import {
   updateOrderStatus,
 } from "../../Redux Toolkit/features/seller/sellerOrderSlice";
 
-const orderStatus = [
+const orderStatusOptions = [
   { color: "#ffa500", label: "PENDING" },
-  { color: "#f5bcba", label: "PLACED" },
-  { color: "#F5BCBA", label: "CONFIRMED" },
+  { color: "#3b82f6", label: "CONFIRMED" }, // ✅ ADD
+  { color: "#8b5cf6", label: "PROCESSING" }, // ✅ ADD
   { color: "#1E90FF", label: "SHIPPED" },
   { color: "#32CD32", label: "DELIVERED" },
   { color: "#FF0000", label: "CANCELLED" },
-  { color: "green", label: "PAID" },
 ];
 
+// 2. Update ALLOWED_TRANSITIONS - FIX the flow
 const ALLOWED_TRANSITIONS: Record<string, string[]> = {
-  PLACED: ["PENDING", "CANCELLED"],
-  PENDING: ["PAID", "CANCELLED"],
-  PAID: ["SHIPPED", "CANCELLED"],
+  PENDING: ["CONFIRMED", "CANCELLED"], // ✅ CHANGE: was PAID
+  CONFIRMED: ["PROCESSING", "CANCELLED"], // ✅ ADD
+  PROCESSING: ["SHIPPED"], // ✅ ADD
   SHIPPED: ["DELIVERED"],
   DELIVERED: [],
   CANCELLED: [],
+};
+
+// 3. Update status color map - ADD all statuses
+const statusColorMap: Record<string, string> = {
+  PENDING: "#ffa500",
+  CONFIRMED: "#3b82f6",
+  PROCESSING: "#8b5cf6",
+  SHIPPED: "#1E90FF",
+  DELIVERED: "#32CD32",
+  CANCELLED: "#FF0000",
 };
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -123,18 +133,11 @@ export default function OrderTable() {
               </StyledTableCell>
               <StyledTableCell align='right'>
                 <Chip
-                  label={order.orderStatus}
+                  label={order?.orderStatus}
                   size='small'
                   sx={{
                     backgroundColor:
-                      {
-                        PLACED: "#f5bcba",
-                        PENDING: "#ffa500",
-                        PAID: "#22c55e",
-                        SHIPPED: "#1E90FF",
-                        DELIVERED: "#32CD32",
-                        CANCELLED: "#FF0000",
-                      }[order.orderStatus] ?? "#ccc",
+                      statusColorMap[order.orderStatus] ?? "#ccc",
                     color: "#fff",
                     fontWeight: 600,
                     fontSize: 11,
@@ -157,7 +160,7 @@ export default function OrderTable() {
                   open={Boolean(anchorEls[order._id])}
                   onClose={() => handleClose(order._id)}
                 >
-                  {orderStatus
+                  {orderStatusOptions
                     .filter((s) =>
                       (ALLOWED_TRANSITIONS[order.orderStatus] ?? []).includes(
                         s.label,

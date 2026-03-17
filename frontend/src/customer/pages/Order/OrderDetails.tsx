@@ -1,15 +1,56 @@
 /** @format */
 
-import { Payment } from "@mui/icons-material";
-import { Box, Button, Divider } from "@mui/material";
+import {
+  Payment,
+  CheckCircle,
+  AccessAlarm,
+  TrendingDown,
+} from "@mui/icons-material";
+import { Box, Button, Divider, Chip } from "@mui/material";
 import OrderStepper from "./OrderStepper";
 import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/store";
 import { useEffect } from "react";
 import {
+  cancelOrder,
   orderById,
   orderItemById,
 } from "../../../Redux Toolkit/features/customer/orderSlice";
 import { useParams } from "react-router";
+
+// Order status color mapping
+const orderStatusColors: Record<
+  string,
+  { bg: string; text: string; icon: any }
+> = {
+  PENDING: { bg: "rgba(245,158,11,0.08)", text: "#d97706", icon: AccessAlarm },
+  CONFIRMED: {
+    bg: "rgba(59,130,246,0.08)",
+    text: "#3b82f6",
+    icon: CheckCircle,
+  },
+  PROCESSING: {
+    bg: "rgba(245,158,11,0.08)",
+    text: "#f59e0b",
+    icon: AccessAlarm,
+  },
+  SHIPPED: { bg: "rgba(59,130,246,0.08)", text: "#3b82f6", icon: CheckCircle },
+  DELIVERED: {
+    bg: "rgba(16,184,129,0.08)",
+    text: "#10b981",
+    icon: CheckCircle,
+  },
+  CANCELLED: {
+    bg: "rgba(239,68,68,0.08)",
+    text: "#ef4444",
+    icon: TrendingDown,
+  },
+};
+
+const paymentStatusColors: Record<string, { bg: string; text: string }> = {
+  PENDING: { bg: "rgba(245,158,11,0.08)", text: "#f59e0b" },
+  COMPLETED: { bg: "rgba(16,184,129,0.08)", text: "#10b981" },
+  FAILED: { bg: "rgba(239,68,68,0.08)", text: "#ef4444" },
+};
 
 const OrderDetails = () => {
   const dispatch = useAppDispatch();
@@ -17,9 +58,28 @@ const OrderDetails = () => {
   const { orderItem, currentOrder } = useAppSelector((store) => store.order);
 
   useEffect(() => {
-    dispatch(orderItemById(orderItemId));
-    dispatch(orderById(orderId));
-  }, []);
+    if (orderItemId) dispatch(orderItemById(orderItemId));
+    if (orderId) dispatch(orderById(orderId));
+  }, [orderItemId, orderId, dispatch]);
+
+  const getOrderStatusColor = (status: string) => {
+    return orderStatusColors[status] || orderStatusColors.PENDING;
+  };
+
+  const getPaymentStatusColor = (status: string) => {
+    return paymentStatusColors[status] || paymentStatusColors.PENDING;
+  };
+
+  const orderCancelHanlder = (orderId: string) => {
+    dispatch(cancelOrder(orderId));
+  };
+
+  const canCancelOrder = () => {
+    return (
+      currentOrder?.orderStatus === "PENDING" ||
+      currentOrder?.orderStatus === "CONFIRMED"
+    );
+  };
 
   return (
     <Box style={{ display: "flex", flexDirection: "column", gap: 20 }}>
@@ -45,7 +105,7 @@ const OrderDetails = () => {
         >
           <img
             src={orderItem?.product?.images[0]}
-            alt=''
+            alt='Product'
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
           />
         </div>
@@ -58,10 +118,10 @@ const OrderDetails = () => {
               marginBottom: 4,
             }}
           >
-            Rana g store
+            {currentOrder?.seller?.bussinessDetails?.bussinessName}
           </p>
           <p style={{ fontSize: 13, color: "#64748B", marginBottom: 4 }}>
-            Turquoise Blue Stonework Satin Designer saree
+            {orderItem?.product?.description}
           </p>
           <span
             style={{
@@ -74,14 +134,14 @@ const OrderDetails = () => {
               borderRadius: 99,
             }}
           >
-            Size: FREE
+            Size: {orderItem?.product?.size}
           </span>
         </div>
       </section>
 
       {/* Stepper */}
       <section style={{ paddingBottom: 20, borderBottom: "1px solid #E2E8F0" }}>
-        <OrderStepper />
+        <OrderStepper orderStatus={currentOrder?.orderStatus} />
       </section>
 
       {/* Delivery address */}
@@ -100,7 +160,7 @@ const OrderDetails = () => {
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <Divider flexItem orientation='vertical' />
             <p style={{ fontSize: 13, fontWeight: 500, color: "#0F172A" }}>
-              0876786780
+              {currentOrder?.shippingAddress?.mobile}
             </p>
           </div>
           <p style={{ fontSize: 13, color: "#64748B", lineHeight: 1.6 }}>
@@ -121,6 +181,31 @@ const OrderDetails = () => {
           overflow: "hidden",
         }}
       >
+        {/* Order Status */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "16px 18px",
+            borderBottom: "1px solid #E2E8F0",
+            background: getOrderStatusColor(currentOrder?.orderStatus).bg,
+          }}
+        >
+          <p style={{ fontSize: 13, fontWeight: 700, color: "#0F172A" }}>
+            Order Status
+          </p>
+          <Chip
+            label={currentOrder?.orderStatus}
+            sx={{
+              background: getOrderStatusColor(currentOrder?.orderStatus).bg,
+              color: getOrderStatusColor(currentOrder?.orderStatus).text,
+              fontWeight: 700,
+              fontSize: "0.85rem",
+            }}
+          />
+        </div>
+
         {/* Price row */}
         <div
           style={{
@@ -138,8 +223,8 @@ const OrderDetails = () => {
             <p style={{ fontSize: 12, color: "#64748B" }}>
               You saved{" "}
               <span style={{ color: "#16a34a", fontWeight: 600 }}>
-                ₹{currentOrder?.mrpPrice - currentOrder?.totalSellingPrice} on
-                this item
+                ₹{currentOrder?.totalMrpPrice - currentOrder?.totalSellingPrice}{" "}
+                on this item
               </span>
             </p>
           </div>
@@ -148,7 +233,7 @@ const OrderDetails = () => {
           </p>
         </div>
 
-        {/* Payment method */}
+        {/* Payment method & status */}
         <div
           style={{ padding: "12px 18px", borderBottom: "1px solid #E2E8F0" }}
         >
@@ -157,16 +242,43 @@ const OrderDetails = () => {
               display: "flex",
               alignItems: "center",
               gap: 10,
-              background: "rgba(15,82,255,0.05)",
-              border: "1px solid rgba(15,82,255,0.15)",
+              background: getPaymentStatusColor(currentOrder?.paymentStatus).bg,
+              border: `1px solid ${getPaymentStatusColor(currentOrder?.paymentStatus).text}33`,
               borderRadius: 10,
               padding: "10px 14px",
             }}
           >
-            <Payment sx={{ fontSize: 18, color: "#0F52FF" }} />
-            <p style={{ fontSize: 12, fontWeight: 600, color: "#0F52FF" }}>
-              Pay on Delivery
-            </p>
+            <Payment
+              sx={{
+                fontSize: 18,
+                color: getPaymentStatusColor(currentOrder?.paymentStatus).text,
+              }}
+            />
+            <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              {/* Show payment method based on paymentMethod field */}
+
+              {/* Show status message based on paymentStatus */}
+              <p style={{ fontSize: 11, color: "#64748B" }}>
+                {
+                  <>
+                    Payment Status:{" "}
+                    <span
+                      style={{
+                        fontWeight: 700,
+                        color: getPaymentStatusColor(
+                          currentOrder?.paymentStatus,
+                        ).text,
+                      }}
+                    >
+                      {currentOrder?.paymentStatus === "COMPLETED"
+                        ? "Payment Successful"
+                        : currentOrder?.paymentStatus === "PENDING" &&
+                          "Pay on Delivery"}
+                    </span>
+                  </>
+                }
+              </p>
+            </div>
           </div>
         </div>
 
@@ -176,32 +288,52 @@ const OrderDetails = () => {
         >
           <p style={{ fontSize: 12, color: "#64748B" }}>
             <span style={{ fontWeight: 700, color: "#0F172A" }}>Sold by: </span>
-            Pablo Clothing
+            {currentOrder?.seller?.sellerName}
           </p>
         </div>
 
-        {/* Cancel button */}
-        <div style={{ padding: "16px 18px" }}>
-          <Button
-            fullWidth
-            variant='outlined'
-            sx={{
-              textTransform: "none",
-              borderRadius: "99px",
-              borderColor: "#FF4F00",
-              color: "#FF4F00",
-              fontSize: 13,
-              fontWeight: 600,
-              py: 1,
-              "&:hover": {
+        {/* Cancel button - only show if order can be cancelled */}
+        {canCancelOrder() && (
+          <div style={{ padding: "16px 18px" }}>
+            <Button
+              onClick={() => orderCancelHanlder(orderId)}
+              fullWidth
+              variant='outlined'
+              sx={{
+                textTransform: "none",
+                borderRadius: "99px",
                 borderColor: "#FF4F00",
-                background: "rgba(255,79,0,0.05)",
-              },
+                color: "#FF4F00",
+                fontSize: 13,
+                fontWeight: 600,
+                py: 1,
+                "&:hover": {
+                  borderColor: "#FF4F00",
+                  background: "rgba(255,79,0,0.05)",
+                },
+              }}
+            >
+              Cancel Order
+            </Button>
+          </div>
+        )}
+
+        {/* Info message if order cannot be cancelled */}
+        {!canCancelOrder() && (
+          <div
+            style={{
+              padding: "16px 18px",
+              background: "rgba(59,130,246,0.05)",
+              color: "#3b82f6",
+              fontSize: 12,
+              fontWeight: 500,
+              textAlign: "center",
             }}
           >
-            Cancel Order
-          </Button>
-        </div>
+            This order cannot be cancelled as it is already{" "}
+            {currentOrder?.orderStatus}
+          </div>
+        )}
       </section>
     </Box>
   );

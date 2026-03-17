@@ -53,6 +53,12 @@ const orderSchmea = new Schema(
       enum: Object.values(PaymentStatus),
       default: PaymentStatus.PENDING,
     },
+    paymentMethod: {
+      type: String,
+      enum: ["POD", "CARD"],
+      default: "POD",
+      required: true,
+    },
     orderDate: {
       type: Date,
       default: Date.now,

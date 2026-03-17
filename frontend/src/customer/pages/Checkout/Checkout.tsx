@@ -20,9 +20,14 @@ const Checkout = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("POD"); // ✅ ADD
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSelectedAddress(e.target.value);
+  };
+
+  const handlePaymentMethodChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setPaymentMethod(e.target.value);
   };
 
   const { cart } = useAppSelector((store) => store.cart);
@@ -33,15 +38,26 @@ const Checkout = () => {
       alert("Please select a delivery address.");
       return;
     }
+
+    // ✅ CREATE ORDER WITH PAYMENT METHOD
     const orderResult = await dispatch(
       createOrder({
         address: selectedAddress,
-        paymentGateway: "stripe",
+        paymentMethod: paymentMethod, // ✅ PASS PAYMENT METHOD
+        paymentGateway: paymentMethod === "CARD" ? "stripe" : "pod",
       }) as any,
     );
     const order = orderResult.payload;
     if (!order) return;
 
+    // ✅ IF POD, NAVIGATE TO ORDERS PAGE
+    if (paymentMethod === "POD") {
+      alert("Order placed successfully! You will pay on delivery.");
+      navigate("/orders");
+      return;
+    }
+
+    // ✅ IF CARD, PROCEED TO STRIPE CHECKOUT
     const checkoutResult = await dispatch(
       createCheckout({
         orderId: order._id,
@@ -58,32 +74,32 @@ const Checkout = () => {
   }, []);
 
   return (
-    <div className='min-h-screen bg-white pt-10 px-5 sm:px-10 md:px-24 lg:px-40 pb-20'>
-      <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
+    <div className="min-h-screen bg-white pt-10 px-5 sm:px-10 md:px-24 lg:px-40 pb-20">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* ── Left: Address section ── */}
-        <div className='lg:col-span-2 space-y-5'>
+        <div className="lg:col-span-2 space-y-5">
           {/* Header row */}
-          <div className='flex justify-between items-center'>
-            <div className='flex items-center gap-3'>
-              <span className='inline-block w-1 h-5 rounded bg-gradient-to-b from-[#0F52FF] to-[#FF4F00]' />
-              <h2 className='font-bold text-[#0F172A]'>
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-3">
+              <span className="inline-block w-1 h-5 rounded bg-gradient-to-b from-[#0F52FF] to-[#FF4F00]" />
+              <h2 className="font-bold text-[#0F172A]">
                 Select Delivery Address
               </h2>
             </div>
             <button
               onClick={() => setOpen(true)}
-              className='flex items-center gap-1.5 text-sm font-semibold text-[#0F52FF]
+              className="flex items-center gap-1.5 text-sm font-semibold text-[#0F52FF]
                 border border-[#0F52FF] px-3 py-1.5 rounded-xl hover:bg-[#0F52FF]/10
-                transition-colors'
+                transition-colors"
             >
-              <Add fontSize='small' />
+              <Add fontSize="small" />
               Add New
             </button>
           </div>
 
           {/* Saved addresses */}
-          <div className='space-y-3'>
-            <p className='text-xs font-semibold text-[#64748B] uppercase tracking-widest'>
+          <div className="space-y-3">
+            <p className="text-xs font-semibold text-[#64748B] uppercase tracking-widest">
               Saved Addresses
             </p>
             {addresses?.map((address: any) => (
@@ -99,29 +115,33 @@ const Checkout = () => {
           {/* Add address inline CTA */}
           <button
             onClick={() => setOpen(true)}
-            className='w-full flex items-center justify-center gap-2 py-3.5
+            className="w-full flex items-center justify-center gap-2 py-3.5
               border border-dashed border-[#E2E8F0] rounded-2xl text-sm
               text-[#64748B] hover:border-[#0F52FF] hover:text-[#0F52FF]
-              transition-colors bg-[#F8FAFC]'
+              transition-colors bg-[#F8FAFC]"
           >
-            <Add fontSize='small' />
+            <Add fontSize="small" />
             Add New Address
           </button>
         </div>
 
         {/* ── Right: Payment + Pricing ── */}
-        <div className='lg:col-span-1 space-y-4'>
-          {/* Payment gateway */}
-          <div className='bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl px-5 py-4'>
-            <p className='text-xs font-bold uppercase tracking-widest text-[#64748B] mb-3'>
+        <div className="lg:col-span-1 space-y-4">
+          {/* ✅ Payment Method Selection */}
+          <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl px-5 py-4">
+            <p className="text-xs font-bold uppercase tracking-widest text-[#64748B] mb-3">
               Payment Method
             </p>
-            <RadioGroup defaultValue='stripe' name='stripe'>
+            <RadioGroup 
+              value={paymentMethod} 
+              onChange={handlePaymentMethodChange}
+              name="payment-method"
+            >
               <FormControlLabel
-                value='stripe'
+                value="POD"
                 control={
                   <Radio
-                    size='small'
+                    size="small"
                     sx={{
                       color: "#94A3B8",
                       "&.Mui-checked": { color: "#0F52FF" },
@@ -129,8 +149,25 @@ const Checkout = () => {
                   />
                 }
                 label={
-                  <span className='text-sm font-medium text-[#0F172A]'>
-                    Stripe
+                  <span className="text-sm font-medium text-[#0F172A]">
+                    Pay on Delivery
+                  </span>
+                }
+              />
+              <FormControlLabel
+                value="CARD"
+                control={
+                  <Radio
+                    size="small"
+                    sx={{
+                      color: "#94A3B8",
+                      "&.Mui-checked": { color: "#0F52FF" },
+                    }}
+                  />
+                }
+                label={
+                  <span className="text-sm font-medium text-[#0F172A]">
+                    Card (Stripe)
                   </span>
                 }
               />
@@ -138,19 +175,19 @@ const Checkout = () => {
           </div>
 
           {/* Pricing + Checkout */}
-          <div className='bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl overflow-hidden'>
+          <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl overflow-hidden">
             <PricingCard />
-            <div className='px-5 pb-5'>
+            <div className="px-5 pb-5">
               <button
                 onClick={handlePayment}
                 disabled={!selectedAddress}
-                className='w-full py-3.5 bg-[#0F52FF] text-white text-sm font-bold
+                className="w-full py-3.5 bg-[#0F52FF] text-white text-sm font-bold
     rounded-xl tracking-wide shadow-[0_4px_20px_rgba(15,82,255,0.28)]
     hover:opacity-90 active:scale-[.98] transition-all duration-150
     disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none
-    disabled:active:scale-100'
+    disabled:active:scale-100"
               >
-                Proceed to Pay
+                {paymentMethod === "POD" ? "Place Order" : "Proceed to Pay"}
               </button>
             </div>
           </div>
@@ -160,11 +197,11 @@ const Checkout = () => {
       {/* ── Address Form Modal ── */}
       <Modal open={open} onClose={() => setOpen(false)}>
         <div
-          className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
             w-[95vw] max-w-[520px] bg-white rounded-2xl shadow-2xl p-6
-            outline-none max-h-[90vh] overflow-y-auto'
+            outline-none max-h-[90vh] overflow-y-auto"
         >
-          <AddressForm paymentGateway='stripe' onClose={() => setOpen(false)} />
+          <AddressForm paymentGateway="stripe" onClose={() => setOpen(false)} />
         </div>
       </Modal>
     </div>

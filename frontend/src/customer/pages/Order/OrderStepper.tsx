@@ -6,23 +6,43 @@ import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 const steps = [
-  { name: "Order Placed", description: "on Thu, 11 Jul", value: "PLACED" },
   {
-    name: "Packed",
-    description: "Item Packed in Dispatch Warehouse",
+    name: "Order Placed",
+    description: "Your order has been placed",
+    value: "PENDING",
+  },
+  {
+    name: "Confirmed",
+    description: "Order confirmed by seller",
     value: "CONFIRMED",
   },
-  { name: "Shipped", description: "by Mon, 15 Jul", value: "SHIPPED" },
-  { name: "Arriving", description: "by 16 Jul - 18 Jul", value: "ARRIVING" },
-  { name: "Arrived", description: "by 16 Jul - 18 Jul", value: "DELIVERED" },
+  {
+    name: "Processing",
+    description: "Item being prepared",
+    value: "PROCESSING",
+  },
+  { name: "Shipped", description: "Order on the way", value: "SHIPPED" },
+  { name: "Delivered", description: "Order delivered", value: "DELIVERED" },
 ];
 
 const canceledStep = [
-  { name: "Order Placed", description: "on Thu, 11 Jul", value: "PLACED" },
-  { name: "Order Canceled", description: "on Thu, 11 Jul", value: "CANCELLED" },
+  {
+    name: "Order Placed",
+    description: "Your order has been placed",
+    value: "PENDING",
+  },
+  {
+    name: "Order Cancelled",
+    description: "Order has been cancelled",
+    value: "CANCELLED",
+  },
 ];
 
-const OrderStepper = ({ orderStatus }: any) => {
+interface OrderStepperProps {
+  orderStatus?: string;
+}
+
+const OrderStepper = ({ orderStatus = "PENDING" }: OrderStepperProps) => {
   const [statusStep, setStatusStep] = useState(steps);
   const [currentStep, setCurrentStep] = useState(0);
 
@@ -33,7 +53,7 @@ const OrderStepper = ({ orderStatus }: any) => {
     } else {
       setStatusStep(steps);
       const index = steps.findIndex((step) => step.value === orderStatus);
-      setCurrentStep(index);
+      setCurrentStep(index >= 0 ? index : 0);
     }
   }, [orderStatus]);
 
@@ -50,7 +70,7 @@ const OrderStepper = ({ orderStatus }: any) => {
 
         return (
           <div
-            key={index}
+            key={step.value}
             style={{ display: "flex", gap: 16, padding: "0 4px" }}
           >
             {/* Icon + line */}
@@ -126,6 +146,7 @@ const OrderStepper = ({ orderStatus }: any) => {
                   fontSize: 11,
                   color: isActive ? "#64748B" : "#94A3B8",
                   paddingLeft: 4,
+                  margin: 0,
                 }}
               >
                 {step.description}
