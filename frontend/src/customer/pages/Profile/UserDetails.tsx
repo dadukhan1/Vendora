@@ -1,19 +1,37 @@
 /** @format */
-import { TextField } from "@mui/material";
+
+import {
+  TextField,
+  Card,
+  CardContent,
+  Button,
+  Box,
+  Divider,
+  Stack,
+  Avatar,
+} from "@mui/material";
 import { Person, Email, Phone, Edit, Check, Close } from "@mui/icons-material";
 import { useState } from "react";
-import { useAppSelector } from "../../../Redux Toolkit/store";
+import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/store";
+import { updateProfile } from "../../../Redux Toolkit/features/customer/userSlice";
 
 const keyIconMap: Record<string, React.ReactNode> = {
-  Name: <Person sx={{ fontSize: 18, color: "#0F52FF" }} />,
-  Email: <Email sx={{ fontSize: 18, color: "#0F52FF" }} />,
-  Mobile: <Phone sx={{ fontSize: 18, color: "#0F52FF" }} />,
+  Name: <Person sx={{ fontSize: 20, color: "#1976d2" }} />,
+  Email: <Email sx={{ fontSize: 20, color: "#1976d2" }} />,
+  Mobile: <Phone sx={{ fontSize: 20, color: "#1976d2" }} />,
 };
 
+interface Field {
+  key: string;
+  name: string;
+  value: string;
+}
+
 const UserDetails = () => {
+  const dispatch = useAppDispatch();
   const { user } = useAppSelector((store) => store.user);
 
-  const fields = [
+  const fields: Field[] = [
     { key: "Name", name: "fullName", value: user?.fullName || "" },
     { key: "Email", name: "email", value: user?.email || "" },
     { key: "Mobile", name: "mobile", value: user?.mobile || "" },
@@ -28,9 +46,14 @@ const UserDetails = () => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setSaved(form);
     setIsEditing(false);
+    handleUpdateProfile(form);
+  };
+
+  const handleUpdateProfile = async (data: any) => {
+    await dispatch(updateProfile(data));
   };
 
   const handleCancel = () => {
@@ -38,140 +61,279 @@ const UserDetails = () => {
     setIsEditing(false);
   };
 
+  const initials =
+    saved.fullName
+      ?.split(" ")
+      .map((n: string) => n[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase() || "U";
+
   return (
-    <div className='bg-white border border-slate-200 rounded-2xl overflow-hidden'>
-      {/* Card header */}
-      <div
-        className={[
-          "px-7 py-[22px] border-b border-slate-200 flex items-center justify-between transition-colors duration-200",
-          isEditing ? "bg-blue-600/[0.03]" : "bg-white",
-        ].join(" ")}
+    <Card
+      elevation={2}
+      sx={{
+        borderRadius: 3,
+        background: "linear-gradient(135deg, #ffffff 0%, #f5f7ff 100%)",
+        border: "1px solid #e8eef7",
+        overflow: "hidden",
+      }}
+    >
+      {/* Header Section */}
+      <Box
+        sx={{
+          px: 3,
+          py: 2.5,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 2,
+        }}
       >
-        <div className='flex items-center gap-3.5'>
-          {/* Avatar initials */}
-          <div className='w-[50px] h-[50px] rounded-full bg-blue-600 flex items-center justify-center text-white text-[17px] font-bold shrink-0'>
-            {saved.fullName
-              ?.split(" ")
-              .map((n: string) => n[0])
-              .join("")
-              .slice(0, 2)
-              .toUpperCase() || "?"}
-          </div>
-
-          <div>
-            <h2 className='text-[17px] font-bold text-slate-900'>
-              Personal Information
-            </h2>
-            <p className='text-[13px] text-slate-400 mt-[3px]'>
-              {isEditing
-                ? "Make changes below and save"
-                : "Your account details"}
-            </p>
-          </div>
-        </div>
-
-        {!isEditing && (
-          <button
-            onClick={() => setIsEditing(true)}
-            className='flex items-center gap-[7px] px-5 py-[9px] rounded-full border border-blue-600/25 bg-blue-600/5 hover:bg-blue-600/10 text-blue-600 text-[13px] font-semibold cursor-pointer transition-colors duration-150'
+        {/* Left Section: Avatar + Text */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2, flex: 1 }}>
+          {/* Avatar */}
+          <Avatar
+            sx={{
+              width: 60,
+              height: 60,
+              background: "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
+              fontSize: "1.3rem",
+              fontWeight: "bold",
+              flexShrink: 0,
+            }}
           >
-            <Edit sx={{ fontSize: 15 }} /> Edit
-          </button>
-        )}
-      </div>
+            {initials}
+          </Avatar>
 
-      {/* View mode */}
-      {!isEditing && (
-        <div className='py-1.5'>
-          {fields.map((field, i) => (
-            <div
-              key={field.key}
-              className={[
-                "flex items-center gap-[18px] px-7 py-[18px]",
-                i < fields.length - 1 ? "border-b border-slate-100" : "",
-              ].join(" ")}
+          {/* Title Section */}
+          <Box>
+            <Box
+              sx={{
+                fontSize: "1.2rem",
+                fontWeight: 700,
+                color: "#0f172a",
+                mb: 0.25,
+              }}
             >
-              {/* Icon bubble */}
-              <div className='w-11 h-11 rounded-xl bg-blue-600/[0.07] flex items-center justify-center shrink-0'>
-                {keyIconMap[field.key]}
-              </div>
+              Personal Information
+            </Box>
+            <Box sx={{ fontSize: "0.8rem", color: "#64748b" }}>
+              {isEditing ? "Editing Profile" : "Your account details"}
+            </Box>
+          </Box>
+        </Box>
 
-              <div className='flex-1'>
-                <p className='text-xs font-semibold text-slate-400 uppercase tracking-[0.07em] mb-[5px]'>
-                  {field.key}
-                </p>
-                <p
-                  className={`text-[15px] font-semibold ${saved[field.name] ? "text-slate-900" : "text-slate-400"}`}
-                >
-                  {saved[field.name] || "Not set"}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+        {/* Right Section: Edit Button */}
+        {!isEditing && (
+          <Button
+            variant='contained'
+            startIcon={<Edit sx={{ fontSize: 16 }} />}
+            onClick={() => setIsEditing(true)}
+            sx={{
+              textTransform: "none",
+              borderRadius: 2,
+              background: "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
+              boxShadow: "0 2px 8px rgba(25, 118, 210, 0.2)",
+              px: 2,
+              py: 1,
+              fontSize: "0.875rem",
+              fontWeight: 600,
+              whiteSpace: "nowrap",
+              "&:hover": {
+                boxShadow: "0 4px 12px rgba(25, 118, 210, 0.3)",
+              },
+            }}
+          >
+            Edit
+          </Button>
+        )}
+      </Box>
 
-      {/* Edit mode */}
-      {isEditing && (
-        <div className='px-7 py-6 flex flex-col gap-[22px]'>
-          {fields.map((field) => (
-            <div key={field.key}>
-              <label className='flex items-center gap-[7px] text-xs font-bold text-blue-600 uppercase tracking-[0.08em] mb-2.5'>
-                {keyIconMap[field.key]}
-                {field.key}
-              </label>
+      <Divider sx={{ opacity: 0.5 }} />
 
-              <TextField
-                fullWidth
-                size='small'
-                name={field.name}
-                value={form[field.name]}
-                onChange={handleChange}
-                placeholder={`Enter your ${field.key.toLowerCase()}`}
-                variant='outlined'
+      <CardContent sx={{ p: 0 }}>
+        {/* View Mode */}
+        {!isEditing && (
+          <Box>
+            {fields.map((field, fieldIndex) => (
+              <Box
+                key={field.key}
                 sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "12px",
-                    fontSize: 15,
-                    fontWeight: 600,
-                    color: "#0F172A",
-                    background: "#F8FAFC",
-                    "& fieldset": { borderColor: "#E2E8F0" },
-                    "&:hover fieldset": { borderColor: "#0F52FF" },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "#0F52FF",
-                      borderWidth: "1.5px",
-                    },
-                  },
-                  input: {
-                    padding: "13px 16px",
-                    fontWeight: 600,
-                    color: "#0F172A",
-                    fontSize: 15,
+                  px: 3,
+                  py: 2.5,
+                  display: "flex",
+                  gap: 2.5,
+                  alignItems: "flex-start",
+                  borderBottom:
+                    fieldIndex < fields.length - 1
+                      ? "1px solid #e2e8f0"
+                      : "none",
+                  transition: "background 0.2s",
+                  background: "#fff",
+                  "&:hover": {
+                    background: "#fafbff",
                   },
                 }}
-              />
-            </div>
-          ))}
+              >
+                {/* Icon */}
+                <Box
+                  sx={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: 2,
+                    background:
+                      "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                  }}
+                >
+                  {keyIconMap[field.key]}
+                </Box>
 
-          {/* Bottom save bar */}
-          <div className='flex justify-end gap-2.5 pt-5 border-t border-slate-200 mt-1'>
-            <button
-              onClick={handleCancel}
-              className='flex items-center gap-1.5 px-[22px] py-2.5 rounded-full border border-slate-200 bg-white text-slate-500 text-sm font-semibold cursor-pointer hover:bg-slate-50 transition-colors duration-150'
+                {/* Content */}
+                <Box sx={{ flex: 1 }}>
+                  <Box
+                    sx={{
+                      fontSize: "0.7rem",
+                      fontWeight: 700,
+                      color: "#94a3b8",
+                      letterSpacing: 0.8,
+                      mb: 0.75,
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {field.key}
+                  </Box>
+                  <Box
+                    sx={{
+                      fontSize: "0.95rem",
+                      fontWeight: 600,
+                      color: saved[field.name] ? "#0f172a" : "#cbd5e1",
+                    }}
+                  >
+                    {saved[field.name] || "Not set"}
+                  </Box>
+                </Box>
+              </Box>
+            ))}
+          </Box>
+        )}
+
+        {/* Edit Mode */}
+        {isEditing && (
+          <Box sx={{ p: 3 }}>
+            <Stack spacing={2.5}>
+              {fields.map((field) => (
+                <Box key={field.key}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                      mb: 1.2,
+                      color: "#1976d2",
+                      fontSize: "0.75rem",
+                      fontWeight: 700,
+                      letterSpacing: 0.8,
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {keyIconMap[field.key]}
+                    {field.key}
+                  </Box>
+                  <TextField
+                    fullWidth
+                    size='small'
+                    name={field.name}
+                    value={form[field.name]}
+                    onChange={handleChange}
+                    placeholder={`Enter your ${field.key.toLowerCase()}`}
+                    variant='outlined'
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        borderRadius: "8px",
+                        fontSize: "0.95rem",
+                        fontWeight: 500,
+                        color: "#0f172a",
+                        background: "#f8fafc",
+                        transition: "all 0.3s ease",
+                        "& fieldset": {
+                          borderColor: "#e2e8f0",
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "#cbd5e1",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#1976d2",
+                          borderWidth: "2px",
+                        },
+                        "&.Mui-focused": {
+                          background: "#f0f4ff",
+                        },
+                      },
+                      "& .MuiInputBase-input": {
+                        padding: "11px 13px",
+                        fontWeight: 500,
+                      },
+                    }}
+                  />
+                </Box>
+              ))}
+            </Stack>
+
+            {/* Action Buttons */}
+            <Box
+              sx={{
+                display: "flex",
+                gap: 2,
+                justifyContent: "flex-end",
+                mt: 4,
+                pt: 3,
+                borderTop: "1px solid #e2e8f0",
+              }}
             >
-              <Close sx={{ fontSize: 15 }} /> Cancel
-            </button>
-            <button
-              onClick={handleSave}
-              className='flex items-center gap-1.5 px-6 py-2.5 rounded-full border-none bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold cursor-pointer transition-colors duration-150'
-            >
-              <Check sx={{ fontSize: 15 }} /> Save Changes
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+              <Button
+                variant='outlined'
+                startIcon={<Close sx={{ fontSize: 16 }} />}
+                onClick={handleCancel}
+                sx={{
+                  textTransform: "none",
+                  borderRadius: 2,
+                  borderColor: "#e2e8f0",
+                  color: "#64748b",
+                  "&:hover": {
+                    borderColor: "#cbd5e1",
+                    background: "#f8fafc",
+                  },
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant='contained'
+                startIcon={<Check sx={{ fontSize: 16 }} />}
+                onClick={handleSave}
+                sx={{
+                  textTransform: "none",
+                  borderRadius: 2,
+                  background:
+                    "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
+                  boxShadow: "0 4px 12px rgba(25, 118, 210, 0.3)",
+                  "&:hover": {
+                    boxShadow: "0 6px 16px rgba(25, 118, 210, 0.4)",
+                  },
+                }}
+              >
+                Save Changes
+              </Button>
+            </Box>
+          </Box>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 

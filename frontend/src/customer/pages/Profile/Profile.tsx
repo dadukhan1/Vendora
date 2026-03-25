@@ -13,18 +13,28 @@ import {
   CreditCard,
   LocationOn,
   Logout,
+  Settings,
 } from "@mui/icons-material";
+import {
+  Box,
+  Card,
+  CardHeader,
+  CardContent,
+  Divider,
+  Avatar,
+} from "@mui/material";
+import { useState } from "react";
 
 const menu = [
-  {
-    name: "Orders",
-    path: "/account/orders",
-    icon: <GridView sx={{ fontSize: 18 }} />,
-  },
   {
     name: "Profile",
     path: "/account",
     icon: <Person sx={{ fontSize: 18 }} />,
+  },
+  {
+    name: "Orders",
+    path: "/account/orders",
+    icon: <GridView sx={{ fontSize: 18 }} />,
   },
   {
     name: "Saved Cards",
@@ -49,6 +59,7 @@ const Profile = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
   const handleClick = (item: (typeof menu)[0]) => {
     if (item.isLogout) {
@@ -66,107 +77,272 @@ const Profile = () => {
     .toUpperCase();
 
   return (
-    <div className='min-h-screen bg-slate-50'>
-      <div className='max-w-5xl mx-auto px-5 lg:px-8 py-12'>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #f5f7ff 0%, #fafbff 100%)",
+        py: { xs: 2, sm: 4, md: 6 },
+        px: { xs: 2, sm: 3, md: 4 },
+      }}
+    >
+      <Box sx={{ maxWidth: 1200, mx: "auto" }}>
         {/* Breadcrumb */}
-        <div className='flex items-center gap-2 mb-8'>
-          <span className='text-sm text-slate-400'>Home</span>
-          <span className='text-sm text-slate-400'>/</span>
-          <span className='text-sm text-blue-600 font-semibold'>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1.5,
+            mb: 4,
+            px: 0.5,
+          }}
+        >
+          <Box
+            sx={{ fontSize: "0.875rem", color: "#94a3b8", cursor: "pointer" }}
+          >
+            Home
+          </Box>
+          <Box sx={{ fontSize: "0.875rem", color: "#cbd5e1" }}>/</Box>
+          <Box
+            sx={{
+              fontSize: "0.875rem",
+              fontWeight: 600,
+              color: "#1976d2",
+            }}
+          >
             My Account
-          </span>
-        </div>
+          </Box>
+        </Box>
 
-        <div className='grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-6 items-start'>
-          {/* ── Sidebar ── */}
-          <div className='lg:sticky lg:top-24 bg-white border border-slate-200 rounded-2xl overflow-hidden'>
-            {/* Top accent + avatar */}
-            <div className='px-5 pt-7 pb-[22px] border-b border-slate-200 text-center relative'>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", lg: "280px 1fr" },
+            gap: { xs: 3, lg: 4 },
+            alignItems: "start",
+          }}
+        >
+          {/* ── Sidebar Card ── */}
+          <Card
+            sx={{
+              borderRadius: 3,
+              border: "1px solid #e8eef7",
+              background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
+              boxShadow: "0 4px 16px rgba(0, 0, 0, 0.04)",
+              position: "sticky",
+              top: 24,
+              overflow: "hidden",
+            }}
+          >
+            {/* Profile Section */}
+            <CardContent
+              sx={{
+                px: 2.5,
+                pt: 3,
+                pb: 2,
+                textAlign: "center",
+                borderBottom: "1px solid #e8eef7",
+              }}
+            >
               {/* Avatar */}
-              <div className='relative inline-block mt-2.5'>
-                <div className='w-[76px] h-[76px] rounded-full bg-blue-600 flex items-center justify-center text-white text-2xl font-bold mx-auto'>
+              <Box sx={{ mb: 2 }}>
+                <Avatar
+                  sx={{
+                    width: 80,
+                    height: 80,
+                    mx: "auto",
+                    background:
+                      "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
+                    fontSize: "2rem",
+                    fontWeight: 700,
+                    boxShadow: "0 8px 20px rgba(25, 118, 210, 0.25)",
+                  }}
+                >
                   {initials}
-                </div>
-                {/* Online dot */}
-                <div className='absolute bottom-0.5 right-0.5 w-4 h-4 bg-green-500 border-[3px] border-white rounded-full' />
-              </div>
+                </Avatar>
+              </Box>
 
-              <p className='text-base font-bold text-slate-900 mt-3.5'>
+              {/* User Info */}
+              <Box
+                sx={{
+                  fontSize: "1rem",
+                  fontWeight: 700,
+                  color: "#0f172a",
+                  mb: 0.75,
+                  letterSpacing: "-0.3px",
+                }}
+              >
                 {user?.fullName}
-              </p>
-              <p className='text-[13px] text-slate-400 mt-1'>{user?.email}</p>
+              </Box>
+              <Box
+                sx={{
+                  fontSize: "0.8125rem",
+                  color: "#64748b",
+                  wordBreak: "break-all",
+                  fontWeight: 500,
+                }}
+              >
+                {user?.email}
+              </Box>
 
-              {/* Premium badge */}
-              <span className='inline-block mt-3 bg-blue-600/10 text-blue-600 text-xs font-bold px-3.5 py-1 rounded-full tracking-wide'>
-                Premium
-              </span>
-            </div>
+              {/* Online Indicator */}
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 0.75,
+                  mt: 1.5,
+                  fontSize: "0.75rem",
+                  color: "#22c55e",
+                  fontWeight: 600,
+                }}
+              >
+                <Box
+                  sx={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: "50%",
+                    background: "#22c55e",
+                    display: "inline-block",
+                  }}
+                />
+                Active Now
+              </Box>
+            </CardContent>
 
-            {/* Nav items */}
-            <nav className='px-2.5 pt-3 pb-4'>
-              {menu.map((item, i) => {
+            {/* Navigation */}
+            <Box sx={{ px: 1.5, py: 2 }}>
+              {menu.map((item, index) => {
                 const isActive = location.pathname === item.path;
                 const isLogout = !!item.isLogout;
-                const isDivider = i === menu.length - 1;
+                const showDivider = index === menu.length - 1;
 
                 return (
-                  <div key={item.path}>
-                    {isDivider && (
-                      <div className='h-px bg-slate-200 mx-1.5 my-2' />
+                  <Box key={item.path}>
+                    {showDivider && (
+                      <Divider
+                        sx={{
+                          my: 1.5,
+                          opacity: 0.4,
+                        }}
+                      />
                     )}
-                    <div
+
+                    <Box
                       onClick={() => handleClick(item)}
-                      className={[
-                        "flex items-center gap-3 px-3.5 py-3 rounded-xl cursor-pointer mb-[3px] transition-colors duration-150",
-                        isActive
-                          ? "bg-blue-600/10 border border-transparent"
+                      onMouseEnter={() => setHoveredItem(item.path)}
+                      onMouseLeave={() => setHoveredItem(null)}
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 2.5,
+                        px: 2.5,
+                        py: 2.25,
+                        borderRadius: 2,
+                        cursor: "pointer",
+                        transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+                        mb: 0.75,
+                        ...(isActive
+                          ? {
+                              background:
+                                "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)",
+                              borderLeft: "3px solid #1976d2",
+                              pl: "calc(2.5rem - 3px)",
+                              boxShadow: "0 2px 8px rgba(25, 118, 210, 0.12)",
+                            }
                           : isLogout
-                            ? "bg-orange-500/[0.03] border border-orange-500/20"
-                            : "border border-transparent hover:bg-slate-100",
-                      ].join(" ")}
+                            ? {
+                                background:
+                                  hoveredItem === item.path
+                                    ? "linear-gradient(135deg, #fff7ed 0%, #fee2e2 100%)"
+                                    : "transparent",
+                                borderLeft: "3px solid transparent",
+                                "&:hover": {
+                                  pl: "calc(2.5rem - 3px)",
+                                  borderLeftColor: "#ea580c",
+                                  boxShadow:
+                                    "0 2px 8px rgba(234, 88, 12, 0.08)",
+                                },
+                              }
+                            : {
+                                background:
+                                  hoveredItem === item.path
+                                    ? "#f1f5ff"
+                                    : "transparent",
+                                borderLeft: "3px solid transparent",
+                                "&:hover": {
+                                  pl: "calc(2.5rem - 3px)",
+                                  borderLeftColor: "#cbd5e1",
+                                },
+                              }),
+                      }}
                     >
                       {/* Icon */}
-                      <span
-                        className={
-                          isActive
-                            ? "text-blue-600 flex"
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          color: isActive
+                            ? "#1976d2"
                             : isLogout
-                              ? "text-orange-600 flex"
-                              : "text-slate-400 flex"
-                        }
+                              ? "#ea580c"
+                              : "#64748b",
+                          transition: "color 0.2s",
+                        }}
                       >
                         {item.icon}
-                      </span>
+                      </Box>
 
                       {/* Label */}
-                      <span
-                        className={[
-                          "flex-1 text-[14.5px]",
-                          isActive
-                            ? "font-bold text-blue-600"
+                      <Box
+                        sx={{
+                          flex: 1,
+                          fontSize: "0.9375rem",
+                          fontWeight: isActive ? 700 : 600,
+                          color: isActive
+                            ? "#1976d2"
                             : isLogout
-                              ? "font-medium text-orange-600"
-                              : "font-medium text-slate-400",
-                        ].join(" ")}
+                              ? "#ea580c"
+                              : "#475569",
+                          transition: "color 0.2s",
+                        }}
                       >
                         {item.name}
-                      </span>
+                      </Box>
 
-                      {/* Badge (optional) */}
-                      {"badge" in item && item.badge && (
-                        <span className='bg-blue-600 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center'>
-                          {item.badge}
-                        </span>
+                      {/* Hover indicator dot */}
+                      {hoveredItem === item.path && !isActive && (
+                        <Box
+                          sx={{
+                            width: 6,
+                            height: 6,
+                            borderRadius: "50%",
+                            background: "#cbd5e1",
+                            animation:
+                              "pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+                            "@keyframes pulse": {
+                              "0%, 100%": { opacity: 0.6 },
+                              "50%": { opacity: 1 },
+                            },
+                          }}
+                        />
                       )}
-                    </div>
-                  </div>
+                    </Box>
+                  </Box>
                 );
               })}
-            </nav>
-          </div>
+            </Box>
+          </Card>
 
-          {/* ── Main content ── */}
-          <div className='flex flex-col gap-5'>
+          {/* ── Main Content ── */}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 3,
+            }}
+          >
             <Routes>
               <Route path='/' element={<UserDetails />} />
               <Route path='/orders' element={<Order />} />
@@ -175,10 +351,10 @@ const Profile = () => {
                 element={<OrderDetails />}
               />
             </Routes>
-          </div>
-        </div>
-      </div>
-    </div>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

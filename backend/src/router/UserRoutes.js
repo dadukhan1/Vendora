@@ -8,4 +8,6 @@ const router = express.Router();
 
 router.post("/profile", authMiddleware, UserController.getUserProfileByJwt);
 
+router.put("/update", authMiddleware, UserController.updateUserProfile);
+
 export const UserRouter = router;
