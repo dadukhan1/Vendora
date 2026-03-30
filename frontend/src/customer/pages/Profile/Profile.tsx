@@ -10,7 +10,7 @@ import { logout } from "../../../Redux Toolkit/features/auth/authSlice";
 import {
   GridView,
   Person,
-  CreditCard,
+  // CreditCard,  // Removed as we don't need saved card anymore
   LocationOn,
   Logout,
   Settings,
@@ -24,6 +24,7 @@ import {
   Avatar,
 } from "@mui/material";
 import { useState } from "react";
+import Addresses from "./Addresses";
 
 const menu = [
   {
@@ -36,11 +37,7 @@ const menu = [
     path: "/account/orders",
     icon: <GridView sx={{ fontSize: 18 }} />,
   },
-  {
-    name: "Saved Cards",
-    path: "/account/saved-card",
-    icon: <CreditCard sx={{ fontSize: 18 }} />,
-  },
+  // Removed 'Saved Cards' menu entry
   {
     name: "Addresses",
     path: "/account/addresses",
@@ -346,6 +343,7 @@ const Profile = () => {
             <Routes>
               <Route path='/' element={<UserDetails />} />
               <Route path='/orders' element={<Order />} />
+              <Route path='/addresses' element={<Addresses />} />
               <Route
                 path='/orders/:orderId/item/:orderItemId'
                 element={<OrderDetails />}

@@ -1,6 +1,6 @@
 /** @format */
 
-import { Grid, TextField, IconButton } from "@mui/material";
+import { Grid, TextField, IconButton, Box, Button } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import { useFormik } from "formik";
 import { useAppDispatch } from "../../../Redux Toolkit/store";
@@ -38,13 +38,36 @@ const AddressForm = ({ paymentGateway, onClose }: any) => {
   });
 
   return (
-    <div className='max-w-[600px] mx-auto'>
+    <Box sx={{ maxWidth: 600, mx: "auto" }}>
       {/* Heading */}
-      <div className='flex items-center justify-between mb-6'>
-        <div className='flex items-center gap-3'>
-          <span className='inline-block w-1 h-6 bg-gradient-to-b from-[#0F52FF] to-[#FF4F00]' />
-          <h2 className='text-lg font-bold text-[#0F172A]'>Contact Details</h2>
-        </div>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          mb: 4,
+        }}
+      >
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Box
+            sx={{
+              width: 4,
+              height: 24,
+              background: "linear-gradient(180deg, #0F52FF 0%, #FF4F00 100%)",
+              borderRadius: 0.5,
+            }}
+          />
+          <Box
+            sx={{
+              fontSize: "1.125rem",
+              fontWeight: 700,
+              color: "#0F172A",
+              letterSpacing: "-0.3px",
+            }}
+          >
+            Contact Details
+          </Box>
+        </Box>
         {onClose && (
           <IconButton
             onClick={onClose}
@@ -55,12 +78,13 @@ const AddressForm = ({ paymentGateway, onClose }: any) => {
                 color: "#FF4F00",
                 background: "rgba(255,79,0,0.08)",
               },
+              transition: "all 0.2s",
             }}
           >
             <Close fontSize='small' />
           </IconButton>
         )}
-      </div>
+      </Box>
 
       <form onSubmit={formik.handleSubmit}>
         <Grid container spacing={2.5}>
@@ -164,18 +188,39 @@ const AddressForm = ({ paymentGateway, onClose }: any) => {
 
           {/* Submit */}
           <Grid size={{ xs: 12 }}>
-            <button
+            <Button
+              onClick={() => onClose()}
               type='submit'
-              className='w-full py-3.5 bg-[#0F52FF] text-white text-sm font-bold
-                rounded-xl tracking-wide shadow-[0_4px_20px_rgba(15,82,255,0.28)]
-                hover:opacity-90 active:scale-[.98] transition-all duration-150'
+              fullWidth
+              variant='contained'
+              sx={{
+                background: "linear-gradient(135deg, #0F52FF 0%, #0D3ABF 100%)",
+                color: "white",
+                py: 1.75,
+                fontSize: "0.95rem",
+                fontWeight: 700,
+                textTransform: "none",
+                borderRadius: 2,
+                boxShadow: "0 4px 20px rgba(15, 82, 255, 0.28)",
+                letterSpacing: "0.5px",
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  background:
+                    "linear-gradient(135deg, #0D3ABF 0%, #0A2885 100%)",
+                  boxShadow: "0 6px 24px rgba(15, 82, 255, 0.35)",
+                  transform: "translateY(-2px)",
+                },
+                "&:active": {
+                  transform: "scale(0.98)",
+                },
+              }}
             >
               Save Address
-            </button>
+            </Button>
           </Grid>
         </Grid>
       </form>
-    </div>
+    </Box>
   );
 };
 

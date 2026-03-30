@@ -2,6 +2,7 @@
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../../config/api";
+import toast from "react-hot-toast";
 
 export const fetchAddresses = createAsyncThunk(
   "address/fetchAddresses",
@@ -49,7 +50,13 @@ export const deleteAddress = createAsyncThunk(
   "address/deleteAddress",
   async (addressId, { rejectWithValue }) => {
     try {
-      await api.delete(`/address/${addressId}`);
+      const token = localStorage.getItem("token");
+      await api.delete(`/address/${addressId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(addressId);
       return addressId;
     } catch (error) {
       return rejectWithValue(
@@ -94,10 +101,12 @@ const addressSlice = createSlice({
       .addCase(addAddress.fulfilled, (state, action) => {
         state.loading = false;
         state.addresses.push(action.payload.address);
+        toast.success("Address added successfully!");
       })
       .addCase(addAddress.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(action.payload || "Failed to add address");
       })
 
       // Delete
@@ -109,10 +118,12 @@ const addressSlice = createSlice({
         state.addresses = state.addresses.filter(
           (addr) => addr._id !== action.payload,
         );
+        toast.success("Address deleted successfully!");
       })
       .addCase(deleteAddress.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(action.payload || "Failed to delete address");
       });
   },
 });
