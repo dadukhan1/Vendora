@@ -67,6 +67,8 @@ app.use("/api/seller/report", SellerReportRouter);
 app.use("/api/admin", AdminRouter);
 app.use("/api/admin/coupons", CouponRouter);
 
+app.use("/api/coupons", CouponRouter);
+
 app.use("/api/home", HomeCategoryRoutes);
 app.use("/api/admin/deals", DealRouter);
 

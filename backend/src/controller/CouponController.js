@@ -55,11 +55,11 @@ export const createCoupon = async (req, res) => {
 // Apply coupon (User)
 export const applyCoupon = async (req, res) => {
   try {
-    const { code, cartTotal } = req.body;
+    const { couponCode, cartTotal } = req.body;
     const userId = req.user._id; // assuming auth middleware
 
     const coupon = await Coupon.findOne({
-      code: code.toUpperCase(),
+      code: couponCode.toUpperCase(),
       isActive: true,
     });
     if (!coupon) return res.status(400).json({ message: "Invalid coupon" });
