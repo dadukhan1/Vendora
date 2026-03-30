@@ -1,14 +1,28 @@
 /** @format */
 
 import { Add, Close, Remove } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+import { Box, Card, CardContent, Divider, IconButton, Typography } from "@mui/material";
 import { useAppDispatch } from "../../../Redux Toolkit/store";
 import {
   deleteCartItem,
   updateCartItem,
 } from "../../../Redux Toolkit/features/customer/cartSlice";
 
-const CartItemCard = ({ item }) => {
+type CartItem = {
+  _id?: string;
+  quantity: number;
+  product?: {
+    title?: string;
+    sellingPrice?: number | string;
+    images?: string[];
+  };
+};
+
+type CartItemCardProps = {
+  item: CartItem;
+};
+
+const CartItemCard = ({ item }: CartItemCardProps) => {
   const dispatch = useAppDispatch();
 
   const handleUpdateCartItem = (quantity: number) => {
@@ -20,75 +34,168 @@ const CartItemCard = ({ item }) => {
   };
 
   return (
-    <div className='bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl relative overflow-hidden'>
+    <Card
+      sx={{
+        position: "relative",
+        overflow: "hidden",
+        borderRadius: 3,
+        border: "1px solid #e8eef7",
+        background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
+        boxShadow: "0 4px 16px rgba(0, 0, 0, 0.04)",
+      }}
+    >
       {/* Delete button */}
-      <div className='absolute top-2 right-2'>
+      <Box sx={{ position: "absolute", top: 8, right: 8, zIndex: 1 }}>
         <IconButton
           onClick={handleDeleteCartItem}
           size='small'
           sx={{
-            color: "#94A3B8",
-            "&:hover": { color: "#FF4F00", background: "rgba(255,79,0,0.08)" },
+            color: "#94a3b8",
+            transition: "all 0.2s",
+            "&:hover": {
+              color: "#ea580c",
+              background: "rgba(234, 88, 12, 0.08)",
+            },
           }}
         >
           <Close fontSize='small' />
         </IconButton>
-      </div>
+      </Box>
 
       {/* Main content */}
-      <div className='p-4 flex gap-4 pr-10'>
-        <img
-          src={item.product?.images[0]}
-          alt=''
-          className='w-20 h-20 rounded-xl object-cover flex-shrink-0'
-        />
-        <div className='space-y-1 min-w-0'>
-          <p className='text-xs font-bold text-[#0F52FF] uppercase tracking-wide'>
-            Zosh Clothing
-          </p>
-          <h2 className='font-semibold text-[#0F172A] text-sm leading-snug truncate'>
-            {item?.product?.title}
-          </h2>
-          <p className='text-[#94A3B8] text-xs truncate'>
-            Sold by: Natural Lifestyle Products Pvt. Ltd.
-          </p>
-          <p className='text-[#64748B] text-xs'>
-            <span className='font-semibold text-[#0F172A]'>7 days</span>{" "}
-            replacement available
-          </p>
-        </div>
-      </div>
+      <CardContent sx={{ p: 2, pr: 5 }}>
+        <Box sx={{ display: "flex", gap: 2 }}>
+          <Box
+            component='img'
+            src={item?.product?.images?.[0]}
+            alt={item?.product?.title || "Cart item image"}
+            sx={{
+              width: 84,
+              height: 84,
+              borderRadius: 2.5,
+              objectFit: "cover",
+              flexShrink: 0,
+              border: "1px solid #e2e8f0",
+              backgroundColor: "#f8fafc",
+            }}
+          />
+          <Box sx={{ minWidth: 0, flex: 1 }}>
+            <Typography
+              sx={{
+                fontSize: "0.7rem",
+                fontWeight: 700,
+                color: "#1976d2",
+                textTransform: "uppercase",
+                letterSpacing: "0.06em",
+                mb: 0.5,
+              }}
+            >
+              Zosh Clothing
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: "0.92rem",
+                fontWeight: 700,
+                color: "#0f172a",
+                lineHeight: 1.35,
+                mb: 0.5,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {item?.product?.title}
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: "0.76rem",
+                color: "#94a3b8",
+                mb: 0.5,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              Sold by: Natural Lifestyle Products Pvt. Ltd.
+            </Typography>
+            <Typography sx={{ fontSize: "0.76rem", color: "#64748b" }}>
+              <Box component='span' sx={{ color: "#0f172a", fontWeight: 700 }}>
+                7 days
+              </Box>{" "}
+              replacement available
+            </Typography>
+          </Box>
+        </Box>
+      </CardContent>
+
+      <Divider sx={{ borderColor: "#e8eef7" }} />
 
       {/* Footer: qty + price */}
-      <div className='border-t border-[#E2E8F0] px-4 py-3 flex items-center justify-between'>
+      <Box
+        sx={{
+          px: 2,
+          py: 1.5,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
         {/* Stepper */}
-        <div className='flex items-center border border-[#E2E8F0] rounded-xl overflow-hidden bg-white'>
-          <button
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            border: "1px solid #e2e8f0",
+            borderRadius: 2,
+            overflow: "hidden",
+            backgroundColor: "#fff",
+          }}
+        >
+          <IconButton
             disabled={item?.quantity === 1}
             onClick={() => handleUpdateCartItem(item?.quantity - 1)}
-            className='px-3 py-1.5 text-[#0F52FF] disabled:text-[#E2E8F0]
-              hover:bg-[#F8FAFC] transition-colors border-none bg-transparent cursor-pointer'
+            size='small'
+            sx={{
+              borderRadius: 0,
+              color: "#1976d2",
+              px: 1.25,
+              "&:hover": { backgroundColor: "#f8fafc" },
+              "&.Mui-disabled": { color: "#cbd5e1" },
+            }}
           >
             <Remove fontSize='small' />
-          </button>
-          <span className='px-3 text-sm font-bold text-[#0F172A]'>
+          </IconButton>
+          <Typography
+            sx={{
+              minWidth: 34,
+              textAlign: "center",
+              fontSize: "0.92rem",
+              fontWeight: 700,
+              color: "#0f172a",
+            }}
+          >
             {item?.quantity}
-          </span>
-          <button
+          </Typography>
+          <IconButton
             onClick={() => handleUpdateCartItem(item?.quantity + 1)}
-            className='px-3 py-1.5 text-[#0F52FF] hover:bg-[#F8FAFC]
-              transition-colors border-none bg-transparent cursor-pointer'
+            size='small'
+            sx={{
+              borderRadius: 0,
+              color: "#1976d2",
+              px: 1.25,
+              "&:hover": { backgroundColor: "#f8fafc" },
+            }}
           >
             <Add fontSize='small' />
-          </button>
-        </div>
+          </IconButton>
+        </Box>
 
         {/* Price */}
-        <p className='text-base font-bold text-[#0F172A]'>
+        <Typography sx={{ fontSize: "1.05rem", fontWeight: 700, color: "#0f172a" }}>
           ${item?.product?.sellingPrice}
-        </p>
-      </div>
-    </div>
+        </Typography>
+      </Box>
+    </Card>
   );
 };
 
