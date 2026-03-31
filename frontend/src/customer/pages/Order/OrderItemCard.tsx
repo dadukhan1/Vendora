@@ -5,17 +5,37 @@ import { Avatar } from "@mui/material";
 import { useNavigate } from "react-router";
 
 const statusColors: Record<string, { color: string; bg: string }> = {
+  PENDING: { color: "#0F52FF", bg: "rgba(15,82,255,0.08)" },
   PLACED: { color: "#0F52FF", bg: "rgba(15,82,255,0.08)" },
   CONFIRMED: { color: "#0F52FF", bg: "rgba(15,82,255,0.08)" },
+  PROCESSING: { color: "#0F52FF", bg: "rgba(15,82,255,0.08)" },
   SHIPPED: { color: "#FF4F00", bg: "rgba(255,79,0,0.08)" },
   ARRIVING: { color: "#FF4F00", bg: "rgba(255,79,0,0.08)" },
   DELIVERED: { color: "#16a34a", bg: "rgba(22,163,74,0.08)" },
   CANCELLED: { color: "#dc2626", bg: "rgba(220,38,38,0.08)" },
 };
 
-const OrderItemCard = ({ orderItem, order }) => {
+type OrderItemCardProps = {
+  orderItem: any;
+  order: any;
+};
+
+const OrderItemCard = ({ orderItem, order }: OrderItemCardProps) => {
   const navigate = useNavigate();
   const status = statusColors[order?.orderStatus] ?? statusColors.PLACED;
+  const deliveryLabel = order?.deliveryDate
+    ? new Date(order.deliveryDate).toLocaleDateString()
+    : "N/A";
+  const quantity = Number(orderItem?.quantity ?? 1);
+  const itemTotal = Number(orderItem?.sellingPrice ?? 0) * quantity;
+  const orderCouponDiscount = Number(order?.couponDiscount ?? 0);
+  const orderShippingPrice = Number(order?.shippingPrice ?? 0);
+  const grossOrderSelling = Number(order?.totalSellingPrice ?? 0) - orderShippingPrice + orderCouponDiscount;
+  const itemCouponShare =
+    grossOrderSelling > 0
+      ? (itemTotal / grossOrderSelling) * orderCouponDiscount
+      : 0;
+  const paidItemTotal = Number(Math.max(itemTotal - itemCouponShare, 0).toFixed(2));
 
   return (
     <div
@@ -66,7 +86,7 @@ const OrderItemCard = ({ orderItem, order }) => {
               {order?.orderStatus}
             </p>
             <p style={{ fontSize: 12, color: "#64748B", marginTop: 1 }}>
-              Arriving by {order?.deliveryDate}
+              Arriving by {deliveryLabel}
             </p>
           </div>
         </div>
@@ -158,7 +178,7 @@ const OrderItemCard = ({ orderItem, order }) => {
             </span>
             {orderItem?.sellingPrice && (
               <span style={{ fontSize: 14, fontWeight: 600, color: "#0F172A" }}>
-                ${orderItem?.sellingPrice}
+                ${paidItemTotal} {quantity > 1 ? `(x${quantity})` : ""}
               </span>
             )}
           </div>

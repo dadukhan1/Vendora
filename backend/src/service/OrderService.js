@@ -7,7 +7,7 @@ import { OrderItem } from "../models/OrderItem.js";
 import { OrderStatus } from "../domain/OrderStatus.js";
 
 class OrderService {
-  async createOrder(user, shippingAddress, cart) {
+  async createOrder(user, shippingAddress, cart, couponDiscount = 0) {
     const session = await mongoose.startSession();
     session.startTransaction();
 
@@ -42,9 +42,25 @@ class OrderService {
       }, {});
 
       const orders = [];
+      const sellerEntries = Object.entries(itemsBySeller);
+      const cartSellingGrossTotal = sellerEntries.reduce((sum, [, sellerItems]) => {
+        const sellerSum = sellerItems.reduce(
+          (subTotal, item) => subTotal + item.sellingPrice * item.quantity,
+          0,
+        );
+        return sum + sellerSum;
+      }, 0);
+      const normalizedCouponDiscount = Math.max(
+        Math.min(Number(couponDiscount) || 0, cartSellingGrossTotal),
+        0,
+      );
+      const totalShippingFee = 299;
+      let distributedDiscount = 0;
+      let distributedShipping = 0;
 
       // Create orders per seller
-      for (const [sellerId, cartItems] of Object.entries(itemsBySeller)) {
+      for (let index = 0; index < sellerEntries.length; index++) {
+        const [sellerId, cartItems] = sellerEntries[index];
         let totalSellingPrice = 0;
         let totalMrpPrice = 0;
         let totalItems = 0;
@@ -67,6 +83,53 @@ class OrderService {
         const orderItems = await OrderItem.insertMany(orderItemsPayload, {
           session,
         });
+        let sellerCouponDiscount = 0;
+        if (normalizedCouponDiscount > 0 && cartSellingGrossTotal > 0) {
+          if (index === sellerEntries.length - 1) {
+            sellerCouponDiscount = Number(
+              (normalizedCouponDiscount - distributedDiscount).toFixed(2),
+            );
+          } else {
+            sellerCouponDiscount = Number(
+              (
+                (totalSellingPrice / cartSellingGrossTotal) *
+                normalizedCouponDiscount
+              ).toFixed(2),
+            );
+          }
+          sellerCouponDiscount = Math.min(sellerCouponDiscount, totalSellingPrice);
+          distributedDiscount = Number(
+            (distributedDiscount + sellerCouponDiscount).toFixed(2),
+          );
+        }
+        const totalSellingAfterCoupon = Number(
+          Math.max(totalSellingPrice - sellerCouponDiscount, 0).toFixed(2),
+        );
+
+        let sellerShippingFee = 0;
+        if (cartSellingGrossTotal > 0) {
+          if (index === sellerEntries.length - 1) {
+            sellerShippingFee = Number(
+              (totalShippingFee - distributedShipping).toFixed(2)
+            );
+          } else {
+            sellerShippingFee = Number(
+              ((totalSellingPrice / cartSellingGrossTotal) * totalShippingFee).toFixed(2)
+            );
+          }
+          sellerShippingFee = Math.max(0, sellerShippingFee);
+          distributedShipping += sellerShippingFee;
+        } else {
+          // If selling gross is 0 (free items?), just attach to first order if we want
+          if (index === 0) {
+            sellerShippingFee = totalShippingFee;
+            distributedShipping = totalShippingFee;
+          }
+        }
+        
+        const totalSellingIncludingShipping = Number(
+          (totalSellingAfterCoupon + sellerShippingFee).toFixed(2)
+        );
 
         const order = await Order.create(
           [
@@ -77,8 +140,12 @@ class OrderService {
               orderItems: orderItems.map((i) => i._id),
               totalItems,
               totalMrpPrice,
-              totalSellingPrice,
-              discount: totalMrpPrice - totalSellingPrice,
+              totalSellingPrice: totalSellingIncludingShipping,
+              couponDiscount: sellerCouponDiscount,
+              shippingPrice: sellerShippingFee,
+              discount: Number(
+                Math.max(totalMrpPrice - totalSellingAfterCoupon, 0).toFixed(2),
+              ),
             },
           ],
           { session },

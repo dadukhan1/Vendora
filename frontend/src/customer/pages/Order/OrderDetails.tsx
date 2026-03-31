@@ -55,7 +55,9 @@ const paymentStatusColors: Record<string, { bg: string; text: string }> = {
 const OrderDetails = () => {
   const dispatch = useAppDispatch();
   const { orderItemId, orderId } = useParams();
-  const { orderItem, currentOrder } = useAppSelector((store) => store.order);
+  const { orderItem, currentOrder } = useAppSelector(
+    (store) => store.order,
+  ) as any;
 
   useEffect(() => {
     if (orderItemId) dispatch(orderItemById(orderItemId));
@@ -73,6 +75,21 @@ const OrderDetails = () => {
   const orderCancelHanlder = (orderId: string) => {
     dispatch(cancelOrder(orderId));
   };
+  const itemQuantity = Number(orderItem?.quantity ?? 1);
+  const itemSellingTotal = Number(orderItem?.sellingPrice ?? 0) * itemQuantity;
+  const orderShippingPrice = Number(currentOrder?.shippingPrice ?? 0);
+  const orderCouponDiscount = Number(currentOrder?.couponDiscount ?? 0);
+  const grossOrderSelling =
+    Number(currentOrder?.totalSellingPrice ?? 0) - orderShippingPrice + orderCouponDiscount;
+  const itemCouponShare =
+    grossOrderSelling > 0
+      ? (itemSellingTotal / grossOrderSelling) * orderCouponDiscount
+      : 0;
+  const itemPaidTotal = Number(
+    Math.max(itemSellingTotal - itemCouponShare, 0).toFixed(2),
+  );
+  const itemMrpTotal = Number(orderItem?.mrpPrice ?? 0) * itemQuantity;
+  const itemSaved = Number(Math.max(itemMrpTotal - itemPaidTotal, 0).toFixed(2));
 
   const canCancelOrder = () => {
     return (
@@ -134,7 +151,7 @@ const OrderDetails = () => {
               borderRadius: 99,
             }}
           >
-            Size: {orderItem?.product?.size}
+            Size: {orderItem?.size}
           </span>
         </div>
       </section>
@@ -223,15 +240,38 @@ const OrderDetails = () => {
             <p style={{ fontSize: 12, color: "#64748B" }}>
               You saved{" "}
               <span style={{ color: "#16a34a", fontWeight: 600 }}>
-                ₹{currentOrder?.totalMrpPrice - currentOrder?.totalSellingPrice}{" "}
+                ${itemSaved}{" "}
                 on this item
               </span>
             </p>
+            <p style={{ fontSize: 12, color: "#64748B" }}>Qty: {itemQuantity}</p>
           </div>
           <p style={{ fontSize: 14, fontWeight: 700, color: "#0F172A" }}>
-            ₹{currentOrder?.totalSellingPrice}
+            ${itemPaidTotal}
           </p>
         </div>
+
+        {/* Shipping Price row */}
+        {orderShippingPrice > 0 && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+              padding: "16px 18px",
+              borderBottom: "1px solid #E2E8F0",
+            }}
+          >
+            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              <p style={{ fontSize: 13, fontWeight: 700, color: "#0F172A" }}>
+                Delivery Price (Order)
+              </p>
+            </div>
+            <p style={{ fontSize: 14, fontWeight: 700, color: "#0F172A" }}>
+              ${orderShippingPrice}
+            </p>
+          </div>
+        )}
 
         {/* Payment method & status */}
         <div
@@ -296,7 +336,7 @@ const OrderDetails = () => {
         {canCancelOrder() && (
           <div style={{ padding: "16px 18px" }}>
             <Button
-              onClick={() => orderCancelHanlder(orderId)}
+              onClick={() => orderId && orderCancelHanlder(orderId)}
               fullWidth
               variant='outlined'
               sx={{

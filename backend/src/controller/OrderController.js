@@ -6,7 +6,7 @@ import OrderService from "../service/OrderService.js";
 
 class OrderController {
   async createOrder(req, res) {
-    const { shippingAddress } = req.body;
+    const { shippingAddress, couponDiscount } = req.body;
     const { paymentMethod } = req.params;
     const jwt = req.headers.authorization;
 
@@ -18,6 +18,7 @@ class OrderController {
         user,
         shippingAddress,
         cart,
+        couponDiscount,
       );
       return res.status(200).json(orders);
     } catch (error) {

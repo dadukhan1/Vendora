@@ -4,15 +4,15 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../../config/api";
 
 const intialState = {
-  orders: [],
+  orders: [] as any[],
   loading: false,
   error: null as string | null,
-  orderItem: null,
-  currentOrder: null,
-  orderPayment: null,
+  orderItem: null as any,
+  currentOrder: null as any,
+  orderPayment: null as any,
 };
 
-export const orderHistory = createAsyncThunk<any, any>(
+export const orderHistory = createAsyncThunk<any, void>(
   "order/orderHistory",
   async (_, { rejectWithValue }) => {
     try {
@@ -54,12 +54,12 @@ export const orderById = createAsyncThunk<any, any>(
 
 export const createOrder = createAsyncThunk<any, any>(
   "order/createOrder",
-  async ({ address, paymentGateway }, { rejectWithValue }) => {
+  async ({ address, paymentGateway, couponDiscount = 0 }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
       const response = await api.post(
         "/order",
-        { shippingAddress: address },
+        { shippingAddress: address, couponDiscount },
         {
           params: {
             paymentGateway,

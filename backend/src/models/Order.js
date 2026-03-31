@@ -38,6 +38,16 @@ const orderSchmea = new Schema(
       required: true,
       min: 0,
     },
+    couponDiscount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    shippingPrice: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
     orderStatus: {
       type: String,
       enum: Object.values(OrderStatus),

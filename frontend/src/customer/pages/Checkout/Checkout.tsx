@@ -11,13 +11,13 @@ import {
   createCheckout,
   createOrder,
 } from "../../../Redux Toolkit/features/customer/orderSlice";
-import { useDispatch } from "react-redux";
-import { useAppSelector } from "../../../Redux Toolkit/store";
+import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/store";
 import { fetchAddresses } from "../../../Redux Toolkit/features/customer/addressSlice";
+import { sumCartItemSellingPrice } from "../../../utils/sumCartItemPrice";
 
 const Checkout = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("POD"); // ✅ ADD
@@ -32,6 +32,17 @@ const Checkout = () => {
 
   const { cart } = useAppSelector((store) => store.cart);
   const { addresses } = useAppSelector((store) => store.address);
+  const { cart: couponData, couponApplied } = useAppSelector(
+    (store) => store.coupon,
+  );
+
+  const shipping = 299;
+  const selling = sumCartItemSellingPrice(cart?.cartItems ?? []);
+  const couponDiscount =
+    couponApplied && typeof (couponData as any)?.discount === "number"
+      ? Number((couponData as any).discount)
+      : 0;
+  const totalPayable = Math.max(selling - couponDiscount, 0) + shipping;
 
   const handlePayment = async () => {
     if (!selectedAddress) {
@@ -45,6 +56,7 @@ const Checkout = () => {
         address: selectedAddress,
         paymentMethod: paymentMethod, // ✅ PASS PAYMENT METHOD
         paymentGateway: paymentMethod === "CARD" ? "stripe" : "pod",
+        couponDiscount,
       }) as any,
     );
     const order = orderResult.payload;
@@ -53,7 +65,7 @@ const Checkout = () => {
     // ✅ IF POD, NAVIGATE TO ORDERS PAGE
     if (paymentMethod === "POD") {
       alert("Order placed successfully! You will pay on delivery.");
-      navigate("/orders");
+      navigate("/account/orders");
       return;
     }
 
@@ -61,7 +73,7 @@ const Checkout = () => {
     const checkoutResult = await dispatch(
       createCheckout({
         orderId: order._id,
-        totalSellingPrice: order.totalSellingPrice,
+        totalSellingPrice: totalPayable,
       }) as any,
     );
     if (checkoutResult.payload?.url) {

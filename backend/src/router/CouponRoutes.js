@@ -14,8 +14,9 @@ const router = express.Router();
 // Admin creates coupon
 router.post("/", authMiddleware, createCoupon);
 router.get("/all", authMiddleware, getAllCoupons);
+router.delete("/:id", authMiddleware, deleteCoupon);
+
 // User applies coupon
 router.post("/apply", authMiddleware, applyCoupon);
-router.delete("/:id", authMiddleware, deleteCoupon);
 
 export const CouponRouter = router;

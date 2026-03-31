@@ -14,23 +14,21 @@ const initialState = {
 
 export const applyCoupon = createAsyncThunk<any, any>(
   "coupon/applyCoupon",
-  async ({ jwt, couponCode, apply, orderValue }, { rejectWithValue }) => {
+  async ({ couponCode, cartTotal }, { rejectWithValue }) => {
     try {
+      const token = localStorage.getItem("token");
       const response = await api.post(
-        "/cart/apply-coupon",
-        { couponCode },
+        "/coupons/apply",
+        { couponCode, cartTotal },
         {
-          params: { apply, couponCode, orderValue },
           headers: {
-            Authorization: `Bearer ${jwt}`,
+            Authorization: `Bearer ${token}`,
           },
         },
       );
       const data = response.data;
-      console.log("Apply coupon response:", data);
       return data;
     } catch (error) {
-      console.error("Error applying coupon:", error);
       return rejectWithValue(error);
     }
   },
@@ -53,8 +51,14 @@ const couponSlice = createSlice({
       })
       .addCase(applyCoupon.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
         state.couponApplied = false;
+        let errorMsg = "Failed to apply coupon";
+        if (action.payload && typeof action.payload === "object" && (action.payload as any).response?.data?.message) {
+          errorMsg = (action.payload as any).response.data.message;
+        } else if (typeof action.payload === "string") {
+          errorMsg = action.payload;
+        }
+        state.error = errorMsg;
       });
   },
 });
