@@ -42,6 +42,11 @@ const Checkout = () => {
     couponApplied && typeof (couponData as any)?.discount === "number"
       ? Number((couponData as any).discount)
       : 0;
+  const couponId =
+    couponApplied && (couponData as any)?.couponId
+      ? (couponData as any).couponId
+      : undefined;
+
   const totalPayable = Math.max(selling - couponDiscount, 0) + shipping;
 
   const handlePayment = async () => {
@@ -57,6 +62,7 @@ const Checkout = () => {
         paymentMethod: paymentMethod, // ✅ PASS PAYMENT METHOD
         paymentGateway: paymentMethod === "CARD" ? "stripe" : "pod",
         couponDiscount,
+        couponId,
       }) as any,
     );
     const order = orderResult.payload;

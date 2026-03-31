@@ -43,6 +43,10 @@ const orderSchmea = new Schema(
       default: 0,
       min: 0,
     },
+    couponId: {
+      type: Schema.Types.ObjectId,
+      ref: "Coupon",
+    },
     shippingPrice: {
       type: Number,
       default: 0,

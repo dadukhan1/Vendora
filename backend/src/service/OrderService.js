@@ -8,7 +8,7 @@ import { CartItem } from "../models/CartItem.js";
 import { OrderStatus } from "../domain/OrderStatus.js";
 
 class OrderService {
-  async createOrder(user, shippingAddress, cart, couponDiscount = 0) {
+  async createOrder(user, shippingAddress, cart, couponDiscount = 0, couponId = null) {
     const session = await mongoose.startSession();
     session.startTransaction();
 
@@ -143,6 +143,7 @@ class OrderService {
               totalMrpPrice,
               totalSellingPrice: totalSellingIncludingShipping,
               couponDiscount: sellerCouponDiscount,
+              couponId: couponId || undefined,
               shippingPrice: sellerShippingFee,
               discount: Number(
                 Math.max(totalMrpPrice - totalSellingAfterCoupon, 0).toFixed(2),

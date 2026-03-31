@@ -3,15 +3,28 @@
 import { OrderStatus } from "../domain/OrderStatus.js";
 import CartService from "../service/CartService.js";
 import OrderService from "../service/OrderService.js";
+import { markCouponUsed } from "./CouponController.js";
+import { Coupon } from "../models/Coupon.js";
 
 class OrderController {
   async createOrder(req, res) {
-    const { shippingAddress, couponDiscount } = req.body;
-    const { paymentMethod } = req.params;
+    const { shippingAddress, couponDiscount, couponId } = req.body;
+    const { paymentGateway } = req.query;
     const jwt = req.headers.authorization;
 
     try {
       const user = req.user;
+
+      if (couponId) {
+        const coupon = await Coupon.findById(couponId);
+        if (!coupon) {
+          return res.status(400).json({ message: "Invalid coupon" });
+        }
+        const hasUsed = coupon.usedBy.some((id) => id.toString() === user._id.toString());
+        if (hasUsed) {
+          return res.status(400).json({ message: "You have already used this coupon" });
+        }
+      }
 
       const cart = await CartService.findUserCart(user);
       const orders = await OrderService.createOrder(
@@ -19,7 +32,13 @@ class OrderController {
         shippingAddress,
         cart,
         couponDiscount,
+        couponId
       );
+      
+      if (paymentGateway === "pod" && couponId) {
+        await markCouponUsed(couponId, user._id);
+      }
+      
       return res.status(200).json(orders);
     } catch (error) {
       console.log(error.message);

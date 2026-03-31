@@ -75,7 +75,10 @@ export const applyCoupon = async (req, res) => {
       });
     }
 
-    if (coupon.usedBy.includes(userId)) {
+    const hasUsed = coupon.usedBy.some(
+      (id) => id.toString() === userId.toString()
+    );
+    if (hasUsed) {
       return res
         .status(400)
         .json({ message: "You have already used this coupon" });
@@ -95,9 +98,10 @@ export const applyCoupon = async (req, res) => {
   }
 };
 
-// Mark coupon as used (call after payment)
+// Mark coupon as used (call after payment or POD)
 export const markCouponUsed = async (couponId, userId) => {
-  await Coupon.findByIdAndUpdate(couponId, { $push: { usedBy: userId } });
+  if (!couponId) return;
+  await Coupon.findByIdAndUpdate(couponId, { $addToSet: { usedBy: userId } });
 };
 
 // Delete coupon (Admin)

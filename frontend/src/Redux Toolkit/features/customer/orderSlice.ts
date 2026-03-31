@@ -54,12 +54,12 @@ export const orderById = createAsyncThunk<any, any>(
 
 export const createOrder = createAsyncThunk<any, any>(
   "order/createOrder",
-  async ({ address, paymentGateway, couponDiscount = 0 }, { rejectWithValue }) => {
+  async ({ address, paymentGateway, couponDiscount = 0, couponId }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
       const response = await api.post(
         "/order",
-        { shippingAddress: address, couponDiscount },
+        { shippingAddress: address, couponDiscount, couponId },
         {
           params: {
             paymentGateway,

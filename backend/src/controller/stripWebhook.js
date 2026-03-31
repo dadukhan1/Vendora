@@ -5,6 +5,7 @@ import { Order } from "../models/Order.js";
 import { Transaction } from "../models/Transaction.js";
 import { PaymentStatus } from "../domain/PaymentStatus.js";
 import { OrderStatus } from "../domain/OrderStatus.js";
+import { markCouponUsed } from "./CouponController.js";
 
 export const stripeWebhooks = async (req, res) => {
   const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
@@ -46,6 +47,10 @@ export const stripeWebhooks = async (req, res) => {
       order.paymentStatus = PaymentStatus.COMPLETED;
       order.orderStatus = OrderStatus.PLACED;
       await order.save();
+
+      if (order.couponId) {
+        await markCouponUsed(order.couponId, order.user);
+      }
 
       // Create Transaction
       console.log("order done for:", orderId)
