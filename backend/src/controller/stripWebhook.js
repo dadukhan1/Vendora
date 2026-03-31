@@ -27,33 +27,41 @@ export const stripeWebhooks = async (req, res) => {
   if (event.type === "checkout.session.completed") {
     const session = event.data.object;
 
-    const orderId = session.metadata.orderId;
-
-    const order = await Order.findById(orderId);
-
-    if (!order) {
-      return res.status(404).send("Order not found");
+    const orderIdStr = session.metadata.orderId;
+    if (!orderIdStr) {
+      return res.status(400).send("Order IDs missing in session metadata");
     }
 
-    // Update Order
-    order.paymentStatus = PaymentStatus.COMPLETED;
-    order.orderStatus = OrderStatus.PLACED;
-    await order.save();
+    const orderIds = orderIdStr.split(",");
 
-    // Create Transaction
-    console.log("order done")
-    await Transaction.create({
-      user: order.user,
-      order: order._id,
-      seller: order.seller,
-      amount: order.totalSellingPrice,
-      type: "CREDIT",
-      status: PaymentStatus.COMPLETED,
-      stripeSessionId: session.id,
-      stripePaymentIntentId: session.payment_intent,
-    });
+    for (const orderId of orderIds) {
+      const order = await Order.findById(orderId.trim());
 
-    console.log("Order & Transaction updated:", orderId);
+      if (!order) {
+        console.error("Order not found:", orderId);
+        continue;
+      }
+
+      // Update Order
+      order.paymentStatus = PaymentStatus.COMPLETED;
+      order.orderStatus = OrderStatus.PLACED;
+      await order.save();
+
+      // Create Transaction
+      console.log("order done for:", orderId)
+      await Transaction.create({
+        user: order.user,
+        order: order._id,
+        seller: order.seller,
+        amount: order.totalSellingPrice,
+        type: "CREDIT",
+        status: PaymentStatus.COMPLETED,
+        stripeSessionId: session.id,
+        stripePaymentIntentId: session.payment_intent,
+      });
+
+      console.log("Order & Transaction updated:", orderId);
+    }
   }
 
   res.status(200).json({ received: true });

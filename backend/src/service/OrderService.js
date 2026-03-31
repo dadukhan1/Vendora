@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import { Address } from "../models/Address.js";
 import { Order } from "../models/Order.js";
 import { OrderItem } from "../models/OrderItem.js";
+import { CartItem } from "../models/CartItem.js";
 import { OrderStatus } from "../domain/OrderStatus.js";
 
 class OrderService {
@@ -155,13 +156,14 @@ class OrderService {
       }
 
       // Clear cart
+      await CartItem.deleteMany({ cart: cart._id }, { session });
       cart.cartItems = [];
       await cart.save({ session });
 
       await session.commitTransaction();
       session.endSession();
 
-      return orders[0];
+      return orders;
     } catch (error) {
       await session.abortTransaction();
       session.endSession();

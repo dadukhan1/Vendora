@@ -70,9 +70,12 @@ const Checkout = () => {
     }
 
     // ✅ IF CARD, PROCEED TO STRIPE CHECKOUT
+    const ordersArray = Array.isArray(order) ? order : [order];
+    const orderIds = ordersArray.map((o: any) => o._id).join(",");
+
     const checkoutResult = await dispatch(
       createCheckout({
-        orderId: order._id,
+        orderId: orderIds,
         totalSellingPrice: totalPayable,
       }) as any,
     );
