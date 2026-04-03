@@ -13,6 +13,7 @@ import {
   Wallet,
   WorkspacePremium,
 } from "@mui/icons-material";
+import { CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import SimilarProduct from "./SimilarProduct";
 import {
@@ -28,10 +29,12 @@ const ProductDetails = () => {
   const { productId } = useParams();
   const [quantity, setQuantity] = useState(1);
   const dispatch = useAppDispatch();
-  const { product } = useAppSelector((store) => store.products);
+  const { product, loading } = useAppSelector((store) => store.products);
 
   useEffect(() => {
     if (!productId) return;
+    // Ensure the user lands at the top when switching products.
+    window.scrollTo({ top: 0, behavior: "smooth" });
     dispatch(fetchProductById(productId));
   }, [dispatch, productId]);
 
@@ -57,6 +60,17 @@ const ProductDetails = () => {
     },
     { icon: <Wallet fontSize='small' />, label: "Pay on Delivery Available" },
   ];
+
+  if (loading || !product) {
+    return (
+      <div className='min-h-screen bg-white text-[#0F172A] flex items-center justify-center px-5'>
+        <div className='flex flex-col items-center gap-3'>
+          <CircularProgress size={34} />
+          <p className='text-sm font-semibold text-gray-500'>Loading product...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className='min-h-screen bg-white text-[#0F172A] font-sans'>
