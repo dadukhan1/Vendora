@@ -1,6 +1,6 @@
 /** @format */
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import FilterSection from "./FilterSection";
 import {
   Divider,
@@ -18,8 +18,10 @@ import { getAllProducts } from "../../../Redux Toolkit/features/customer/product
 const Products = () => {
   const { products, totalPages } = useAppSelector((store) => store.products);
   const [sort, setSort] = useState("price_low");
+  const [pageNumber, setPageNumber] = useState(1);
   const { categoryId } = useParams();
   const dispatch = useAppDispatch();
+  const topRef = useRef<HTMLDivElement | null>(null);
 
   const handleSort = (e: any) => {
     setSort(e.target.value);
@@ -31,13 +33,24 @@ const Products = () => {
         getAllProducts({
           category: categoryId,
           sort,
+          pageNumber,
         })
       );
     }
-  }, [categoryId, sort]);
+  }, [categoryId, sort, pageNumber]);
+
+  // If the category changes, reset back to the first page.
+  useEffect(() => {
+    setPageNumber(1);
+  }, [categoryId]);
+
+  // When pagination changes, bring the user back to the top.
+  useEffect(() => {
+    topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [pageNumber, categoryId]);
 
   return (
-    <div className='mt-10'>
+    <div className='mt-10' ref={topRef}>
       {/* Header */}
       <div className='text-center py-6 px-9'>
         <p className='text-xs font-semibold tracking-[0.3em] text-gray-400 uppercase mb-2'>
@@ -98,20 +111,24 @@ const Products = () => {
 
           {/* Pagination */}
           <div className='flex justify-center py-10'>
-            <Pagination
-              count={totalPages}
-              shape='rounded'
-              sx={{
-                "& .MuiPaginationItem-root": {
-                  borderRadius: "8px",
-                  fontWeight: 500,
-                },
-                "& .Mui-selected": {
-                  backgroundColor: "#111 !important",
-                  color: "#fff",
-                },
-              }}
-            />
+            {totalPages > 1 && (
+              <Pagination
+                count={totalPages}
+                page={pageNumber}
+                onChange={(_, value) => setPageNumber(value)}
+                shape='rounded'
+                sx={{
+                  "& .MuiPaginationItem-root": {
+                    borderRadius: "8px",
+                    fontWeight: 500,
+                  },
+                  "& .Mui-selected": {
+                    backgroundColor: "#111 !important",
+                    color: "#fff",
+                  },
+                }}
+              />
+            )}
           </div>
         </section>
       </div>

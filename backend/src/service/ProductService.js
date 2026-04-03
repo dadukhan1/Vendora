@@ -146,7 +146,7 @@ class ProductService {
     const filterQuery = {};
 
     const pageNumber = Number(query.pageNumber) || 1;
-    const limit = 10;
+    const limit = 12;
 
     if (query.category) {
       const category = await Category.findOne({ categoryId: query.category });
