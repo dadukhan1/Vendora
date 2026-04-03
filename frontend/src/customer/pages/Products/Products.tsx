@@ -3,41 +3,95 @@
 import { useEffect, useRef, useState } from "react";
 import FilterSection from "./FilterSection";
 import {
+  CircularProgress,
+  Chip,
   Divider,
   FormControl,
   InputLabel,
   MenuItem,
   Pagination,
   Select,
+  Skeleton,
 } from "@mui/material";
 import ProductCard from "./ProductCard";
 import { useParams } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/store";
 import { getAllProducts } from "../../../Redux Toolkit/features/customer/productSlice";
+import { price as priceFilters } from "../../../data/filters/prices.ts";
 
 const Products = () => {
-  const { products, totalPages } = useAppSelector((store) => store.products);
+  const { products, totalPages, loading } = useAppSelector(
+    (store) => store.products
+  );
   const [sort, setSort] = useState("price_low");
   const [pageNumber, setPageNumber] = useState(1);
   const { categoryId } = useParams();
   const dispatch = useAppDispatch();
   const topRef = useRef<HTMLDivElement | null>(null);
 
+  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedPrice, setSelectedPrice] = useState("");
+  const [selectedDiscount, setSelectedDiscount] = useState("");
+
+  const selectedPriceObj = priceFilters.find((p) => p.value === selectedPrice);
+  const priceLabel = selectedPriceObj?.name ?? "";
+  const discountLabel = selectedDiscount ? `${selectedDiscount}%+` : "";
+  const hasAnyFilter =
+    !!selectedColor || !!selectedPrice || !!selectedDiscount;
+
   const handleSort = (e: any) => {
     setSort(e.target.value);
+    setPageNumber(1);
+  };
+
+  const handleColorChange = (value: string) => {
+    setSelectedColor(value);
+    setPageNumber(1);
+  };
+
+  const handlePriceChange = (value: string) => {
+    setSelectedPrice(value);
+    setPageNumber(1);
+  };
+
+  const handleDiscountChange = (value: string) => {
+    setSelectedDiscount(value);
+    setPageNumber(1);
   };
 
   useEffect(() => {
     if (categoryId) {
+      const selectedPriceObj = priceFilters.find(
+        (p) => p.value === selectedPrice,
+      );
+
+      const minPrice = selectedPriceObj ? selectedPriceObj.min : undefined;
+      // backend uses `maxPrice != null` so we send a very large max for "10000+"
+      const maxPrice = selectedPriceObj
+        ? selectedPriceObj.max ?? 100000000
+        : undefined;
+
       dispatch(
         getAllProducts({
           category: categoryId,
           sort,
           pageNumber,
+          ...(selectedColor ? { color: selectedColor } : {}),
+          ...(selectedPrice ? { minPrice, maxPrice } : {}),
+          ...(selectedDiscount
+            ? { minDiscount: Number(selectedDiscount) }
+            : {}),
         })
       );
     }
-  }, [categoryId, sort, pageNumber]);
+  }, [
+    categoryId,
+    sort,
+    pageNumber,
+    selectedColor,
+    selectedPrice,
+    selectedDiscount,
+  ]);
 
   // If the category changes, reset back to the first page.
   useEffect(() => {
@@ -50,7 +104,7 @@ const Products = () => {
   }, [pageNumber, categoryId]);
 
   return (
-    <div className='mt-10' ref={topRef}>
+    <div className='mt-10 mb-10' ref={topRef}>
       {/* Header */}
       <div className='text-center py-6 px-9'>
         <p className='text-xs font-semibold tracking-[0.3em] text-gray-400 uppercase mb-2'>
@@ -64,8 +118,21 @@ const Products = () => {
 
       <div className='lg:flex'>
         {/* Filter Sidebar */}
-        <section className='hidden lg:block w-[20%] min-h-screen border-r border-gray-100 px-4 pt-4'>
-          <FilterSection />
+        <section className='hidden lg:block w-[20%] min-h-screen border-r border-gray-100 px-4 pt-4 sticky top-20 self-start'>
+          <FilterSection
+            selectedColor={selectedColor}
+            selectedPrice={selectedPrice}
+            selectedDiscount={selectedDiscount}
+            onColorChange={handleColorChange}
+            onPriceChange={handlePriceChange}
+            onDiscountChange={handleDiscountChange}
+            onClearAll={() => {
+              setSelectedColor("");
+              setSelectedPrice("");
+              setSelectedDiscount("");
+              setPageNumber(1);
+            }}
+          />
         </section>
 
         {/* Products Section */}
@@ -95,16 +162,87 @@ const Products = () => {
 
           <Divider />
 
+          {/* Active Filters */}
+          {hasAnyFilter && (
+            <div className='flex flex-wrap gap-2 px-5'>
+              {selectedColor && (
+                <Chip
+                  label={`Color: ${selectedColor}`}
+                  onDelete={() => handleColorChange("")}
+                  sx={{ borderRadius: "999px", fontWeight: 600 }}
+                />
+              )}
+              {selectedPrice && (
+                <Chip
+                  label={`Price: ${priceLabel}`}
+                  onDelete={() => handlePriceChange("")}
+                  sx={{ borderRadius: "999px", fontWeight: 600 }}
+                />
+              )}
+              {selectedDiscount && (
+                <Chip
+                  label={`Discount: ${discountLabel}`}
+                  onDelete={() => handleDiscountChange("")}
+                  sx={{ borderRadius: "999px", fontWeight: 600 }}
+                />
+              )}
+              <Chip
+                label='Clear filters'
+                onDelete={() => {
+                  setSelectedColor("");
+                  setSelectedPrice("");
+                  setSelectedDiscount("");
+                  setPageNumber(1);
+                }}
+                sx={{
+                  borderRadius: "999px",
+                  fontWeight: 700,
+                  bgcolor: "#fff",
+                  border: "1px solid rgba(15,82,255,0.25)",
+                }}
+              />
+            </div>
+          )}
+
           {/* Product Grid */}
-          <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8 px-5 mt-5'>
-            {products.length > 0 ? (
-              products.map((item, index) => (
-                <ProductCard key={index} item={item} />
-              ))
-            ) : (
+          <div className='relative grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8 px-5 mt-5'>
+            {products.length > 0 && (
+              <>
+                {products.map((item, index) => (
+                  <ProductCard key={index} item={item} />
+                ))}
+                {loading && (
+                  <div className='absolute inset-0 z-10 bg-white/85 flex items-center justify-center rounded-xl pointer-events-none'>
+                    <div className='flex items-center gap-3 text-gray-800'>
+                      <CircularProgress size={26} />
+                      <span className='text-sm font-medium'>
+                        Loading products...
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+
+            {products.length === 0 && loading && (
+              <div className='col-span-4 flex flex-col items-center justify-center py-24 text-gray-500'>
+                <Skeleton
+                  variant='rectangular'
+                  width='100%'
+                  height={280}
+                  sx={{ borderRadius: "16px" }}
+                />
+                <div className='flex items-center gap-3 mt-4'>
+                  <CircularProgress size={22} />
+                  <p className='text-sm font-medium'>Loading products...</p>
+                </div>
+              </div>
+            )}
+
+            {products.length === 0 && !loading && (
               <div className='col-span-4 flex flex-col items-center justify-center py-24 text-gray-400'>
-                <p className='text-lg font-medium'>No products found</p>
-                <p className='text-sm mt-1'>Try adjusting your filters</p>
+                <p className='text-lg font-semibold text-gray-700'>No products found</p>
+                <p className='text-sm mt-1'>Try adjusting filters or sorting</p>
               </div>
             )}
           </div>
@@ -116,6 +254,7 @@ const Products = () => {
                 count={totalPages}
                 page={pageNumber}
                 onChange={(_, value) => setPageNumber(value)}
+                disabled={loading}
                 shape='rounded'
                 sx={{
                   "& .MuiPaginationItem-root": {

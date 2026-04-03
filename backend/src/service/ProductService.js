@@ -166,15 +166,17 @@ class ProductService {
       filterQuery.color = query.color;
     }
 
-    if (query.minPrice && query.maxPrice) {
+    // Use `!= null` so minPrice = 0 still works (e.g. "Below 500").
+    if (query.minPrice != null && query.maxPrice != null) {
       filterQuery.sellingPrice = {
         $gte: Number(query.minPrice),
         $lte: Number(query.maxPrice),
       };
     }
 
-    if (query.minDiscount) {
-      filterQuery.minDiscount = { $gte: Number(query.minDiscount) };
+    if (query.minDiscount != null) {
+      // In DB the field name is `discount` (percentage).
+      filterQuery.discount = { $gte: Number(query.minDiscount) };
     }
 
     if (query.size) {
