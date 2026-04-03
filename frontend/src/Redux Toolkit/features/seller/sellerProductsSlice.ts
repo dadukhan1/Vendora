@@ -137,17 +137,17 @@ const sellerProductsSlice = createSlice({
       .addCase(updateProduct.fulfilled, (state, action) => {
         state.loading = false;
         const index = state.products.findIndex(
-          (p) => p.id === action.payload.id,
+          (p) => p._id === action.payload._id,
         );
         if (index !== -1) {
           state.products[index] = action.payload;
         }
-        toast.success("Product update successfully");
+        toast.success("Product updated successfully");
       })
       .addCase(updateProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
-        toast.error("Product update error: ", action.payload.error);
+        toast.error(action.payload as string);
       });
     builder
       .addCase(deleteProduct.pending, (state) => {

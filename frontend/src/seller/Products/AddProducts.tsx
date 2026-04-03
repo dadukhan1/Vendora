@@ -24,8 +24,9 @@ import { menLevel3 } from "../../data/category/level3/menLevel3";
 import { womenLevel3 } from "../../data/category/level3/womenLevel3";
 import { furnitureLevel3 } from "../../data/category/level3/furnitureLevel3";
 import { electronicLevel3 } from "../../data/category/level3/electronicLevel3";
-import { createProduct } from "../../Redux Toolkit/features/seller/sellerProductsSlice";
-import { useAppDispatch } from "../../Redux Toolkit/store";
+import { createProduct, fetchSellerProducts } from "../../Redux Toolkit/features/seller/sellerProductsSlice";
+import { useAppDispatch, useAppSelector } from "../../Redux Toolkit/store";
+// import Loader from "../../components/Loader";
 
 const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
 
@@ -94,6 +95,8 @@ const AddProducts = () => {
       console.log(formData);
     },
   });
+
+  const { loading } = useAppSelector(store => store.sellerProduct);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
@@ -329,7 +332,7 @@ const AddProducts = () => {
                 <MenuItem value='none'>None</MenuItem>
                 {childCategory(
                   categoryThree[
-                    formik.values.category as keyof typeof categoryThree
+                  formik.values.category as keyof typeof categoryThree
                   ] || [],
                   formik.values.category2,
                 )?.map((category: any, index: any) => (
@@ -343,11 +346,25 @@ const AddProducts = () => {
           <Grid size={{ xs: 12 }}>
             <Button
               variant='contained'
-              sx={{ p: "11px" }}
-              fullWidth
               type='submit'
+              fullWidth
+              disabled={loading}
+              sx={{
+                py: 1.5,
+                borderRadius: 2,
+                textTransform: "none",
+                fontWeight: 500,
+                fontSize: "0.95rem",
+              }}
             >
-              Add Product
+              {loading ? (
+                <div className='flex items-center justify-center gap-2'>
+                  <CircularProgress size={20} thickness={4} />
+                  <span>Saving...</span>
+                </div>
+              ) : (
+                "Save product"
+              )}
             </Button>
           </Grid>
         </Grid>
