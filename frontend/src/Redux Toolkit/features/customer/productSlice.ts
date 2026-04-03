@@ -43,7 +43,7 @@ export const searchProduct = createAsyncThunk(
 
 export const getAllProducts = createAsyncThunk(
   "product/getAllProducts",
-  async (params, { rejectWithValue }) => {
+  async (params: any, { rejectWithValue }) => {
     try {
       const response = await api.get("/products", {
         params: {

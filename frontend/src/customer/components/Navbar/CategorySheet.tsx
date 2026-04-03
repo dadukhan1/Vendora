@@ -50,7 +50,7 @@ const CategorySheet = ({ selectedCategory }: any) => {
                 item.categoryId,
               )?.map((item: any) => (
                 <li
-                  onClick={() => navigate(`/products/${item.name}`)}
+                  onClick={() => navigate(`/products/${item.categoryId}`)}
                   key={item.name}
                   className='cursor-pointer text-[#0F172A]'
                 >

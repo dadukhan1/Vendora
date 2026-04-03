@@ -26,8 +26,15 @@ const Products = () => {
   };
 
   useEffect(() => {
-    dispatch(getAllProducts({}));
-  }, []);
+    if (categoryId) {
+      dispatch(
+        getAllProducts({
+          category: categoryId,
+          sort,
+        })
+      );
+    }
+  }, [categoryId, sort]);
 
   return (
     <div className='mt-10'>
