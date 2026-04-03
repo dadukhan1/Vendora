@@ -31,8 +31,9 @@ const ProductDetails = () => {
   const { product } = useAppSelector((store) => store.products);
 
   useEffect(() => {
+    if (!productId) return;
     dispatch(fetchProductById(productId));
-  }, [dispatch]);
+  }, [dispatch, productId]);
 
   const handleAddItemToCart = () => {
     dispatch(addItemToCart({ size: "M", productId: product?._id, quantity }));
@@ -264,7 +265,10 @@ const ProductDetails = () => {
               Similar Products
             </h2>
           </div>
-          <SimilarProduct />
+          <SimilarProduct 
+            category={product?.category}
+            currentProductId={product?._id}
+          />
         </section>
       </div>
     </div>

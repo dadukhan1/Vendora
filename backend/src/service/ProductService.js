@@ -149,7 +149,13 @@ class ProductService {
     const limit = 12;
 
     if (query.category) {
-      const category = await Category.findOne({ categoryId: query.category });
+      // Support both:
+      // - categoryId (used on listing pages)
+      // - category ObjectId (stored on Product as `product.category`)
+      let category = await Category.findOne({ categoryId: query.category });
+      if (!category) {
+        category = await Category.findById(query.category);
+      }
 
       if (!category) {
         return {

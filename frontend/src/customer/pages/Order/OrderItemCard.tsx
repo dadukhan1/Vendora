@@ -36,6 +36,12 @@ const OrderItemCard = ({ orderItem, order }: OrderItemCardProps) => {
       ? (itemTotal / grossOrderSelling) * orderCouponDiscount
       : 0;
   const paidItemTotal = Number(Math.max(itemTotal - itemCouponShare, 0).toFixed(2));
+  const itemShippingShare = grossOrderSelling > 0
+    ? Number(((itemTotal / grossOrderSelling) * orderShippingPrice).toFixed(2))
+    : 0;
+  const paidItemTotalIncludingShipping = Number(
+    (paidItemTotal + itemShippingShare).toFixed(2),
+  );
 
   return (
     <div
@@ -177,9 +183,17 @@ const OrderItemCard = ({ orderItem, order }: OrderItemCardProps) => {
               Size: {orderItem?.size}
             </span>
             {orderItem?.sellingPrice && (
-              <span style={{ fontSize: 14, fontWeight: 600, color: "#0F172A" }}>
-                ${paidItemTotal} {quantity > 1 ? `(x${quantity})` : ""}
-              </span>
+              <>
+                <span style={{ fontSize: 14, fontWeight: 600, color: "#0F172A" }}>
+                  ${paidItemTotalIncludingShipping}{" "}
+                  {quantity > 1 ? `(x${quantity})` : ""}
+                </span>
+                {itemShippingShare > 0 && (
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "#64748B" }}>
+                    + ${itemShippingShare} delivery
+                  </span>
+                )}
+              </>
             )}
           </div>
         </div>

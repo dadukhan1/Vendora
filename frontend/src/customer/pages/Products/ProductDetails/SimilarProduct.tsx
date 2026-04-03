@@ -1,22 +1,67 @@
 /** @format */
-
+import { useEffect, useState } from "react";
+import { CircularProgress } from "@mui/material";
+import api from "../../../../config/api";
 import ProductCard from "../ProductCard";
 
-const product = {
-  images: [
-    "https://images.unsplash.com/photo-1619516388835-2b60acc4049e?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  ],
-  sellerDetails: {
-    bussinessName: "Rana Clothing",
-  },
+type SimilarProductProps = {
+  category?: string;
+  currentProductId?: string;
 };
 
-const SimilarProduct = () => {
+const SimilarProduct = ({
+  category,
+  currentProductId,
+}: SimilarProductProps) => {
+  const [similarProducts, setSimilarProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!category) return;
+
+    const fetchSimilar = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get("/products", {
+          params: {
+            category,
+            sort: "price_low",
+            pageNumber: 1,
+          },
+        });
+
+        const content = response.data?.content ?? [];
+        const filtered = currentProductId
+          ? content.filter((p: any) => p?._id !== currentProductId)
+          : content;
+
+        // UI: we only need a small set for the details page.
+        setSimilarProducts(filtered.slice(0, 4));
+      } catch (e) {
+        setSimilarProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSimilar();
+  }, [category, currentProductId]);
+
+  if (!category) return null;
+  if (loading && similarProducts.length === 0) {
+    return (
+      <div className='w-full flex items-center justify-center py-10'>
+        <CircularProgress />
+      </div>
+    );
+  }
+
+  if (!similarProducts.length) return null;
+
   return (
     <div className='grid lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 grid-cols-1 justify-between gap-2 gap-y-8'>
-      {[1, 1, 1, 1].map((item) => (
-        <ProductCard item={product} />
+      {similarProducts.map((item) => (
+        <ProductCard key={item?._id ?? item?.title} item={item} />
       ))}
     </div>
   );

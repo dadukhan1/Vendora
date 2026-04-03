@@ -88,6 +88,12 @@ const OrderDetails = () => {
   const itemPaidTotal = Number(
     Math.max(itemSellingTotal - itemCouponShare, 0).toFixed(2),
   );
+  const itemShippingShare = grossOrderSelling > 0
+    ? Number(((itemSellingTotal / grossOrderSelling) * orderShippingPrice).toFixed(2))
+    : 0;
+  const itemPaidTotalIncludingShipping = Number(
+    (itemPaidTotal + itemShippingShare).toFixed(2),
+  );
   const itemMrpTotal = Number(orderItem?.mrpPrice ?? 0) * itemQuantity;
   const itemSaved = Number(Math.max(itemMrpTotal - itemPaidTotal, 0).toFixed(2));
 
@@ -235,7 +241,7 @@ const OrderDetails = () => {
         >
           <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
             <p style={{ fontSize: 13, fontWeight: 700, color: "#0F172A" }}>
-              Total Item Price
+              Total Paid (Item + Delivery Share)
             </p>
             <p style={{ fontSize: 12, color: "#64748B" }}>
               You saved{" "}
@@ -245,9 +251,14 @@ const OrderDetails = () => {
               </span>
             </p>
             <p style={{ fontSize: 12, color: "#64748B" }}>Qty: {itemQuantity}</p>
+            {itemShippingShare > 0 && (
+              <p style={{ fontSize: 12, color: "#64748B" }}>
+                Delivery share: ${itemShippingShare}
+              </p>
+            )}
           </div>
           <p style={{ fontSize: 14, fontWeight: 700, color: "#0F172A" }}>
-            ${itemPaidTotal}
+            ${itemPaidTotalIncludingShipping}
           </p>
         </div>
 
