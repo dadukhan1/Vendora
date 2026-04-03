@@ -27,6 +27,8 @@ const Navbar = () => {
   const { user } = useAppSelector((store) => store.user);
   const { seller } = useAppSelector((store) => store.seller);
   const activeRole = user?.role || (seller ? "ROLE_SELLER" : null);
+  const canShowCustomerActions =
+    !activeRole || user?.role === "ROLE_CUSTOMER";
   const theme = useTheme();
   const isLarge = useMediaQuery(theme.breakpoints.up("lg"));
   const [showSheet, setShowSheet] = useState(false);
@@ -81,16 +83,20 @@ const Navbar = () => {
             <Search sx={{ fontSize: 26 }} />
           </IconButton>
 
-          <IconButton sx={{ color: "#374151" }}>
-            <FavoriteBorder sx={{ fontSize: 26 }} />
-          </IconButton>
+          {canShowCustomerActions && (
+            <IconButton sx={{ color: "#374151" }}>
+              <FavoriteBorder sx={{ fontSize: 26 }} />
+            </IconButton>
+          )}
 
-          <IconButton
-            onClick={() => navigate("/cart")}
-            sx={{ color: "#374151" }}
-          >
-            <AddShoppingCart sx={{ fontSize: 26 }} />
-          </IconButton>
+          {canShowCustomerActions && (
+            <IconButton
+              onClick={() => navigate("/cart")}
+              sx={{ color: "#374151" }}
+            >
+              <AddShoppingCart sx={{ fontSize: 26 }} />
+            </IconButton>
+          )}
 
           {activeRole ? (
             <>
