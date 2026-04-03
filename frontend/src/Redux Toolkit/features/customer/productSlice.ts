@@ -11,6 +11,21 @@ const initialState = {
   searchProducts: [],
   totalElements: 0,
   totalPages: 0,
+  activeProductsQueryKey: "",
+  lastCategory: "",
+};
+
+const buildProductsQueryKey = (params: any) => {
+  const p = params ?? {};
+  return [
+    p.category ?? "",
+    p.sort ?? "",
+    (p.pageNumber ?? 1).toString(),
+    p.color ?? "",
+    p.minPrice ?? "",
+    p.maxPrice ?? "",
+    p.minDiscount ?? "",
+  ].join("|");
 };
 
 export const fetchProductById = createAsyncThunk(
@@ -91,17 +106,33 @@ const productSlice = createSlice({
       state.error = action.payload as string;
     });
 
-    builder.addCase(getAllProducts.pending, (state) => {
+    builder.addCase(getAllProducts.pending, (state, action) => {
       state.loading = true;
       state.error = null;
+      const args = action.meta.arg || {};
+      const nextCategory = args.category ?? "";
+
+      // If category changed, clear previous products & pagination immediately
+      if (nextCategory !== state.lastCategory) {
+        state.products = [];
+        state.totalElements = 0;
+        state.totalPages = 0;
+        state.lastCategory = nextCategory;
+      }
+
+      state.activeProductsQueryKey = buildProductsQueryKey(args);
     });
     builder.addCase(getAllProducts.fulfilled, (state, action) => {
+      const fulfilledKey = buildProductsQueryKey(action.meta.arg);
+      if (fulfilledKey !== state.activeProductsQueryKey) return;
       state.loading = false;
       state.products = action.payload.content;
       state.totalElements = action.payload.totalElements;
       state.totalPages = action.payload.totalPages;
     });
     builder.addCase(getAllProducts.rejected, (state, action) => {
+      const rejectedKey = buildProductsQueryKey(action.meta.arg);
+      if (rejectedKey !== state.activeProductsQueryKey) return;
       state.loading = false;
       state.error = action.payload as string;
     });

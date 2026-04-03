@@ -20,9 +20,11 @@ import { getAllProducts } from "../../../Redux Toolkit/features/customer/product
 import { price as priceFilters } from "../../../data/filters/prices.ts";
 
 const Products = () => {
-  const { products, totalPages, loading } = useAppSelector(
+  const { products, totalPages, totalElements, loading } = useAppSelector(
     (store) => store.products
   );
+  const [displayedProducts, setDisplayedProducts] = useState<any[]>([]);
+  const [isCategorySwitching, setIsCategorySwitching] = useState(false);
   const [sort, setSort] = useState("price_low");
   const [pageNumber, setPageNumber] = useState(1);
   const { categoryId } = useParams();
@@ -38,6 +40,24 @@ const Products = () => {
   const discountLabel = selectedDiscount ? `${selectedDiscount}%+` : "";
   const hasAnyFilter =
     !!selectedColor || !!selectedPrice || !!selectedDiscount;
+
+  // Clear old products immediately when category changes.
+  useEffect(() => {
+    setIsCategorySwitching(true);
+    setDisplayedProducts([]);
+  }, [categoryId]);
+
+  // Only update displayed products when the redux `products` changes.
+  useEffect(() => {
+    setDisplayedProducts(products);
+  }, [products]);
+
+  // Stop showing the switching/loading UI once redux finishes the request.
+  useEffect(() => {
+    if (isCategorySwitching && !loading) {
+      setIsCategorySwitching(false);
+    }
+  }, [isCategorySwitching, loading]);
 
   const handleSort = (e: any) => {
     setSort(e.target.value);
@@ -141,7 +161,7 @@ const Products = () => {
           <div className='flex justify-between items-center px-6 py-3 bg-gray-50 rounded-xl mx-5'>
             <p className='text-sm text-gray-500'>
               <span className='font-semibold text-gray-800'>
-                {products.length}
+                {displayedProducts.length}
               </span>{" "}
               products
             </p>
@@ -206,9 +226,9 @@ const Products = () => {
 
           {/* Product Grid */}
           <div className='relative grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8 px-5 mt-5'>
-            {products.length > 0 && (
+            {displayedProducts.length > 0 && (
               <>
-                {products.map((item, index) => (
+                {displayedProducts.map((item, index) => (
                   <ProductCard key={index} item={item} />
                 ))}
                 {loading && (
@@ -224,7 +244,7 @@ const Products = () => {
               </>
             )}
 
-            {products.length === 0 && loading && (
+            {displayedProducts.length === 0 && (loading || isCategorySwitching) && (
               <div className='col-span-4 flex flex-col items-center justify-center py-24 text-gray-500'>
                 <Skeleton
                   variant='rectangular'
@@ -239,7 +259,7 @@ const Products = () => {
               </div>
             )}
 
-            {products.length === 0 && !loading && (
+            {displayedProducts.length === 0 && !loading && !isCategorySwitching && (
               <div className='col-span-4 flex flex-col items-center justify-center py-24 text-gray-400'>
                 <p className='text-lg font-semibold text-gray-700'>No products found</p>
                 <p className='text-sm mt-1'>Try adjusting filters or sorting</p>
@@ -249,9 +269,9 @@ const Products = () => {
 
           {/* Pagination */}
           <div className='flex justify-center py-10'>
-            {totalPages > 1 && (
+            {!isCategorySwitching && !loading && totalElements > 0 && (
               <Pagination
-                count={totalPages}
+                count={Math.max(totalPages, 1)}
                 page={pageNumber}
                 onChange={(_, value) => setPageNumber(value)}
                 disabled={loading}
