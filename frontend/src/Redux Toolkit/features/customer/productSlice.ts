@@ -19,6 +19,7 @@ const buildProductsQueryKey = (params: any) => {
   const p = params ?? {};
   return [
     p.category ?? "",
+    p.search ?? "",
     p.sort ?? "",
     (p.pageNumber ?? 1).toString(),
     p.color ?? "",
@@ -46,7 +47,7 @@ export const searchProduct = createAsyncThunk(
   "product/searchProduct",
   async (query: string, { rejectWithValue }) => {
     try {
-      const response = await api.get(`/products/search`, { params: { query } });
+      const response = await api.get(`/products/search`, { params: { q: query } });
       const data = response.data;
       console.log("Search results:", data);
       return data;

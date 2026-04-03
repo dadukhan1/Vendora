@@ -127,15 +127,14 @@ class ProductService {
   }
 
   async searchProduct(query) {
-    const products = await Product.find({
-      title: new RegExp(query, "i"),
+    const normalizedQuery = (query || "").trim();
+    if (!normalizedQuery) return [];
+    return await Product.find({
+      $or: [
+        { title: new RegExp(normalizedQuery, "i") },
+        { description: new RegExp(normalizedQuery, "i") },
+      ],
     });
-
-    if (products.length === 0) {
-      throw new Error("No products found!");
-    }
-
-    return products;
   }
 
   async getProductsBySeller(sellerId) {
@@ -187,6 +186,16 @@ class ProductService {
 
     if (query.size) {
       filterQuery.size = query.size;
+    }
+
+    if (query.search) {
+      const normalizedSearch = String(query.search).trim();
+      if (normalizedSearch) {
+        filterQuery.$or = [
+          { title: new RegExp(normalizedSearch, "i") },
+          { description: new RegExp(normalizedSearch, "i") },
+        ];
+      }
     }
 
     let sortQuery = {};

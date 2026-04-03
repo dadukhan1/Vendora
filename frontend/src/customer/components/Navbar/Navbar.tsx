@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   IconButton,
+  TextField,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -33,7 +34,16 @@ const Navbar = () => {
   const isLarge = useMediaQuery(theme.breakpoints.up("lg"));
   const [showSheet, setShowSheet] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("men");
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+  const runSearch = () => {
+    const trimmed = searchQuery.trim();
+    if (!trimmed) return;
+    setSearchOpen(false);
+    setSearchQuery("");
+    navigate(`/products/all?search=${encodeURIComponent(trimmed)}`);
+  };
 
   return (
     <Box
@@ -78,10 +88,40 @@ const Navbar = () => {
         </div>
 
         {/* Right: Actions */}
-        <div className='flex items-center gap-2'>
-          <IconButton sx={{ color: "#374151" }}>
+        <div className='relative flex items-center gap-2'>
+          <IconButton
+            sx={{ color: "#374151" }}
+            onClick={() => {
+              setSearchOpen((prev) => !prev);
+              if (searchOpen) setSearchQuery("");
+            }}
+          >
             <Search sx={{ fontSize: 26 }} />
           </IconButton>
+
+          {searchOpen && (
+            <div className='absolute top-14 right-0 w-[330px] bg-white border border-gray-200 rounded-xl shadow-xl p-3 z-[1200]'>
+              <TextField
+                fullWidth
+                size='small'
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    runSearch();
+                  }
+                }}
+                placeholder='Search products...'
+                InputProps={{}}
+              />
+
+              <div className='mt-2 flex justify-end'>
+                <Button size='small' onClick={runSearch} variant='contained'>
+                  Search
+                </Button>
+              </div>
+            </div>
+          )}
 
           {canShowCustomerActions && (
             <IconButton sx={{ color: "#374151" }}>

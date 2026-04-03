@@ -14,7 +14,7 @@ import {
   Skeleton,
 } from "@mui/material";
 import ProductCard from "./ProductCard";
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/store";
 import { getAllProducts } from "../../../Redux Toolkit/features/customer/productSlice";
 import { price as priceFilters } from "../../../data/filters/prices.ts";
@@ -28,12 +28,17 @@ const Products = () => {
   const [sort, setSort] = useState("price_low");
   const [pageNumber, setPageNumber] = useState(1);
   const { categoryId } = useParams();
+  const location = useLocation();
   const dispatch = useAppDispatch();
   const topRef = useRef<HTMLDivElement | null>(null);
 
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("");
   const [selectedDiscount, setSelectedDiscount] = useState("");
+  const searchTerm =
+    new URLSearchParams(location.search).get("search")?.trim() ?? "";
+  const isSearchView = searchTerm.length > 0;
+  const isAllProductsView = categoryId === "all";
 
   const selectedPriceObj = priceFilters.find((p) => p.value === selectedPrice);
   const priceLabel = selectedPriceObj?.name ?? "";
@@ -45,9 +50,9 @@ const Products = () => {
   useEffect(() => {
     setIsCategorySwitching(true);
     setDisplayedProducts([]);
-  }, [categoryId]);
+  }, [categoryId, searchTerm]);
 
-  // Only update displayed products when the redux `products` changes.
+  // Update displayed products from paginated redux source.
   useEffect(() => {
     setDisplayedProducts(products);
   }, [products]);
@@ -93,7 +98,8 @@ const Products = () => {
 
       dispatch(
         getAllProducts({
-          category: categoryId,
+          ...(isAllProductsView ? {} : { category: categoryId }),
+          ...(isSearchView ? { search: searchTerm } : {}),
           sort,
           pageNumber,
           ...(selectedColor ? { color: selectedColor } : {}),
@@ -106,6 +112,9 @@ const Products = () => {
     }
   }, [
     categoryId,
+    searchTerm,
+    isSearchView,
+    isAllProductsView,
     sort,
     pageNumber,
     selectedColor,
@@ -131,7 +140,11 @@ const Products = () => {
           Collection
         </p>
         <h1 className='text-4xl font-bold text-gray-900 uppercase tracking-wide'>
-          {categoryId || "Woman Sarees"}
+          {isSearchView
+            ? `Search: ${searchTerm}`
+            : isAllProductsView
+              ? "All Products"
+              : categoryId || "Woman Sarees"}
         </h1>
         <div className='mt-3 mx-auto w-16 h-0.5 bg-gray-900 rounded-full' />
       </div>
@@ -269,7 +282,9 @@ const Products = () => {
 
           {/* Pagination */}
           <div className='flex justify-center py-10'>
-            {!isCategorySwitching && !loading && totalElements > 0 && (
+            {!isCategorySwitching &&
+              !loading &&
+              totalElements > 0 && (
               <Pagination
                 count={Math.max(totalPages, 1)}
                 page={pageNumber}
