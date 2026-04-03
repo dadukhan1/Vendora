@@ -122,10 +122,10 @@ const Products = () => {
     selectedDiscount,
   ]);
 
-  // If the category changes, reset back to the first page.
+  // If the category or search term changes, reset back to the first page.
   useEffect(() => {
     setPageNumber(1);
-  }, [categoryId]);
+  }, [categoryId, searchTerm]);
 
   // When pagination changes, bring the user back to the top.
   useEffect(() => {

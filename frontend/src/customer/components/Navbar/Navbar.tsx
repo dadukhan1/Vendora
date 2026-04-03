@@ -5,7 +5,6 @@ import {
   Box,
   Button,
   IconButton,
-  TextField,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -88,39 +87,47 @@ const Navbar = () => {
         </div>
 
         {/* Right: Actions */}
-        <div className='relative flex items-center gap-2'>
-          <IconButton
-            sx={{ color: "#374151" }}
-            onClick={() => {
-              setSearchOpen((prev) => !prev);
-              if (searchOpen) setSearchQuery("");
-            }}
-          >
-            <Search sx={{ fontSize: 26 }} />
-          </IconButton>
+        <div className='relative flex items-center gap-3'>
 
-          {searchOpen && (
-            <div className='absolute top-14 right-0 w-[330px] bg-white border border-gray-200 rounded-xl shadow-xl p-3 z-[1200]'>
-              <TextField
-                fullWidth
-                size='small'
+          {/* Search bar — always visible on desktop */}
+          {isLarge ? (
+            <div className='flex items-center gap-2 bg-gray-100 rounded-full px-4 py-2'>
+              <Search sx={{ fontSize: 18, color: "#9ca3af" }} />
+              <input
+                type='text'
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    runSearch();
-                  }
-                }}
+                onKeyDown={(e) => e.key === "Enter" && runSearch()}
                 placeholder='Search products...'
-                InputProps={{}}
+                className='bg-transparent outline-none text-sm text-gray-700 placeholder-gray-400 w-48'
               />
-
-              <div className='mt-2 flex justify-end'>
-                <Button size='small' onClick={runSearch} variant='contained'>
-                  Search
-                </Button>
-              </div>
             </div>
+          ) : (
+            <>
+              <IconButton
+                size='small'
+                sx={{ color: "#374151" }}
+                onClick={() => {
+                  setSearchOpen((prev) => !prev);
+                  if (searchOpen) setSearchQuery("");
+                }}
+              >
+                <Search sx={{ fontSize: 22 }} />
+              </IconButton>
+              {searchOpen && (
+                <div className='absolute top-14 right-0 w-72 bg-white border border-gray-200 rounded-xl shadow-lg p-3 z-[1200]'>
+                  <input
+                    autoFocus
+                    type='text'
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && runSearch()}
+                    placeholder='Search products...'
+                    className='w-full outline-none text-sm text-gray-700 placeholder-gray-400 border border-gray-200 rounded-lg px-3 py-2'
+                  />
+                </div>
+              )}
+            </>
           )}
 
           {canShowCustomerActions && (

@@ -13,6 +13,7 @@ const initialState = {
   totalPages: 0,
   activeProductsQueryKey: "",
   lastCategory: "",
+  lastSearchTerm: "",
 };
 
 const buildProductsQueryKey = (params: any) => {
@@ -112,13 +113,18 @@ const productSlice = createSlice({
       state.error = null;
       const args = action.meta.arg || {};
       const nextCategory = args.category ?? "";
+      const nextSearchTerm = args.search ?? "";
 
-      // If category changed, clear previous products & pagination immediately
-      if (nextCategory !== state.lastCategory) {
+      // If category OR search term changed, clear previous products & pagination immediately
+      if (
+        nextCategory !== state.lastCategory ||
+        nextSearchTerm !== state.lastSearchTerm
+      ) {
         state.products = [];
         state.totalElements = 0;
         state.totalPages = 0;
         state.lastCategory = nextCategory;
+        state.lastSearchTerm = nextSearchTerm;
       }
 
       state.activeProductsQueryKey = buildProductsQueryKey(args);
