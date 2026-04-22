@@ -27,8 +27,8 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173", // ✅ allow your frontend
-    credentials: true, // if you want cookies/auth headers
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
   }),
 );
 
