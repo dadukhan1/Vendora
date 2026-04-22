@@ -13,7 +13,6 @@ export const createDeal = createAsyncThunk<any, any>(
   "/deals/createDeal",
   async (deal, { rejectWithValue }) => {
     try {
-      console.log(deal);
       const token = localStorage.getItem("token");
       const response = await api.post(
         "/admin/deals",
@@ -24,7 +23,6 @@ export const createDeal = createAsyncThunk<any, any>(
           },
         },
       );
-      console.log("createDeal response:", response.data);
       return response.data;
     } catch (error) {
       console.log("createDeal error:", error);

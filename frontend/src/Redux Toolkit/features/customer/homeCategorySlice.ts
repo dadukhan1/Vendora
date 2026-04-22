@@ -59,7 +59,7 @@ const homeCategorySlice = createSlice({
       })
       .addCase(homeCategoryData.fulfilled, (state, action) => {
         state.loading = false;
-        state.homeCategories = action.payload.data;
+        state.homeCategories = action.payload;
       })
       .addCase(homeCategoryData.rejected, (state, action) => {
         state.loading = false;

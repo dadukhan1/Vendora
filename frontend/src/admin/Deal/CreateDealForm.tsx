@@ -27,14 +27,22 @@ const CreateDealForm = () => {
       category: "",
     },
     onSubmit: (values) => {
-      console.log(values);
       dispatch(createDeal(values));
     },
   });
 
   useEffect(() => {
     dispatch(homeCategoryData());
-  }, []);
+  }, [dispatch]);
+
+  const categoriesArray = Array.isArray(homeCategories)
+    ? homeCategories
+    : homeCategories?.data || []; // agar API {data: []} bhej rahi ho
+
+  const uniqueCategories = categoriesArray.filter(
+    (value, index, self) =>
+      index === self.findIndex((t) => t.categoryId === value.categoryId),
+  );
 
   return (
     <Box
@@ -48,6 +56,7 @@ const CreateDealForm = () => {
       <div className='flex flex-col gap-4 mt-5'>
         <TextField
           fullWidth
+          type='number'
           name='discount'
           label='Discount'
           value={formik.values.discount}
@@ -63,10 +72,10 @@ const CreateDealForm = () => {
             labelId='size-label'
             label='Category'
           >
-            <MenuItem value='none'>None</MenuItem>
-            {homeCategories?.map((category, index) => (
-              <MenuItem key={index} value={category?.categoryId}>
-                {category?.name}
+            <MenuItem value=''>None</MenuItem>
+            {uniqueCategories.map((category) => (
+              <MenuItem key={category._id} value={category.categoryId}>
+                {category.name}
               </MenuItem>
             ))}
           </Select>
