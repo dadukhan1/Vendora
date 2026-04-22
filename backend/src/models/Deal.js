@@ -8,9 +8,9 @@ const dealSchema = new Schema({
     required: true,
   },
   category: {
-    // type: Schema.Types.ObjectId,
-    type: String,
-    // ref: "HomeCategory",
+    type: Schema.Types.ObjectId,
+    // type: String,
+    ref: "HomeCategory",
     required: true,
   },
 });

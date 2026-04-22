@@ -5,13 +5,15 @@ import { HomeCategory } from "../models/HomeCategory.js";
 
 class DealService {
   async getDeals() {
-    return await Deal.find().populate({ path: "category" });
+    console.log("deals")
+    return await Deal.find().populate({
+      path: "category",
+      select: "name image"
+    });
   }
 
   async createDeal(deal) {
     try {
-      console.log("checkind deal lasd;klfjlkasdjf'", deal);
-      // Mongoose will handle the reference if you just pass the ID
       const newDeal = await Deal.create({
         ...deal,
         category: deal.category._id || deal.category,
