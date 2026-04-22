@@ -8,7 +8,18 @@ export const homeCategoryData = createAsyncThunk<any, any>(
   async (_, { rejectWithValue }) => {
     try {
       const response = await api.get(`/home`);
-      console.log("home", response.data);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
+export const getHomePageCategories = createAsyncThunk<any, any>(
+  "home/createHomeCategory",
+  async (category, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`/home/grouped`, { category });
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -21,10 +32,8 @@ export const createHomeCategory = createAsyncThunk<any, any>(
   async (category, { rejectWithValue }) => {
     try {
       const response = await api.post(`/home`, { category });
-      console.log("home", response.data);
       return response.data;
     } catch (error: any) {
-      console.error("Error creating home category:", error);
       return rejectWithValue(error.response.data);
     }
   },

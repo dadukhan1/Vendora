@@ -39,16 +39,11 @@ class HomeCategoryController {
     }
   }
 
-  async getSingleHomeCategory(req, res) {
+  async homePageCategories(req, res) {
     try {
-      console.log("1");
-      const homeCategory = await HomeCategoryService.getSingleHomeCategory(
-        req.params.id,
-      );
-      console.log(homeCategory);
-      if (!homeCategory)
-        return res.status(404).json({ message: "Category not found" });
-      res.status(200).json(homeCategory);
+      const allCategories = await HomeCategoryService.getAllHomeCategories();
+      const home = await HomeService.createHomePageData(allCategories);
+      return res.status(201).json(home);
     } catch (error) {
       res.status(400).json({ message: error.message });
     }

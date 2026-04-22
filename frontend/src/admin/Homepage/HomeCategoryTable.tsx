@@ -8,9 +8,8 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Button, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { Edit } from "@mui/icons-material";
-import { useAppSelector } from "../../Redux Toolkit/store";
 import { useNavigate } from "react-router";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -63,7 +62,9 @@ export default function HomeCategoryTable({ cateogry }) {
               <StyledTableCell align='right'>
                 <IconButton
                   color='warning'
-                  onClick={() => navigate(`/admin/home-page/update/${item._id}`)}
+                  onClick={() =>
+                    navigate(`/admin/home-page/update/${item._id}`)
+                  }
                 >
                   <Edit />
                 </IconButton>
