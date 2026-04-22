@@ -5,7 +5,6 @@ import { HomeCategory } from "../models/HomeCategory.js";
 
 class DealService {
   async getDeals() {
-    console.log("deals")
     return await Deal.find().populate({
       path: "category",
       select: "name image"
