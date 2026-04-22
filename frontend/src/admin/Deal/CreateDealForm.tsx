@@ -74,7 +74,7 @@ const CreateDealForm = () => {
           >
             <MenuItem value=''>None</MenuItem>
             {uniqueCategories.map((category) => (
-              <MenuItem key={category._id} value={category.categoryId}>
+              <MenuItem key={category._id} value={category._id}>
                 {category.name}
               </MenuItem>
             ))}

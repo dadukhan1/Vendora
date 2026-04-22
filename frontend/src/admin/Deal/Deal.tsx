@@ -6,7 +6,11 @@ import DealCategoryTable from "./DealCategoryTable";
 import CreateDealForm from "./CreateDealForm";
 import Button from "@mui/material/Button";
 
-const tabs = ["Deals", "Categories", "Create Deal"];
+const tabs = [
+  "Deals",
+  // "Categories",
+  "Create Deal",
+];
 
 const Deal = () => {
   const [activeTab, setActiveTab] = useState("Deals");
@@ -26,9 +30,10 @@ const Deal = () => {
       <div className='mt-5'>
         {activeTab === "Deals" ? (
           <DealTable />
-        ) : activeTab === "Categories" ? (
-          <DealCategoryTable />
         ) : (
+          // activeTab === "Categories" ? (
+          //   <DealCategoryTable />
+          // ) :
           <div className='mt-5 border-t border-gray-400 flex flex-col justify-center items-center h-[70vh]'>
             <CreateDealForm />
           </div>

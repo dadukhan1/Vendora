@@ -96,6 +96,7 @@ const dealSlice = createSlice({
         state.error = null;
       })
       .addCase(createDeal.fulfilled, (state, action) => {
+        state.loading = false;
         state.deals.push(action.payload);
       })
       .addCase(createDeal.rejected, (state, action) => {
@@ -107,6 +108,7 @@ const dealSlice = createSlice({
         state.error = null;
       })
       .addCase(getAllDeals.fulfilled, (state, action) => {
+        state.loading = false;
         state.deals = action.payload;
       })
       .addCase(getAllDeals.rejected, (state, action) => {
@@ -118,9 +120,9 @@ const dealSlice = createSlice({
         state.error = null;
       })
       .addCase(deleteDeal.fulfilled, (state, action) => {
-        state.deals = state.deals.filter(
-          (deal) => deal.id !== action.payload.id,
-        );
+        state.loading = false;
+        const deletedId = action.meta.arg;
+        state.deals = state.deals.filter((deal) => deal._id !== deletedId);
       })
       .addCase(deleteDeal.rejected, (state, action) => {
         state.loading = false;
@@ -132,8 +134,9 @@ const dealSlice = createSlice({
         state.error = null;
       })
       .addCase(updateDeal.fulfilled, (state, action) => {
+        state.loading = false;
         const index = state.deals.findIndex(
-          (deal) => deal.id === action.payload.id,
+          (deal) => deal._id === action.payload._id,
         );
         if (index !== -1) {
           state.deals[index] = action.payload;

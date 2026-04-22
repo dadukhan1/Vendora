@@ -12,7 +12,10 @@ import { IconButton } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../Redux Toolkit/store";
 import { useEffect } from "react";
-import { getAllDeals } from "../../Redux Toolkit/features/admin/dealSlice";
+import {
+  deleteDeal,
+  getAllDeals,
+} from "../../Redux Toolkit/features/admin/dealSlice";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -34,24 +37,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
-) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
-
 export default function DealTable() {
   const dispatch = useAppDispatch();
   const { deals } = useAppSelector((store) => store.deal);
@@ -59,6 +44,10 @@ export default function DealTable() {
   useEffect(() => {
     dispatch(getAllDeals());
   }, []);
+
+  const deleteDealById = (id: string) => {
+    dispatch(deleteDeal(id));
+  };
 
   return (
     <TableContainer component={Paper}>
@@ -75,14 +64,18 @@ export default function DealTable() {
         </TableHead>
         <TableBody>
           {deals.map((deal, index) => (
-            <StyledTableRow key={index}>
+            <StyledTableRow key={deal?._id}>
               <StyledTableCell component='th' scope='row'>
                 {index}
               </StyledTableCell>
               <StyledTableCell>
-                <img className='w-20 rounded-md' src='/img1.jpg' alt='' />
+                <img
+                  className='w-20 rounded-md'
+                  src={deal?.category?.image}
+                  alt=''
+                />
               </StyledTableCell>
-              <StyledTableCell>{deal?.category}</StyledTableCell>
+              <StyledTableCell>{deal?.category?.name}</StyledTableCell>
               <StyledTableCell align='right'>{deal?.discount}</StyledTableCell>
               <StyledTableCell align='right'>
                 <IconButton color='warning'>
@@ -90,7 +83,10 @@ export default function DealTable() {
                 </IconButton>
               </StyledTableCell>
               <StyledTableCell align='right'>
-                <IconButton color='error'>
+                <IconButton
+                  onClick={() => deleteDealById(deal._id)}
+                  color='error'
+                >
                   <Delete />
                 </IconButton>
               </StyledTableCell>

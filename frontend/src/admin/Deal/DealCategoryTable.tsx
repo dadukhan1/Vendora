@@ -8,7 +8,7 @@ const DealCategoryTable = () => {
 
   return (
     <div>
-      <HomeCategoryTable cateogry={homeCategories?.dealCategories} />
+      <HomeCategoryTable cateogry={homeCategories?.deals} />
     </div>
   );
 };
