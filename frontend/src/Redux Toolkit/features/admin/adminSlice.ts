@@ -3,51 +3,66 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../../config/api";
 
-export const updateHomeCategory = createAsyncThunk<any, any>(
-  "/homeCategory/updateHomeCategory",
-  async ({ id, data }, { rejectWithValue }) => {
-    try {
-      const response = await api.patch(`/home/${id}`, data, {});
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
-  },
-);
+export interface Category {
+  id: string;
+  title?: string;
+}
 
-export const fetchHomeCategory = createAsyncThunk<any, any>(
-  "/homeCategory/fetchHomeCategory",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await api.get("/home");
-      const data = response.data;
-      return data;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
-  },
-);
+interface HomeCategoryState {
+  categories: Category[];
+  selectedCategory: Category | null;
+  loading: boolean;
+  error: string | null;
+}
 
-export const fetchSingleHomeCategory = createAsyncThunk<any, any>(
-  "/homeCategory/fetchSingleHomeCategory",
-  async (id, { rejectWithValue }) => {
-    try {
-      console.log("state data ", id);
-      const response = await api.get(`/home/${id}`);
-      console.log(response.data);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
-  },
-);
-
-const initialState = {
-  categories: [] as any,
-  selectedCategory: null as any,
+const initialState: HomeCategoryState = {
+  categories: [],
+  selectedCategory: null,
   loading: false,
   error: null,
 };
+
+export const fetchHomeCategory = createAsyncThunk<
+  Category[],
+  void,
+  { rejectValue: string }
+>("/homeCategory/fetchHomeCategory", async (_, { rejectWithValue }) => {
+  try {
+    const response = await api.get("/home");
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(error.message || "Failed to fetch categories");
+  }
+});
+
+export const fetchSingleHomeCategory = createAsyncThunk<
+  Category,
+  string,
+  { rejectValue: string }
+>("/homeCategory/fetchSingleHomeCategory", async (id, { rejectWithValue }) => {
+  try {
+    const response = await api.get(`/home/${id}`);
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(error.message || "Failed to fetch category");
+  }
+});
+
+export const updateHomeCategory = createAsyncThunk<
+  Category,
+  { id: string; data: Partial<Category> },
+  { rejectValue: string }
+>(
+  "/homeCategory/updateHomeCategory",
+  async ({ id, data }, { rejectWithValue }) => {
+    try {
+      const response = await api.patch(`/home/${id}`, data);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.message || "Failed to update category");
+    }
+  },
+);
 
 const homeCategorySlice = createSlice({
   name: "homeCategory",
@@ -59,24 +74,6 @@ const homeCategorySlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(updateHomeCategory.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(updateHomeCategory.fulfilled, (state, action) => {
-        state.loading = false;
-        const updatedCategory = action.payload;
-        const index = state.categories.findIndex(
-          (cat) => cat.id === updatedCategory.id,
-        );
-        if (index !== -1) {
-          state.categories[index] = updatedCategory;
-        }
-      })
-      .addCase(updateHomeCategory.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
       .addCase(fetchHomeCategory.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -87,7 +84,7 @@ const homeCategorySlice = createSlice({
       })
       .addCase(fetchHomeCategory.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload || "Something went wrong";
       })
       .addCase(fetchSingleHomeCategory.pending, (state) => {
         state.loading = true;
@@ -96,11 +93,41 @@ const homeCategorySlice = createSlice({
       })
       .addCase(fetchSingleHomeCategory.fulfilled, (state, action) => {
         state.loading = false;
-        state.selectedCategory = action.payload; // ✅ store it separately
+        state.selectedCategory = action.payload;
       })
       .addCase(fetchSingleHomeCategory.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload || "Something went wrong";
+      })
+
+      /* ---------- UPDATE ---------- */
+      .addCase(updateHomeCategory.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateHomeCategory.fulfilled, (state, action) => {
+        state.loading = false;
+
+        const updated = action.payload;
+
+        const index = state.categories.findIndex(
+          (cat) => cat.id === updated.id,
+        );
+
+        if (index !== -1) {
+          state.categories[index] = updated;
+        }
+
+        if (
+          state.selectedCategory &&
+          state.selectedCategory.id === updated.id
+        ) {
+          state.selectedCategory = updated;
+        }
+      })
+      .addCase(updateHomeCategory.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Something went wrong";
       });
   },
 });

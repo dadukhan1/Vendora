@@ -1,7 +1,7 @@
 /** @format */
 
 import { Button, TextField, CircularProgress, Alert } from "@mui/material";
-import { ArrowBack, ArrowForward } from "@mui/icons-material";
+import { ArrowForward } from "@mui/icons-material";
 import { useFormik } from "formik";
 import { useAppDispatch, useAppSelector } from "../../Redux Toolkit/store";
 import {

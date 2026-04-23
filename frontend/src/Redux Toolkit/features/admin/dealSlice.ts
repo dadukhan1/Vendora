@@ -3,87 +3,107 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../../config/api";
 
-const initialState = {
+export interface Deal {
+  _id: string;
+  title?: string;
+  price?: number;
+}
+
+interface DealState {
+  deals: Deal[];
+  loading: boolean;
+  error: string | null;
+}
+
+const initialState: DealState = {
   deals: [],
   loading: false,
   error: null,
 };
 
-export const createDeal = createAsyncThunk<any, any>(
-  "/deals/createDeal",
-  async (deal, { rejectWithValue }) => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await api.post(
-        "/admin/deals",
-        { deal },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-      return response.data;
-    } catch (error) {
-      console.log("createDeal error:", error);
-      return rejectWithValue(error);
-    }
-  },
-);
+const getToken = () => localStorage.getItem("token");
 
-export const getAllDeals = createAsyncThunk<any, any>(
-  "/deals/getAllDeals",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await api.get("/admin/deals", {
+export const createDeal = createAsyncThunk<
+  Deal,
+  Partial<Deal>,
+  { rejectValue: string }
+>("/deals/createDeal", async (deal, { rejectWithValue }) => {
+  try {
+    const response = await api.post(
+      "/admin/deals",
+      { deal },
+      {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${getToken()}`,
         },
-      });
-      console.log("getAllDeals response:", response.data);
-      return response.data;
-    } catch (error) {
-      console.log("getAllDeals error:", error);
-      return rejectWithValue(error);
-    }
-  },
-);
+      },
+    );
 
-export const deleteDeal = createAsyncThunk<any, any>(
-  "/deals/deleteDeal",
-  async (id, { rejectWithValue }) => {
-    try {
-      const response = await api.delete(`/admin/deals/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      console.log("deleteDeal response:", response.data);
-      return response.data;
-    } catch (error) {
-      console.log("deleteDeal error:", error);
-      return rejectWithValue(error);
-    }
-  },
-);
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error?.response?.data?.message || "Failed to create deal",
+    );
+  }
+});
 
-export const updateDeal = createAsyncThunk<any, any>(
-  "/deals/updateDeal",
-  async ({ id, data }, { rejectWithValue }) => {
-    try {
-      const response = await api.put(`/admin/deals/${id}`, data, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      console.log("updateDeal response:", response.data);
-      return response.data;
-    } catch (error) {
-      console.log("updateDeal error:", error);
-      return rejectWithValue(error);
-    }
-  },
-);
+export const getAllDeals = createAsyncThunk<
+  Deal[],
+  void,
+  { rejectValue: string }
+>("/deals/getAllDeals", async (_, { rejectWithValue }) => {
+  try {
+    const response = await api.get("/admin/deals", {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
+
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error?.response?.data?.message || "Failed to fetch deals",
+    );
+  }
+});
+
+export const deleteDeal = createAsyncThunk<
+  string,
+  string,
+  { rejectValue: string }
+>("/deals/deleteDeal", async (id, { rejectWithValue }) => {
+  try {
+    await api.delete(`/admin/deals/${id}`, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
+    return id;
+  } catch (error: any) {
+    return rejectWithValue(
+      error?.response?.data?.message || "Failed to delete deal",
+    );
+  }
+});
+
+export const updateDeal = createAsyncThunk<
+  Deal,
+  { id: string; data: Partial<Deal> },
+  { rejectValue: string }
+>("/deals/updateDeal", async ({ id, data }, { rejectWithValue }) => {
+  try {
+    const response = await api.put(`/admin/deals/${id}`, data, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error?.response?.data?.message || "Failed to update deal",
+    );
+  }
+});
 
 const dealSlice = createSlice({
   name: "deal",
@@ -101,7 +121,7 @@ const dealSlice = createSlice({
       })
       .addCase(createDeal.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload || "Failed to create deal";
       })
       .addCase(getAllDeals.pending, (state) => {
         state.loading = true;
@@ -113,7 +133,7 @@ const dealSlice = createSlice({
       })
       .addCase(getAllDeals.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload || "Failed to fetch deals";
       })
       .addCase(deleteDeal.pending, (state) => {
         state.loading = true;
@@ -121,30 +141,28 @@ const dealSlice = createSlice({
       })
       .addCase(deleteDeal.fulfilled, (state, action) => {
         state.loading = false;
-        const deletedId = action.meta.arg;
-        state.deals = state.deals.filter((deal) => deal._id !== deletedId);
+
+        state.deals = state.deals.filter((deal) => deal._id !== action.payload);
       })
       .addCase(deleteDeal.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload || "Failed to delete deal";
       })
-
       .addCase(updateDeal.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(updateDeal.fulfilled, (state, action) => {
         state.loading = false;
-        const index = state.deals.findIndex(
-          (deal) => deal._id === action.payload._id,
-        );
+        const updated = action.payload;
+        const index = state.deals.findIndex((deal) => deal._id === updated._id);
         if (index !== -1) {
-          state.deals[index] = action.payload;
+          state.deals[index] = updated;
         }
       })
       .addCase(updateDeal.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload || "Failed to update deal";
       });
   },
 });
