@@ -12,8 +12,8 @@ import { useAppDispatch, useAppSelector } from "./Redux Toolkit/store";
 import { useEffect } from "react";
 import { profile } from "./Redux Toolkit/features/customer/userSlice";
 import { fetchSellerProfile } from "./Redux Toolkit/features/seller/sellerSlice";
-import { createHomeCategory } from "./Redux Toolkit/features/customer/homeCategorySlice";
-import { homeCategories } from "./data/homeCategory";
+// import { createHomeCategory } from "./Redux Toolkit/features/customer/homeCategorySlice";
+// import { homeCategories } from "./data/homeCategory";
 import { Toaster } from "react-hot-toast";
 
 function App() {
@@ -25,12 +25,12 @@ function App() {
 
     if (jwt && !auth.jwt) {
       dispatch(profile(jwt));
-      dispatch(fetchSellerProfile(jwt));
+      dispatch(fetchSellerProfile());
     }
   }, [auth.jwt, dispatch]);
 
   useEffect(() => {
-    dispatch(createHomeCategory(homeCategories));
+    // dispatch(createHomeCategory(homeCategories));
   }, [dispatch]);
 
   return (
