@@ -5,4 +5,10 @@ import tailwindcss from '@tailwindcss/vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-})
+  build: {
+    sourcemap: false,
+  },
+  esbuild: {
+    logOverride: { "this-is-undefined-in-esm": "silent" },
+  },
+});
