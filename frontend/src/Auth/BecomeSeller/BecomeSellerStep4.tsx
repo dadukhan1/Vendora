@@ -2,6 +2,7 @@
 
 import { TextField } from "@mui/material";
 import type { FormikProps } from "formik/dist/types";
+import type { SellerFormValues } from "./SellerAccountForm";
 
 const inputSx = {
   "& .MuiOutlinedInput-root": {
@@ -18,26 +19,30 @@ const inputSx = {
   "& input::placeholder": { color: "#94A3B8", opacity: 1 },
 };
 
-const BecomeSellerStep4 = ({ formik }: { formik: FormikProps<any> }) => {
+const BecomeSellerStep4 = ({
+  formik,
+}: {
+  formik: FormikProps<SellerFormValues>;
+}) => {
   return (
     <div className='flex flex-col gap-4 space-y-5'>
       <TextField
         fullWidth
         label='Business Name'
         placeholder='Enter your business name'
-        id='bussinessDetails.bussinessName'
-        name='bussinessDetails.bussinessName'
-        value={formik.values.bussinessDetails.bussinessName}
+        id='businessDetails.businessName'
+        name='businessDetails.businessName'
+        value={formik.values.businessDetails.businessName}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         error={
-          formik.touched.bussinessDetails?.bussinessName &&
-          Boolean(formik.errors.bussinessDetails?.bussinessName)
+          formik.touched.businessDetails?.businessName &&
+          Boolean(formik.errors.businessDetails?.businessName)
         }
         helperText={
-          formik.touched.bussinessDetails?.bussinessName &&
-          typeof formik.errors.bussinessDetails?.bussinessName === "string"
-            ? formik.errors.bussinessDetails?.bussinessName
+          formik.touched.businessDetails?.businessName &&
+          typeof formik.errors.businessDetails?.businessName === "string"
+            ? formik.errors.businessDetails?.businessName
             : ""
         }
         sx={inputSx}
@@ -46,19 +51,16 @@ const BecomeSellerStep4 = ({ formik }: { formik: FormikProps<any> }) => {
         fullWidth
         label='Seller Name'
         placeholder='Enter your name'
-        id='bussinessDetails.sellerName'
-        name='bussinessDetails.sellerName'
-        value={formik.values.bussinessDetails.sellerName}
+        id='sellerName'
+        name='sellerName'
+        value={formik.values.sellerName}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
-        error={
-          formik.touched.bussinessDetails?.sellerName &&
-          Boolean(formik.errors.bussinessDetails?.sellerName)
-        }
+        error={formik.touched.sellerName && Boolean(formik.errors.sellerName)}
         helperText={
-          formik.touched.bussinessDetails?.sellerName &&
-          typeof formik.errors.bussinessDetails?.sellerName === "string"
-            ? formik.errors.bussinessDetails?.sellerName
+          formik.touched.sellerName &&
+          typeof formik.errors.sellerName === "string"
+            ? formik.errors.sellerName
             : ""
         }
         sx={inputSx}
@@ -67,19 +69,19 @@ const BecomeSellerStep4 = ({ formik }: { formik: FormikProps<any> }) => {
         fullWidth
         label='Business Email'
         placeholder='Enter business email'
-        id='bussinessDetails.bussinessEmail'
-        name='bussinessDetails.bussinessEmail'
-        value={formik.values.bussinessDetails.bussinessEmail}
+        id='businessDetails.businessEmail'
+        name='businessDetails.businessEmail'
+        value={formik.values.businessDetails.businessEmail}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         error={
-          formik.touched.bussinessDetails?.bussinessEmail &&
-          Boolean(formik.errors.bussinessDetails?.bussinessEmail)
+          formik.touched.businessDetails?.businessEmail &&
+          Boolean(formik.errors.businessDetails?.businessEmail)
         }
         helperText={
-          formik.touched.bussinessDetails?.bussinessEmail &&
-          typeof formik.errors.bussinessDetails?.bussinessEmail === "string"
-            ? formik.errors.bussinessDetails?.bussinessEmail
+          formik.touched.businessDetails?.businessEmail &&
+          typeof formik.errors.businessDetails?.businessEmail === "string"
+            ? formik.errors.businessDetails?.businessEmail
             : ""
         }
         sx={inputSx}
@@ -89,19 +91,15 @@ const BecomeSellerStep4 = ({ formik }: { formik: FormikProps<any> }) => {
         label='Password'
         placeholder='Enter a password'
         type='password'
-        id='bussinessDetails.password'
-        name='bussinessDetails.password'
-        value={formik.values.bussinessDetails.password}
+        id='password'
+        name='password'
+        value={formik.values.password}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
-        error={
-          formik.touched.bussinessDetails?.password &&
-          Boolean(formik.errors.bussinessDetails?.password)
-        }
+        error={formik.touched.password && Boolean(formik.errors.password)}
         helperText={
-          formik.touched.bussinessDetails?.password &&
-          typeof formik.errors.bussinessDetails?.password === "string"
-            ? formik.errors.bussinessDetails?.password
+          formik.touched.password && typeof formik.errors.password === "string"
+            ? formik.errors.password
             : ""
         }
         sx={inputSx}

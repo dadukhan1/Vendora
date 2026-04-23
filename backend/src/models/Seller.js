@@ -32,7 +32,7 @@ const sellerSchema = new mongoose.Schema(
       bussinessEmail: {
         type: String,
       },
-      bussinessMobile: {
+      bussinessPhone: {
         type: String,
       },
       bussinessAddress: {

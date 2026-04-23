@@ -2,6 +2,7 @@
 
 import { TextField } from "@mui/material";
 import type { FormikProps } from "formik";
+import type { SellerFormValues } from "./SellerAccountForm";
 
 const inputSx = {
   "& .MuiOutlinedInput-root": {
@@ -18,7 +19,11 @@ const inputSx = {
   "& input::placeholder": { color: "#94A3B8", opacity: 1 },
 };
 
-const BecomeSellerStep3 = ({ formik }: { formik: FormikProps<any> }) => {
+const BecomeSellerStep3 = ({
+  formik,
+}: {
+  formik: FormikProps<SellerFormValues>;
+}) => {
   return (
     <div className='flex flex-col gap-4 space-y-5'>
       <TextField
@@ -36,27 +41,27 @@ const BecomeSellerStep3 = ({ formik }: { formik: FormikProps<any> }) => {
         helperText={
           formik.touched.bankDetails?.accountNumber &&
           typeof formik.errors.bankDetails?.accountNumber === "string"
-            ? formik.errors.bankDetails.accountNumber
+            ? formik.errors.bankDetails?.accountNumber
             : ""
         }
         sx={inputSx}
       />
       <TextField
         fullWidth
-        name='bankDetails.accountHOlderName'
+        name='bankDetails.accountHolderName'
         label='Account Holder Name'
         placeholder='Enter account holder name'
-        value={formik.values.bankDetails.accountHOlderName}
+        value={formik.values.bankDetails.accountHolderName}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         error={
-          formik.touched.bankDetails?.accountHOlderName &&
-          Boolean(formik.errors.bankDetails?.accountHOlderName)
+          formik.touched.bankDetails?.accountHolderName &&
+          Boolean(formik.errors.bankDetails?.accountHolderName)
         }
         helperText={
-          formik.touched.bankDetails?.accountHOlderName &&
-          typeof formik.errors.bankDetails?.accountHOlderName === "string"
-            ? formik.errors.bankDetails.accountHOlderName
+          formik.touched.bankDetails?.accountHolderName &&
+          typeof formik.errors.bankDetails?.accountHolderName === "string"
+            ? formik.errors.bankDetails.accountHolderName
             : ""
         }
         sx={inputSx}

@@ -12,10 +12,7 @@ import { useAppDispatch, useAppSelector } from "./Redux Toolkit/store";
 import { useEffect } from "react";
 import { profile } from "./Redux Toolkit/features/customer/userSlice";
 import { fetchSellerProfile } from "./Redux Toolkit/features/seller/sellerSlice";
-import {
-  createHomeCategory,
-  homeCategoryData,
-} from "./Redux Toolkit/features/customer/homeCategorySlice";
+import { createHomeCategory } from "./Redux Toolkit/features/customer/homeCategorySlice";
 import { homeCategories } from "./data/homeCategory";
 import { Toaster } from "react-hot-toast";
 

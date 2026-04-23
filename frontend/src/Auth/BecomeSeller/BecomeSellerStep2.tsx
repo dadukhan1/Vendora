@@ -2,6 +2,7 @@
 
 import { Grid, TextField } from "@mui/material";
 import type { FormikProps } from "formik/dist/types";
+import type { SellerFormValues } from "./SellerAccountForm";
 
 const inputSx = {
   "& .MuiOutlinedInput-root": {
@@ -18,7 +19,31 @@ const inputSx = {
   "& input::placeholder": { color: "#94A3B8", opacity: 1 },
 };
 
-const BecomeSellerStep2 = ({ formik }: { formik: FormikProps<any> }) => {
+const getFieldError = (
+  formik: FormikProps<SellerFormValues>,
+  fieldPath: string,
+) => {
+  const keys = fieldPath.split(".");
+  let touched: any = formik.touched;
+  let errors: any = formik.errors;
+
+  for (const key of keys) {
+    touched = touched?.[key];
+    errors = errors?.[key];
+    if (!touched && !errors) break;
+  }
+
+  return {
+    touched: Boolean(touched),
+    error: typeof errors === "string" ? errors : "",
+  };
+};
+
+const BecomeSellerStep2 = ({
+  formik,
+}: {
+  formik: FormikProps<SellerFormValues>;
+}) => {
   return (
     <div>
       <Grid container spacing={3}>
@@ -36,12 +61,7 @@ const BecomeSellerStep2 = ({ formik }: { formik: FormikProps<any> }) => {
               formik.touched.pickupAddress?.name &&
               Boolean(formik.errors.pickupAddress?.name)
             }
-            helperText={
-              formik.touched.pickupAddress?.name &&
-              typeof formik.errors.pickupAddress?.name === "string"
-                ? formik.errors.pickupAddress?.name
-                : ""
-            }
+            helperText={getFieldError(formik, "pickupAddress.name").error}
             sx={inputSx}
           />
         </Grid>
@@ -60,12 +80,7 @@ const BecomeSellerStep2 = ({ formik }: { formik: FormikProps<any> }) => {
               formik.touched.pickupAddress?.mobile &&
               Boolean(formik.errors.pickupAddress?.mobile)
             }
-            helperText={
-              formik.touched.pickupAddress?.mobile &&
-              typeof formik.errors.pickupAddress?.mobile === "string"
-                ? formik.errors.pickupAddress?.mobile
-                : ""
-            }
+            helperText={getFieldError(formik, "pickupAddress.mobile").error}
             sx={inputSx}
           />
         </Grid>
@@ -80,6 +95,11 @@ const BecomeSellerStep2 = ({ formik }: { formik: FormikProps<any> }) => {
             value={formik.values.pickupAddress.address}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
+            error={
+              formik.touched.pickupAddress?.address &&
+              Boolean(formik.errors.pickupAddress?.address)
+            }
+            helperText={getFieldError(formik, "pickupAddress.address").error}
             sx={inputSx}
           />
         </Grid>
@@ -94,6 +114,11 @@ const BecomeSellerStep2 = ({ formik }: { formik: FormikProps<any> }) => {
             value={formik.values.pickupAddress.city}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
+            error={
+              formik.touched.pickupAddress?.city &&
+              Boolean(formik.errors.pickupAddress?.city)
+            }
+            helperText={getFieldError(formik, "pickupAddress.city").error}
             sx={inputSx}
           />
         </Grid>
@@ -108,6 +133,11 @@ const BecomeSellerStep2 = ({ formik }: { formik: FormikProps<any> }) => {
             value={formik.values.pickupAddress.state}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
+            error={
+              formik.touched.pickupAddress?.state &&
+              Boolean(formik.errors.pickupAddress?.state)
+            }
+            helperText={getFieldError(formik, "pickupAddress.state").error}
             sx={inputSx}
           />
         </Grid>
@@ -126,12 +156,7 @@ const BecomeSellerStep2 = ({ formik }: { formik: FormikProps<any> }) => {
               formik.touched.pickupAddress?.pinCode &&
               Boolean(formik.errors.pickupAddress?.pinCode)
             }
-            helperText={
-              formik.touched.pickupAddress?.pinCode &&
-              typeof formik.errors.pickupAddress?.pinCode === "string"
-                ? formik.errors.pickupAddress?.pinCode
-                : ""
-            }
+            helperText={getFieldError(formik, "pickupAddress.pinCode").error}
             sx={inputSx}
           />
         </Grid>
@@ -146,6 +171,11 @@ const BecomeSellerStep2 = ({ formik }: { formik: FormikProps<any> }) => {
             value={formik.values.pickupAddress.locality}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
+            error={
+              formik.touched.pickupAddress?.locality &&
+              Boolean(formik.errors.pickupAddress?.locality)
+            }
+            helperText={getFieldError(formik, "pickupAddress.locality").error}
             sx={inputSx}
           />
         </Grid>

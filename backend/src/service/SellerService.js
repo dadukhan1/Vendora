@@ -1,5 +1,6 @@
 /** @format */
 
+import mongoose from "mongoose";
 import { Address } from "../models/Address.js";
 import { Seller } from "../models/Seller.js";
 import JwtProvider from "../utils/jwtProvider.js";
@@ -15,68 +16,94 @@ class SellerService {
       GSTIN,
       pickupAddress,
       bankDetails,
-      bussinessDetails,
+      businessDetails,
     } = req.body;
 
+    // Validate required fields
     if (!sellerName || !mobile || !email || !password || !GSTIN) {
       throw new Error("Required fields are missing");
     }
 
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      throw new Error("Invalid email format");
+    }
+
+    // Validate password strength
+    if (password.length < 6) {
+      throw new Error("Password must be at least 6 characters");
+    }
+
+    // Validate pickup address
     if (
       !pickupAddress?.address ||
       !pickupAddress?.city ||
       !pickupAddress?.state ||
       !pickupAddress?.pinCode
     ) {
-      throw new Error("Pickup address is incomplete");
+      throw new Error("Complete pickup address required");
     }
 
-    if (!bankDetails?.accountHOlderName || !bankDetails?.accountNumber) {
-      throw new Error("Bank details are incomplete");
-    }
-
+    // Validate bank details
     if (
-      !bussinessDetails?.bussinessName ||
-      !bussinessDetails?.bussinessEmail
-      // ||
-      // !bussinessDetails?.bussinessPhone
-    ) {
-      throw new Error("Business details are incomplete");
+      !bankDetails?.accountHolderName ||
+      !bankDetails?.accountNumber) {
+      throw new Error("Complete bank details required (account holder, number)");
     }
 
+    // Validate business details
+    if (
+      !businessDetails?.businessName ||
+      !businessDetails?.businessEmail) {
+      throw new Error("Complete business details required");
+    }
+
+    // Check for existing email
     const existingEmail = await Seller.findOne({ email });
     if (existingEmail) {
-      throw new Error("Email already exists");
+      throw new Error("Email already registered");
     }
 
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const savedAddress = await Address.create({
-      ...pickupAddress,
-    });
+    // Use transaction for atomic operation
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
-    //  Create seller
-    const newSeller = await Seller.create({
-      sellerName,
-      mobile,
-      email,
-      password: hashedPassword,
-      GSTIN,
-      pickupAddress: savedAddress._id, // reference
-      bankDetails: {
-        accountHOlderName: bankDetails.accountHolderName,
-        accountNumber: bankDetails.accountNumber,
-        ifsCode: bankDetails.ifsCode,
-      },
-      bussinessDetails: {
-        bussinessName: bussinessDetails.bussinessName,
-        bussinessEmail: bussinessDetails.bussinessEmail,
-        bussinessMobile: bussinessDetails.bussinessPhone,
-        bussinessAddress: bussinessDetails.bussinessAddress,
-      },
-    });
+    try {
+      // Create address
+      const [savedAddress] = await Address.create([pickupAddress], { session });
 
-    return newSeller;
+      // Create seller
+      const [newSeller] = await Seller.create([{
+        sellerName,
+        mobile,
+        email,
+        password: hashedPassword,
+        GSTIN,
+        pickupAddress: savedAddress._id,
+        bankDetails: {
+          accountHolderName: bankDetails.accountHolderName,
+          accountNumber: bankDetails.accountNumber,
+        },
+        businessDetails: {
+          businessName: businessDetails.businessName,
+          businessEmail: businessDetails.businessEmail,
+          businessPhone: businessDetails.businessPhone,
+          businessAddress: businessDetails.businessAddress,
+        },
+      }], { session });
+
+      await session.commitTransaction();
+      return newSeller;
+    } catch (err) {
+      await session.abortTransaction();
+      throw err;
+    } finally {
+      session.endSession();
+    }
   }
 
   async getSellerProfile(jwt) {

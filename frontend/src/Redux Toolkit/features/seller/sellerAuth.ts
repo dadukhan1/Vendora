@@ -48,17 +48,25 @@ export const signup = createAsyncThunk<any, any>(
   "seller/signup",
   async (values, { rejectWithValue }) => {
     try {
-      const { mobile, GSTIN, pickupAddress, bankDetails, bussinessDetails } =
-        values;
-      const response = await api.post("/seller", {
-        sellerName: bussinessDetails.sellerName,
-        email: bussinessDetails.bussinessEmail,
+      console.log(values);
+      const {
+        sellerName,
         mobile,
         GSTIN,
         pickupAddress,
         bankDetails,
-        bussinessDetails,
-        password: bussinessDetails.password,
+        businessDetails,
+        password,
+      } = values;
+      const response = await api.post("/seller", {
+        sellerName,
+        email: businessDetails.businessEmail,
+        mobile,
+        GSTIN,
+        pickupAddress,
+        bankDetails,
+        businessDetails,
+        password,
       });
       const data = response;
       return data;

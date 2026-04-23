@@ -2,6 +2,7 @@
 
 import { Box, TextField } from "@mui/material";
 import type { FormikProps } from "formik";
+import type { SellerFormValues } from "./SellerAccountForm";
 
 const inputSx = {
   "& .MuiOutlinedInput-root": {
@@ -18,7 +19,11 @@ const inputSx = {
   "& input::placeholder": { color: "#94A3B8", opacity: 1 },
 };
 
-const BecomeSellerStep1 = ({ formik }: { formik: FormikProps<any> }) => {
+const BecomeSellerStep1 = ({
+  formik,
+}: {
+  formik: FormikProps<SellerFormValues>;
+}) => {
   return (
     <Box>
       <p className='text-xl font-bold text-center pb-9'>Contact Details</p>

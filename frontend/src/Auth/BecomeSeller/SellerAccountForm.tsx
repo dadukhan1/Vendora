@@ -1,6 +1,6 @@
 /** @format */
 
-import { Button, CircularProgress } from "@mui/material";
+import { Button, CircularProgress, Alert } from "@mui/material";
 import { ArrowBack, ArrowForward, CheckCircle } from "@mui/icons-material";
 import { useFormik } from "formik";
 import { useState } from "react";
@@ -19,13 +19,152 @@ const steps = [
   { label: "Business Info", desc: "Brand details" },
 ];
 
+export interface SellerFormValues {
+  mobile: string;
+  otp: string;
+  GSTIN: string;
+
+  pickupAddress: {
+    name: string;
+    mobile: string;
+    address: string;
+    city: string;
+    state: string;
+    pinCode: string;
+    locality: string;
+  };
+
+  bankDetails: {
+    accountHolderName: string;
+    accountNumber: string;
+  };
+
+  sellerName: string;
+  email: string;
+
+  businessDetails: {
+    businessName: string;
+    businessEmail: string;
+    businessPhone: string;
+    logo: string;
+    banner: string;
+    businessAddress: string;
+  };
+
+  password: string;
+}
+
 const SellerAccountForm = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { sellerAuth } = useAppSelector((store) => store);
   const [activeStep, setActiveStep] = useState(0);
+  const [error, setError] = useState<string | null>(null);
 
-  const formik = useFormik({
+  // Manual validation function
+  const validateStep = (step: number, values: SellerFormValues) => {
+    const errors: any = {};
+
+    if (step === 0) {
+      // Step 1: Tax & Mobile
+      if (!values.mobile) {
+        errors.mobile = "Mobile is required";
+      }
+
+      if (!values.GSTIN) {
+        errors.GSTIN = "GSTIN is required";
+      }
+    } else if (step === 1) {
+      // Step 2: Pickup Address - nested structure
+      errors.pickupAddress = {};
+
+      if (!values.pickupAddress.name) {
+        errors.pickupAddress.name = "Name is required";
+      }
+      if (!values.pickupAddress.mobile) {
+        errors.pickupAddress.mobile = "Mobile is required";
+      }
+      if (!values.pickupAddress.address) {
+        errors.pickupAddress.address = "Address is required";
+      }
+      if (!values.pickupAddress.city) {
+        errors.pickupAddress.city = "City is required";
+      }
+      if (!values.pickupAddress.state) {
+        errors.pickupAddress.state = "State is required";
+      }
+      if (!values.pickupAddress.pinCode) {
+        errors.pickupAddress.pinCode = "PIN code is required";
+      }
+      if (!values.pickupAddress.locality) {
+        errors.pickupAddress.locality = "Locality is required";
+      }
+
+      // Remove pickupAddress if no errors
+      if (Object.keys(errors.pickupAddress).length === 0) {
+        delete errors.pickupAddress;
+      }
+    } else if (step === 2) {
+      // Step 3: Bank Details - nested structure
+      errors.bankDetails = {};
+
+      if (!values.bankDetails.accountHolderName) {
+        errors.bankDetails.accountHolderName =
+          "Account holder name is required";
+      }
+      if (!values.bankDetails.accountNumber) {
+        errors.bankDetails.accountNumber = "Account number is required";
+      }
+
+      // Remove bankDetails if no errors
+      if (Object.keys(errors.bankDetails).length === 0) {
+        delete errors.bankDetails;
+      }
+    } else if (step === 3) {
+      // Step 4: Business Info
+      if (!values.sellerName) {
+        errors.sellerName = "Seller name is required";
+      }
+      if (!values.email) {
+        errors.email = "Email is required";
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
+        errors.email = "Invalid email format";
+      }
+      if (!values.password) {
+        errors.password = "Password is required";
+      } else if (values.password.length < 6) {
+        errors.password = "Password must be at least 6 characters";
+      }
+
+      errors.businessDetails = {};
+
+      if (!values.businessDetails.businessName) {
+        errors.businessDetails.businessName = "Business name is required";
+      }
+      if (!values.businessDetails.businessEmail) {
+        errors.businessDetails.businessEmail = "Business email is required";
+      } else if (
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.businessDetails.businessEmail)
+      ) {
+        errors.businessDetails.businessEmail = "Invalid email format";
+      }
+      if (!values.businessDetails.businessPhone) {
+        errors.businessDetails.businessPhone = "Business phone is required";
+      }
+      if (!values.businessDetails.businessAddress) {
+        errors.businessDetails.businessAddress = "Business address is required";
+      }
+
+      // Remove businessDetails if no errors
+      if (Object.keys(errors.businessDetails).length === 0) {
+        delete errors.businessDetails;
+      }
+    }
+
+    return errors;
+  };
+
+  const formik = useFormik<SellerFormValues>({
     initialValues: {
       mobile: "",
       otp: "",
@@ -45,30 +184,92 @@ const SellerAccountForm = () => {
       },
       sellerName: "",
       email: "",
-      bussinessDetails: {
-        bussinessName: "",
-        bussinessEmail: "",
-        bussinessPhone: "",
+      businessDetails: {
+        businessName: "",
+        businessEmail: "",
+        businessPhone: "",
         logo: "",
         banner: "",
-        bussinessAddress: "",
+        businessAddress: "",
       },
       password: "",
     },
     onSubmit: async (values) => {
+      setError(null);
+      console.log(values);
       const resultAction = await dispatch(signup(values));
       if (signup.fulfilled.match(resultAction)) {
         navigate("/");
       } else {
-        console.error("Failed to sign up:", resultAction.payload);
+        setError(
+          typeof resultAction.payload === "string"
+            ? resultAction.payload
+            : "Failed to create account. Please try again.",
+        );
       }
     },
   });
+
+  const handleNext = () => {
+    const errors = validateStep(activeStep, formik.values);
+
+    if (Object.keys(errors).length > 0) {
+      formik.setErrors(errors);
+
+      // Set touched for nested fields properly
+      const touched: any = {};
+      if (errors.pickupAddress) {
+        touched.pickupAddress = {};
+        Object.keys(errors.pickupAddress).forEach((key) => {
+          touched.pickupAddress[key] = true;
+        });
+      }
+      if (errors.bankDetails) {
+        touched.bankDetails = {};
+        Object.keys(errors.bankDetails).forEach((key) => {
+          touched.bankDetails[key] = true;
+        });
+      }
+      if (errors.businessDetails) {
+        touched.businessDetails = {};
+        Object.keys(errors.businessDetails).forEach((key) => {
+          touched.businessDetails[key] = true;
+        });
+      }
+      Object.keys(errors).forEach((key) => {
+        if (
+          key !== "pickupAddress" &&
+          key !== "bankDetails" &&
+          key !== "businessDetails"
+        ) {
+          touched[key] = true;
+        }
+      });
+
+      formik.setTouched(touched);
+      return;
+    }
+
+    setError(null);
+    setActiveStep((prev) => Math.min(3, prev + 1));
+  };
+
+  const handleBack = () => {
+    setError(null);
+    setActiveStep((prev) => Math.max(0, prev - 1));
+  };
 
   const isLastStep = activeStep === steps.length - 1;
 
   return (
     <div className='flex flex-col gap-6'>
+      {/* Error Alert */}
+      {error && (
+        <Alert severity='error' onClose={() => setError(null)}>
+          {error}
+        </Alert>
+      )}
+
       {/* ── Custom Stepper ── */}
       <div className='flex items-center gap-0'>
         {steps.map((step, index) => {
@@ -161,7 +362,7 @@ const SellerAccountForm = () => {
         <Button
           variant='text'
           disabled={activeStep === 0}
-          onClick={() => setActiveStep((prev) => Math.max(0, prev - 1))}
+          onClick={handleBack}
           startIcon={<ArrowBack sx={{ fontSize: "15px !important" }} />}
           sx={{
             textTransform: "none",
@@ -179,11 +380,7 @@ const SellerAccountForm = () => {
 
         <Button
           variant='contained'
-          onClick={
-            isLastStep
-              ? () => formik.handleSubmit()
-              : () => setActiveStep((prev) => Math.min(3, prev + 1))
-          }
+          onClick={isLastStep ? () => formik.handleSubmit() : handleNext}
           disabled={sellerAuth?.loading}
           endIcon={
             sellerAuth?.loading ? (
