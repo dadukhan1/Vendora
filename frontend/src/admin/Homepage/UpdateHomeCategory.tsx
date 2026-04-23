@@ -35,7 +35,7 @@ const T = {
 };
 
 export default function UpdateHomeCategory() {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -44,22 +44,24 @@ export default function UpdateHomeCategory() {
   );
 
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [previewImage, setPreviewImage] = useState<string>("");
   const [successMsg, setSuccessMsg] = useState("");
   const [formData, setFormData] = useState({ categoryId: "", image: "" });
 
   useEffect(() => {
     if (id) dispatch(fetchSingleHomeCategory(id));
-    return () => { dispatch(clearSelectedCategory()); };
-  }, [id]);
+    return () => {
+      dispatch(clearSelectedCategory());
+    };
+  }, [id, dispatch]);
 
   useEffect(() => {
     if (selectedCategory) {
       setFormData({
-        categoryId: selectedCategory?.categoryId || "",
-        image: selectedCategory?.image || "",
+        categoryId: (selectedCategory as any).categoryId || "",
+        image: (selectedCategory as any).image || "",
       });
-      setPreviewImage(selectedCategory?.image || null);
+      setPreviewImage((selectedCategory as any).image || "");
     }
   }, [selectedCategory]);
 
@@ -78,11 +80,16 @@ export default function UpdateHomeCategory() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!id) return;
+
     setSuccessMsg("");
+
     const payload = new FormData();
     payload.append("categoryId", formData.categoryId);
     if (imageFile) payload.append("image", imageFile);
-    const result = await dispatch(updateHomeCategory({ id, data: payload }));
+
+    const result = await dispatch(updateHomeCategory({ id, data: payload as any }));
+
     if (updateHomeCategory.fulfilled.match(result)) {
       setSuccessMsg("Category updated successfully!");
       setTimeout(() => navigate("/admin/home-page"), 1500);
@@ -100,8 +107,6 @@ export default function UpdateHomeCategory() {
   return (
     <Box sx={{ minHeight: "100vh", background: T.bg, py: 5, px: 2 }}>
       <Box sx={{ maxWidth: 560, mx: "auto" }}>
-
-        {/* ── Header ── */}
         <Box display="flex" alignItems="center" gap={1.5} mb={4}>
           <IconButton
             onClick={() => navigate(-1)}
@@ -119,43 +124,23 @@ export default function UpdateHomeCategory() {
             <Typography sx={{ fontSize: "1.15rem", fontWeight: 700, color: T.dark, letterSpacing: "-0.3px" }}>
               Update Category
             </Typography>
-            <Typography sx={{ fontSize: "0.72rem", color: T.muted }}>
-              {id}
-            </Typography>
+            <Typography sx={{ fontSize: "0.72rem", color: T.muted }}>{id}</Typography>
           </Box>
         </Box>
 
-        {/* ── Alerts ── */}
         {error && (
-          <Alert
-            severity="error"
-            sx={{ mb: 3, borderRadius: "10px", fontSize: "0.82rem" }}
-          >
+          <Alert severity="error" sx={{ mb: 3, borderRadius: "10px", fontSize: "0.82rem" }}>
             {typeof error === "string" ? error : "Something went wrong."}
           </Alert>
         )}
         {successMsg && (
-          <Alert
-            severity="success"
-            icon={<CheckCircle fontSize="small" />}
-            sx={{ mb: 3, borderRadius: "10px", fontSize: "0.82rem" }}
-          >
+          <Alert severity="success" icon={<CheckCircle fontSize="small" />} sx={{ mb: 3, borderRadius: "10px", fontSize: "0.82rem" }}>
             {successMsg}
           </Alert>
         )}
 
-        {/* ── Form Card ── */}
-        <Box
-          sx={{
-            background: "#fff",
-            border: `1.5px solid ${T.border}`,
-            borderRadius: "16px",
-            p: { xs: 3, md: 4 },
-          }}
-        >
+        <Box sx={{ background: "#fff", border: `1.5px solid ${T.border}`, borderRadius: "16px", p: { xs: 3, md: 4 } }}>
           <form onSubmit={handleSubmit}>
-
-            {/* Category Name */}
             <Box mb={3.5}>
               <Typography sx={{ fontSize: "0.75rem", fontWeight: 600, color: T.secondary, mb: 1, letterSpacing: 0.3 }}>
                 Category Name
@@ -183,16 +168,12 @@ export default function UpdateHomeCategory() {
               />
             </Box>
 
-            {/* Image */}
             <Box mb={4}>
               <Typography sx={{ fontSize: "0.75rem", fontWeight: 600, color: T.secondary, mb: 1.5, letterSpacing: 0.3 }}>
                 Category Image
               </Typography>
 
-              {/* Images Row */}
               <Box display="flex" alignItems="flex-end" gap={2.5} mb={2}>
-
-                {/* Current */}
                 <Box>
                   <Typography sx={{ fontSize: "0.65rem", color: T.muted, mb: 0.8, textTransform: "uppercase", letterSpacing: 1 }}>
                     Current
@@ -210,44 +191,26 @@ export default function UpdateHomeCategory() {
                       justifyContent: "center",
                     }}
                   >
-                    {selectedCategory?.image ? (
-                      <img
-                        src={selectedCategory.image}
-                        alt="current"
-                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                      />
+                    {(selectedCategory as any)?.image ? (
+                      <img src={(selectedCategory as any).image} alt="current" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                     ) : (
                       <ImageOutlined sx={{ color: T.border, fontSize: 28 }} />
                     )}
                   </Box>
                 </Box>
 
-                {/* New Preview */}
                 {imageFile && previewImage && (
                   <Box>
                     <Typography sx={{ fontSize: "0.65rem", color: T.blue, mb: 0.8, textTransform: "uppercase", letterSpacing: 1 }}>
                       New
                     </Typography>
-                    <Box
-                      sx={{
-                        width: 80,
-                        height: 80,
-                        borderRadius: "10px",
-                        border: `1.5px solid ${T.blue}`,
-                        overflow: "hidden",
-                      }}
-                    >
-                      <img
-                        src={previewImage}
-                        alt="new"
-                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                      />
+                    <Box sx={{ width: 80, height: 80, borderRadius: "10px", border: `1.5px solid ${T.blue}`, overflow: "hidden" }}>
+                      <img src={previewImage} alt="new" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                     </Box>
                   </Box>
                 )}
               </Box>
 
-              {/* Upload */}
               <Button
                 component="label"
                 variant="outlined"
@@ -268,17 +231,11 @@ export default function UpdateHomeCategory() {
                 <input type="file" accept="image/*" hidden onChange={handleImageChange} />
               </Button>
 
-              {imageFile && (
-                <Typography sx={{ fontSize: "0.7rem", color: T.muted, mt: 0.8 }}>
-                  {imageFile.name}
-                </Typography>
-              )}
+              {imageFile && <Typography sx={{ fontSize: "0.7rem", color: T.muted, mt: 0.8 }}>{imageFile.name}</Typography>}
             </Box>
 
-            {/* Divider */}
             <Box sx={{ height: "1px", background: T.border, mb: 3 }} />
 
-            {/* Buttons */}
             <Box display="flex" justifyContent="flex-end" gap={1.5}>
               <Button
                 variant="text"
@@ -317,7 +274,6 @@ export default function UpdateHomeCategory() {
                 {loading ? "Saving..." : "Save Changes"}
               </Button>
             </Box>
-
           </form>
         </Box>
       </Box>

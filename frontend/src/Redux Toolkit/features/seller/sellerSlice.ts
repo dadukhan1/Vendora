@@ -6,11 +6,32 @@ import { toast } from "react-hot-toast";
 
 /* ---------------- TYPES ---------------- */
 
+interface BusinessDetails {
+  bussinessName: string;
+  bussinessEmail: string;
+  bussinessMobile: string;
+  bussinessAddress: string;
+  logo?: string;
+  banner?: string;
+}
+
+interface BankDetails {
+  accountNumber: string;
+  ifscCode?: string;
+  accountHolderName?: string;
+}
+
 interface Seller {
   _id: string;
-  name?: string;
+  sellerName?: string;
   email?: string;
-  status?: string;
+  mobile?: string;
+  GSTIN?: string;
+  bussinessDetails?: BusinessDetails;
+  bankDetails?: BankDetails;
+  accountStatus?: string;
+  role?: string;
+  isEmailVerified?: boolean;
 }
 
 interface SellerState {
