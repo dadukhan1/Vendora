@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import DealTable from "./DealTable";
-import DealCategoryTable from "./DealCategoryTable";
 import CreateDealForm from "./CreateDealForm";
 import Button from "@mui/material/Button";
 

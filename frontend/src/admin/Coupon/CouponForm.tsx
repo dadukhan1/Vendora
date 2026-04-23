@@ -20,9 +20,18 @@ const CouponForm = () => {
       minimumOrderValue: 0,
     },
     onSubmit: async (values) => {
-      // Handle form submission
-      console.log(values);
-      const resultAction = await dispatch(createCoupon(values));
+      const payload = {
+        ...values,
+        validityStartDate: values.validityStartDate
+          ? values.validityStartDate.toISOString()
+          : undefined,
+        validityEndDate: values.validityEndDate
+          ? values.validityEndDate.toISOString()
+          : undefined,
+      };
+
+      const resultAction = await dispatch(createCoupon(payload));
+
       if (createCoupon.fulfilled.match(resultAction)) {
         formik.resetForm();
       }

@@ -37,9 +37,20 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+interface Deal {
+  _id?: string;
+  discount?: number;
+  category?: {
+    _id: string;
+    name: string;
+    image: string;
+  };
+}
+
 export default function DealTable() {
   const dispatch = useAppDispatch();
   const { deals } = useAppSelector((store) => store.deal);
+  console.log(deals)
 
   useEffect(() => {
     dispatch(getAllDeals());
@@ -63,7 +74,7 @@ export default function DealTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {deals.map((deal, index) => (
+          {deals.map((deal: Deal, index) => (
             <StyledTableRow key={deal?._id}>
               <StyledTableCell component='th' scope='row'>
                 {index}
@@ -84,7 +95,7 @@ export default function DealTable() {
               </StyledTableCell>
               <StyledTableCell align='right'>
                 <IconButton
-                  onClick={() => deleteDealById(deal._id)}
+                  onClick={() => deleteDealById(deal._id!)}
                   color='error'
                 >
                   <Delete />

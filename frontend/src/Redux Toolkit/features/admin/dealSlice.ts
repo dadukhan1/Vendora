@@ -4,10 +4,13 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../../config/api";
 
 export interface Deal {
-  _id: string;
-  title?: string;
+  _id?: string;
   discount?: number;
-  category: string
+  category: {
+    _id: string;
+    name: string;
+    image: string;
+  };
 }
 
 interface DealState {

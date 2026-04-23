@@ -16,6 +16,11 @@ import { createDeal } from "../../Redux Toolkit/features/admin/dealSlice";
 import { useEffect } from "react";
 import { homeCategoryData } from "../../Redux Toolkit/features/customer/homeCategorySlice";
 
+interface DealCategory {
+  _id?: string;
+  name?: string;
+}
+
 const CreateDealForm = () => {
   const dispatch = useAppDispatch();
 
@@ -27,7 +32,16 @@ const CreateDealForm = () => {
       category: "",
     },
     onSubmit: (values) => {
-      dispatch(createDeal(values));
+      dispatch(
+        createDeal({
+          discount: values.discount,
+          category: {
+            _id: values.category,
+            name: "",
+            image: "",
+          },
+        }),
+      );
     },
   });
 
@@ -72,7 +86,7 @@ const CreateDealForm = () => {
             label='Category'
           >
             <MenuItem value=''>None</MenuItem>
-            {uniqueCategories.map((category) => (
+            {uniqueCategories.map((category: DealCategory) => (
               <MenuItem key={category._id} value={category._id}>
                 {category.name}
               </MenuItem>
