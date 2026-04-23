@@ -12,6 +12,16 @@ import { IconButton } from "@mui/material";
 import { Edit } from "@mui/icons-material";
 import { useNavigate } from "react-router";
 
+interface CategoryItem {
+  _id: string;
+  image: string;
+  categoryId: string;
+}
+
+interface Props {
+  cateogry?: CategoryItem[]; // optional rakha for safety
+}
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -26,17 +36,17 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
   },
-  // hide last border
   "&:last-child td, &:last-child th": {
     border: 0,
   },
 }));
 
-export default function HomeCategoryTable({ cateogry }) {
+export default function HomeCategoryTable({ cateogry = [] }: Props) {
   const navigate = useNavigate();
+
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 700 }} aria-label='customized table'>
+      <Table sx={{ minWidth: 700 }}>
         <TableHead>
           <TableRow>
             <StyledTableCell>No.</StyledTableCell>
@@ -46,19 +56,20 @@ export default function HomeCategoryTable({ cateogry }) {
             <StyledTableCell align='right'>Update</StyledTableCell>
           </TableRow>
         </TableHead>
+
         <TableBody>
-          {cateogry?.map((item, index) => (
-            <StyledTableRow key={item?.id}>
-              <StyledTableCell component='th' scope='row'>
-                {index}
-              </StyledTableCell>
-              <StyledTableCell>{item?._id}</StyledTableCell>
+          {cateogry.map((item, index) => (
+            <StyledTableRow key={item._id}>
+              <StyledTableCell>{index + 1}</StyledTableCell>
+
+              <StyledTableCell>{item._id}</StyledTableCell>
+
               <StyledTableCell>
-                <img className='w-20 rounded-md' src={item?.image} alt='' />
+                <img className='w-20 rounded-md' src={item.image} alt='' />
               </StyledTableCell>
-              <StyledTableCell align='right'>
-                {item?.categoryId}
-              </StyledTableCell>
+
+              <StyledTableCell align='right'>{item.categoryId}</StyledTableCell>
+
               <StyledTableCell align='right'>
                 <IconButton
                   color='warning'

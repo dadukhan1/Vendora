@@ -12,9 +12,12 @@ const ElectronicsTable = () => {
   useEffect(() => {
     dispatch(getHomePageCategories());
   }, [dispatch]);
+
+  const data = homeCategories?.electricCategories || [];
+
   return (
     <div>
-      <HomeCategoryTable cateogry={homeCategories?.electricCategories} />
+      <HomeCategoryTable cateogry={data} />
     </div>
   );
 };
