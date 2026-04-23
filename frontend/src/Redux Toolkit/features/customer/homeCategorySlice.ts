@@ -6,7 +6,7 @@ import api from "../../../config/api";
 /* ---------------- TYPES ---------------- */
 
 interface HomeCategory {
-  id?: string;
+  _id?: string;
   title?: string;
 }
 
@@ -96,6 +96,7 @@ const homeCategorySlice = createSlice({
       .addCase(homeCategoryData.fulfilled, (state, action) => {
         state.loading = false;
         state.homeCategories = action.payload;
+        console.log(state.homeCategories);
       })
       .addCase(homeCategoryData.rejected, (state, action) => {
         state.loading = false;

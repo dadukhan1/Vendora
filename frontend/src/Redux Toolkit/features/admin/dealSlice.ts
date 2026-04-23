@@ -6,7 +6,8 @@ import api from "../../../config/api";
 export interface Deal {
   _id: string;
   title?: string;
-  price?: number;
+  discount?: number;
+  category: string
 }
 
 interface DealState {

@@ -35,13 +35,12 @@ const CreateDealForm = () => {
     dispatch(homeCategoryData());
   }, [dispatch]);
 
-  const categoriesArray = Array.isArray(homeCategories)
-    ? homeCategories
-    : homeCategories?.data || []; // agar API {data: []} bhej rahi ho
+  const categoriesArray =
+    (Array.isArray(homeCategories) && homeCategories) || [];
 
   const uniqueCategories = categoriesArray.filter(
-    (value, index, self) =>
-      index === self.findIndex((t) => t.categoryId === value.categoryId),
+    (value: any, index: number, self: any[]) =>
+      index === self.findIndex((t: any) => t._id === value._id),
   );
 
   return (
