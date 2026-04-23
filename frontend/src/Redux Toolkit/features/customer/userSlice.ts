@@ -11,6 +11,7 @@ interface User {
   email?: string;
   mobile?: string;
   address?: string;
+  role?: string;
 }
 
 interface ErrorPayload {

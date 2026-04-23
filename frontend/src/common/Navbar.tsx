@@ -14,7 +14,7 @@ const Navbar = ({ DrawerList }: any) => {
     <div className='h-[10] flex items-center px-5 border-b border-gray-300'>
       <div className='flex items-center gap-3'>
         <IconButton onClick={toggleDrawwer(true)} color='primary'>
-          <MenuIcon open color='primary' />
+          <MenuIcon color='primary' />
         </IconButton>
         <h1
           onClick={() => navigate("/")}
