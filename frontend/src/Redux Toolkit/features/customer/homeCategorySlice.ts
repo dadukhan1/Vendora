@@ -3,49 +3,77 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../../config/api";
 
-export const homeCategoryData = createAsyncThunk<any, any>(
-  "home/fetchHomePageData",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await api.get(`/home`);
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response.data);
-    }
-  },
-);
+/* ---------------- TYPES ---------------- */
 
-export const getHomePageCategories = createAsyncThunk<any, any>(
-  "home/createHomeCategory",
-  async (category, { rejectWithValue }) => {
-    try {
-      const response = await api.get(`/home/grouped`, { category });
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response.data);
-    }
-  },
-);
+interface HomeCategory {
+  id?: string;
+  title?: string;
+}
 
-export const createHomeCategory = createAsyncThunk<any, any>(
-  "home/createHomeCategory",
-  async (category, { rejectWithValue }) => {
-    try {
-      const response = await api.post(`/home`, { category });
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response.data);
-    }
-  },
-);
+interface HomeCategoryState {
+  homeCategories: HomeCategory[];
+  loading: boolean;
+  error: string | null;
+}
+
+/* ---------------- INITIAL STATE ---------------- */
+
+const initialState: HomeCategoryState = {
+  homeCategories: [],
+  loading: false,
+  error: null,
+};
+
+export const homeCategoryData = createAsyncThunk<
+  HomeCategory[],
+  void,
+  { rejectValue: string }
+>("home/fetchHomePageData", async (_, { rejectWithValue }) => {
+  try {
+    const response = await api.get("/home");
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error?.response?.data?.message || "Failed to fetch home data",
+    );
+  }
+});
+
+export const getHomePageCategories = createAsyncThunk<
+  HomeCategory[],
+  string,
+  { rejectValue: string }
+>("home/getGroupedCategories", async (category, { rejectWithValue }) => {
+  try {
+    const response = await api.get("/home/grouped", {
+      params: { category },
+    });
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error?.response?.data?.message || "Failed to fetch grouped categories",
+    );
+  }
+});
+
+export const createHomeCategory = createAsyncThunk<
+  HomeCategory[],
+  Partial<HomeCategory>,
+  { rejectValue: string }
+>("home/createHomeCategory", async (category, { rejectWithValue }) => {
+  try {
+    const response = await api.post("/home", { category });
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error?.response?.data?.message || "Failed to create category",
+    );
+  }
+});
 
 const homeCategorySlice = createSlice({
   name: "homeCategory",
-  initialState: {
-    homeCategories: [],
-    loading: false,
-    error: null as string | null,
-  },
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -59,9 +87,8 @@ const homeCategorySlice = createSlice({
       })
       .addCase(createHomeCategory.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
-      });
-    builder
+        state.error = action.payload || "Create failed";
+      })
       .addCase(homeCategoryData.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -72,7 +99,19 @@ const homeCategorySlice = createSlice({
       })
       .addCase(homeCategoryData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.error = action.payload || "Fetch failed";
+      })
+      .addCase(getHomePageCategories.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getHomePageCategories.fulfilled, (state, action) => {
+        state.loading = false;
+        state.homeCategories = action.payload;
+      })
+      .addCase(getHomePageCategories.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Grouped fetch failed";
       });
   },
 });

@@ -8,15 +8,8 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import {
-  FormControl,
-  IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
-  type SelectChangeEvent,
-} from "@mui/material";
-import { useEffect, useState } from "react";
+import { IconButton } from "@mui/material";
+import { useEffect } from "react";
 import { Delete } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../Redux Toolkit/store";
 import {
@@ -44,51 +37,51 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const accountStatus = [
-  {
-    status: "Pending",
-    title: "Pending Verification",
-    description: "The seller's account is pending verification.",
-  },
-  {
-    status: "Active",
-    title: "ACTIVE",
-    description: "The seller's account is active.",
-  },
-  {
-    status: "SUSPENDED",
-    title: "Suspended",
-    description: "The seller's account is suspended.",
-  },
-  {
-    status: "DEACTIVATED",
-    title: "Deactivated",
-    description: "The seller's account is deactivated.",
-  },
-  {
-    status: "BANNED",
-    title: "Banned",
-    description: "The seller's account is banned.",
-  },
-  {
-    status: "CLOSED",
-    title: "Closed",
-    description: "The seller's account is closed.",
-  },
-];
+// const accountStatus = [
+//   {
+//     status: "Pending",
+//     title: "Pending Verification",
+//     description: "The seller's account is pending verification.",
+//   },
+//   {
+//     status: "Active",
+//     title: "ACTIVE",
+//     description: "The seller's account is active.",
+//   },
+//   {
+//     status: "SUSPENDED",
+//     title: "Suspended",
+//     description: "The seller's account is suspended.",
+//   },
+//   {
+//     status: "DEACTIVATED",
+//     title: "Deactivated",
+//     description: "The seller's account is deactivated.",
+//   },
+//   {
+//     status: "BANNED",
+//     title: "Banned",
+//     description: "The seller's account is banned.",
+//   },
+//   {
+//     status: "CLOSED",
+//     title: "Closed",
+//     description: "The seller's account is closed.",
+//   },
+// ];
 export default function Coupon() {
-  const [status, setStatus] = useState("");
+  // const [status, setStatus] = useState("");
   const dispatch = useAppDispatch();
 
   const { coupons } = useAppSelector((store) => store.adminCoupon);
 
   useEffect(() => {
     dispatch(getCoupons());
-  }, [coupons]);
+  }, [dispatch]);
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setStatus(event.target.value as string);
-  };
+  // const handleChange = (event: SelectChangeEvent) => {
+  //   setStatus(event.target.value as string);
+  // };
 
   const handleDelete = (id: string) => {
     dispatch(deleteCoupon(id));
@@ -128,24 +121,24 @@ export default function Coupon() {
           </TableHead>
           <TableBody>
             {coupons.map((coupon) => (
-              <StyledTableRow key={coupon?.code}>
+              <StyledTableRow key={coupon._id}>
                 <StyledTableCell component='th' scope='row'>
-                  <div className='flex gap-1 flex-wrap'>{coupon?.code}</div>
+                  <div className='flex gap-1 flex-wrap'>{coupon.code}</div>
                 </StyledTableCell>
                 <StyledTableCell align='right'>
-                  {coupon?.validityStartDate}
+                  {coupon.validityStartDate}
                 </StyledTableCell>
                 <StyledTableCell align='right'>
-                  {coupon?.validityEndDate}
+                  {coupon.validityEndDate}
                 </StyledTableCell>
                 <StyledTableCell align='right'>
-                  {coupon?.minimumOrderValue}
+                  {coupon.minimumOrderValue}
                 </StyledTableCell>
                 <StyledTableCell align='right'>
-                  {coupon?.discountPercentage}%
+                  {coupon.discountPercentage}%
                 </StyledTableCell>
                 <StyledTableCell align='right'>
-                  <IconButton onClick={() => handleDelete(coupon?._id)}>
+                  <IconButton onClick={() => handleDelete(coupon._id)}>
                     <Delete color='error' />
                   </IconButton>
                 </StyledTableCell>

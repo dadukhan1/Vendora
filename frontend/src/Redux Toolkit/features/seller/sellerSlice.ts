@@ -4,140 +4,139 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../../config/api";
 import { toast } from "react-hot-toast";
 
-const initialState = {
+/* ---------------- TYPES ---------------- */
+
+interface Seller {
+  _id: string;
+  name?: string;
+  email?: string;
+  status?: string;
+}
+
+interface SellerState {
+  sellers: Seller[];
+  seller: Seller | null;
+  selectedSeller: Seller | null;
+  profile: Seller | null;
+  report: any;
+  loading: boolean;
+  error: string | null;
+}
+
+/* ---------------- INITIAL STATE ---------------- */
+
+const initialState: SellerState = {
   sellers: [],
   seller: null,
   selectedSeller: null,
-  loading: false,
-  error: null as string | null,
   profile: null,
   report: null,
-  profileUpdate: false,
+  loading: false,
+  error: null,
 };
 
-export const fetchSellerProfile = createAsyncThunk<any, any>(
-  "sellers/fetchSellerProfile",
-  async (_, { rejectWithValue }) => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await api.get(`/seller/profile`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = response.data;
-      console.log("seller profile ", data);
-      return data;
-    } catch (error) {
-      console.error("Fetch sellers profile error :", error);
-      return rejectWithValue(error);
-    }
-  },
-);
+const getToken = () => localStorage.getItem("token");
 
-export const fetchSellers = createAsyncThunk<any, any>(
-  "sellers/fetchSellers",
-  async (status, { rejectWithValue }) => {
-    try {
-      const response = await api.get(`/seller/`, {
-        params: {
-          status,
-        },
-      });
-      const data = response.data;
-      return data;
-    } catch (error) {
-      console.error("Error in fetching all profiles", error);
-      return rejectWithValue(error);
-    }
-  },
-);
+export const fetchSellerProfile = createAsyncThunk<
+  Seller,
+  void,
+  { rejectValue: string }
+>("sellers/fetchSellerProfile", async (_, { rejectWithValue }) => {
+  try {
+    const res = await api.get("/seller/profile", {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    });
+    return res.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error?.response?.data?.message || "Failed to fetch profile",
+    );
+  }
+});
 
-export const fetchSellerReport = createAsyncThunk<any, any>(
-  "sellers/fetchSellerReport",
-  async (_, { rejectWithValue }) => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await api.get(`seller/report`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = response.data;
-      console.log("Fetch seller report", data);
-      return data;
-    } catch (error) {
-      console.error("Error in fetching seller report", error);
-      return rejectWithValue(error);
-    }
-  },
-);
+export const fetchSellers = createAsyncThunk<
+  Seller[],
+  string | undefined,
+  { rejectValue: string }
+>("sellers/fetchSellers", async (status, { rejectWithValue }) => {
+  try {
+    const res = await api.get("/seller", {
+      params: { status },
+    });
+    return res.data;
+  } catch (error: any) {
+    return rejectWithValue("Failed to fetch sellers");
+  }
+});
 
-export const fetchSellerById = createAsyncThunk<any, any>(
-  "sellers/fetchSellerById",
-  async (id, { rejectWithValue }) => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await api.get(`seller/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = response.data;
-      console.log("Fetch seller by id", data);
-      return data;
-    } catch (error) {
-      console.error("Error in fetching seller by id", error);
-      return rejectWithValue(error);
-    }
-  },
-);
+export const fetchSellerReport = createAsyncThunk<
+  any,
+  void,
+  { rejectValue: string }
+>("sellers/fetchSellerReport", async (_, { rejectWithValue }) => {
+  try {
+    const res = await api.get("seller/report", {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    });
+    return res.data;
+  } catch (error: any) {
+    return rejectWithValue("Failed to fetch report");
+  }
+});
 
-export const updateSellerAccountStatus = createAsyncThunk<any, any>(
+export const fetchSellerById = createAsyncThunk<
+  Seller,
+  string,
+  { rejectValue: string }
+>("sellers/fetchSellerById", async (id, { rejectWithValue }) => {
+  try {
+    const res = await api.get(`seller/${id}`, {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    });
+    return res.data;
+  } catch (error: any) {
+    return rejectWithValue("Failed to fetch seller");
+  }
+});
+
+export const updateSellerAccountStatus = createAsyncThunk<
+  Seller,
+  { id: string; status: string },
+  { rejectValue: string }
+>(
   "sellers/updateSellerAccountStatus",
   async ({ id, status }, { rejectWithValue }) => {
     try {
-      console.log("the udapte slice", id, status);
-      const token = localStorage.getItem("token");
-      const response = await api.put(
+      const res = await api.put(
         `admin/seller/${id}/status/${status}`,
         {},
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${getToken()}` },
         },
       );
-      const data = response.data;
-      console.log(data);
-      toast.success(data.message);
-      return data;
-    } catch (error) {
-      console.error("Error in updating seller account status", error);
-      return rejectWithValue(error);
+
+      toast.success(res.data.message);
+      return res.data.seller;
+    } catch (error: any) {
+      return rejectWithValue("Failed to update seller status");
     }
   },
 );
 
-export const updateSellerProfile = createAsyncThunk<any, any>(
-  "sellers/updateSellerProfile",
-  async (profileData, { rejectWithValue }) => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await api.patch(`/seller`, profileData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = response.data;
-      console.log("Seller profile updated successfully:", data);
-      return data;
-    } catch (error) {
-      console.error("Error updating seller profile:", error);
-      return rejectWithValue("Failed to update profile. Please try again.");
-    }
-  },
-);
+export const updateSellerProfile = createAsyncThunk<
+  Seller,
+  Partial<Seller>,
+  { rejectValue: string }
+>("sellers/updateSellerProfile", async (profileData, { rejectWithValue }) => {
+  try {
+    const res = await api.patch("/seller", profileData, {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    });
+    return res.data;
+  } catch (error: any) {
+    return rejectWithValue("Failed to update profile");
+  }
+});
 
 const sellerSlice = createSlice({
   name: "sellers",
@@ -156,83 +155,32 @@ const sellerSlice = createSlice({
       })
       .addCase(fetchSellerProfile.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message as string;
-      });
-
-    builder
-      .addCase(fetchSellers.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        state.error = action.payload || "Failed";
       })
       .addCase(fetchSellers.fulfilled, (state, action) => {
         state.loading = false;
         state.sellers = action.payload;
       })
-      .addCase(fetchSellers.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message as string;
-      });
-    builder
-      .addCase(fetchSellerReport.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
       .addCase(fetchSellerReport.fulfilled, (state, action) => {
-        state.loading = false;
         state.report = action.payload;
       })
-      .addCase(fetchSellerReport.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message as string;
-      });
-    builder
-      .addCase(fetchSellerById.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
       .addCase(fetchSellerById.fulfilled, (state, action) => {
-        state.loading = false;
         state.selectedSeller = action.payload;
       })
-      .addCase(fetchSellerById.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message as string;
-      });
-    builder
-      .addCase(updateSellerAccountStatus.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
       .addCase(updateSellerAccountStatus.fulfilled, (state, action) => {
-        state.loading = false;
-        const updatedSeller = action.payload.seller;
+        const updated = action.payload;
+
         const index = state.sellers.findIndex(
-          (seller) => seller._id === updatedSeller._id,
+          (seller) => seller._id === updated._id,
         );
         if (index !== -1) {
-          state.sellers[index] = updatedSeller;
+          state.sellers[index] = updated;
         }
       })
-      .addCase(updateSellerAccountStatus.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message as string;
-      });
-
-    builder
-      .addCase(updateSellerProfile.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
       .addCase(updateSellerProfile.fulfilled, (state, action) => {
-        state.loading = false;
         state.profile = action.payload;
         state.seller = action.payload;
         toast.success("Profile updated successfully");
-      })
-      .addCase(updateSellerProfile.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-        toast.error(action.payload as string);
       });
   },
 });

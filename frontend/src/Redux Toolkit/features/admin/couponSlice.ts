@@ -5,9 +5,12 @@ import api from "../../../config/api";
 import toast from "react-hot-toast";
 
 export interface Coupon {
-  id: string;
+  _id: string;
   code: string;
-  discount?: number;
+  validityStartDate: string;
+  validityEndDate: string;
+  minimumOrderValue: number;
+  discountPercentage: number;
 }
 
 interface CouponState {
@@ -126,7 +129,7 @@ const couponSlice = createSlice({
       .addCase(deleteCoupon.fulfilled, (state, action) => {
         state.loading = false;
         state.coupons = state.coupons.filter(
-          (coupon) => coupon.id !== action.payload,
+          (coupon) => coupon._id !== action.payload,
         );
 
         toast.success("Coupon deleted successfully!");

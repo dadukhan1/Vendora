@@ -1,16 +1,31 @@
 /** @format */
 import toast from "react-hot-toast";
-import api from "../../../config/api.ts";
-
+import api from "../../../config/api";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
+/* ---------------- TYPES ---------------- */
+
+interface User {
+  id?: string;
+  fullName?: string;
+  email?: string;
+  mobile?: string;
+  address?: string;
+}
+
+interface ErrorPayload {
+  message: string;
+}
+
 interface UserState {
-  user: any | null;
+  user: User | null;
   loading: boolean;
   error: string | null;
   updating: boolean;
   updateError: string | null;
 }
+
+/* ---------------- INITIAL STATE ---------------- */
 
 const initialState: UserState = {
   user: null,
@@ -20,56 +35,52 @@ const initialState: UserState = {
   updateError: null,
 };
 
-export const profile = createAsyncThunk<any, string>(
-  "/user/profile",
-  async (token, { rejectWithValue }) => {
-    try {
-      const response = await api.post(
-        `/user/profile`,
-        {}, // no body needed
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+export const profile = createAsyncThunk<
+  User,
+  string,
+  { rejectValue: ErrorPayload }
+>("user/profile", async (token, { rejectWithValue }) => {
+  try {
+    const response = await api.post(
+      "/user/profile",
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
-      return response.data;
-    } catch (error: any) {
-      console.error("Error fetching profile:", error);
-      return rejectWithValue({
-        message:
-          error.response?.data?.message ||
-          "An error occurred while fetching profile",
-      });
-    }
-  },
-);
+      },
+    );
+
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue({
+      message: error?.response?.data?.message || "Failed to fetch profile",
+    });
+  }
+});
 
 export const updateProfile = createAsyncThunk<
-  any,
-  { fullName?: string; email?: string; mobile?: string; address?: string },
-  { rejectValue: { message: string } }
+  User,
+  Partial<User>,
+  { rejectValue: ErrorPayload }
 >("user/updateProfile", async (userData, { rejectWithValue }) => {
   try {
     const token = localStorage.getItem("token");
     if (!token) {
       return rejectWithValue({
-        message: "Authentication token not found. Please login again.",
+        message: "Authentication token not found",
       });
     }
-    const response = await api.put(`/user/update`, userData, {
+
+    const response = await api.put("/user/update", userData, {
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
       },
     });
     return response.data;
   } catch (error: any) {
-    console.error("Error updating profile:", error);
     return rejectWithValue({
-      message:
-        error.response?.data?.message ||
-        "An error occurred while updating profile",
+      message: error?.response?.data?.message || "Failed to update profile",
     });
   }
 });
@@ -90,43 +101,36 @@ const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // Profile fetch cases
-    builder.addCase(profile.pending, (state) => {
-      state.loading = true;
-      state.error = null;
-    });
-    builder.addCase(profile.fulfilled, (state, action) => {
-      state.loading = false;
-      state.user = action.payload;
-    });
-    builder.addCase(profile.rejected, (state, action) => {
-      state.loading = false;
-      state.error =
-        (action.payload as { message?: string })?.message ||
-        "Failed to fetch user profile";
-    });
-
-    // Profile update cases
-    builder.addCase(updateProfile.pending, (state) => {
-      state.updating = true;
-      state.updateError = null;
-    });
-    builder.addCase(updateProfile.fulfilled, (state, action) => {
-      state.updating = false;
-      // state.user = action.payload;
-      state.updateError = null;
-      toast.success("Profile updated successfully!");
-    });
-    builder.addCase(updateProfile.rejected, (state, action) => {
-      state.updating = false;
-      state.updateError =
-        (action.payload as { message?: string })?.message ||
-        "Failed to update profile";
-      toast.error(action.payload as string);
-    });
+    builder
+      .addCase(profile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(profile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(profile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || "Failed to fetch profile";
+      })
+      .addCase(updateProfile.pending, (state) => {
+        state.updating = true;
+        state.updateError = null;
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.updating = false;
+        state.user = action.payload;
+        toast.success("Profile updated successfully!");
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
+        state.updating = false;
+        const message = action.payload?.message || "Failed to update profile";
+        state.updateError = message;
+        toast.error(message);
+      });
   },
 });
 
 export const { clearUser, clearUpdateError } = userSlice.actions;
-
 export default userSlice.reducer;
