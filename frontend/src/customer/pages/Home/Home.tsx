@@ -1,7 +1,7 @@
 /** @format */
 
 import { useNavigate } from "react-router";
-import Deal from "./Deal/Deal";
+// import Deal from "./Deal/Deal";
 
 import Grid from "./Grid/Grid";
 import HomeCateogry from "./HomeCategory/HomeCategory";
@@ -18,7 +18,7 @@ const Home = () => {
       </section>
 
       {/* Today's Deal */}
-      <section className='px-5 lg:px-20'>
+      {/* <section className='px-5 lg:px-20'>
         <div className='flex items-end justify-between mb-6'>
           <div>
             <p
@@ -36,7 +36,7 @@ const Home = () => {
           </span>
         </div>
         <Deal />
-      </section>
+      </section> */}
 
       {/* Shop by Category */}
       <section className='px-5 lg:px-20 '>
