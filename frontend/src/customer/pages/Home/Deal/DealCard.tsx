@@ -37,7 +37,7 @@ const DealCard = ({ deal }: any) => {
           className='text-xs text-[#0F172A] font-semibold truncate'
           style={{ fontWeight: 600 }}
         >
-          Flash Deal
+          {deal.name}
         </p>
         <div className='flex items-center gap-2'>
           <span className='text-sm font-bold text-[#0F52FF]'>₹899</span>

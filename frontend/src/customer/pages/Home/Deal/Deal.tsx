@@ -4,6 +4,7 @@ import DealCard from "./DealCard";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useAppSelector } from "../../../../Redux Toolkit/store";
 
 const Deal = () => {
   const settings = {
@@ -22,6 +23,8 @@ const Deal = () => {
       { breakpoint: 480, settings: { slidesToShow: 2 } },
     ],
   };
+  const { homeCategories } = useAppSelector((store) => store.homeCategory);
+  console.log(homeCategories);
 
   return (
     <div className='py-2'>
@@ -33,13 +36,13 @@ const Deal = () => {
 
       <div className='deal-slider'>
         <Slider {...settings}>
-          {[1, 1, 1, 1, 1, 1, 1].map((_, index) => (
+          {homeCategories?.deals?.map((deal, index) => (
             <div key={index}>
               <DealCard
                 deal={{
-                  image:
-                    "https://images.unsplash.com/photo-1534217466718-ef4950786e24?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                  discount: 10,
+                  image: deal.category.image,
+                  discount: deal.discount,
+                  name: deal.category.name,
                 }}
               />
             </div>
