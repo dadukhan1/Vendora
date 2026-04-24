@@ -19,20 +19,11 @@ import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/store";
 import {
   fetchAddresses,
   deleteAddress,
+  type Address,
 } from "../../../Redux Toolkit/features/customer/addressSlice";
 import AddressForm from "../Checkout/AddressForm";
 
-interface Address {
-  _id: string;
-  name: string;
-  address: string;
-  locality?: string;
-  city: string;
-  pinCode: string;
-  state?: string;
-  mobile: string;
-  addressType?: string;
-}
+
 
 const Addresses = () => {
   const dispatch = useAppDispatch();

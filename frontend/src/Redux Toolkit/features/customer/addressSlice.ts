@@ -8,9 +8,14 @@ import toast from "react-hot-toast";
 
 export interface Address {
   _id: string;
-  city?: string;
-  country?: string;
-  addressLine?: string;
+  name: string;
+  address: string;
+  locality?: string;
+  city: string;
+  pinCode: string;
+  state?: string;
+  mobile: string;
+  addressType?: string;
 }
 
 interface AddressState {
