@@ -9,7 +9,6 @@ import {
   Box,
   Divider,
   Stack,
-  Chip,
   Avatar,
 } from "@mui/material";
 import {
@@ -24,9 +23,9 @@ import {
   CheckCircle,
   VerifiedUser,
 } from "@mui/icons-material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../Redux Toolkit/store";
-import { updateSellerProfile } from "../../Redux Toolkit/features/seller/sellerSlice";
+import { updateSellerProfile, fetchSellerProfile } from "../../Redux Toolkit/features/seller/sellerSlice";
 
 const keyIconMap: Record<string, React.ReactNode> = {
   "Business Name": <Store sx={{ fontSize: 20, color: "#1976d2" }} />,
@@ -50,30 +49,31 @@ interface Field {
 const SellerProfile = () => {
   const dispatch = useAppDispatch();
   const { profile } = useAppSelector((store) => store.seller);
+  console.log(profile)
 
   const fields: Field[] = [
     {
       key: "Business Name",
-      name: "bussinessName",
-      value: profile?.bussinessDetails?.bussinessName || "",
+      name: "businessName",
+      value: profile?.businessDetails?.businessName || "",
       section: "Business Details",
     },
     {
       key: "Business Email",
-      name: "bussinessEmail",
-      value: profile?.bussinessDetails?.bussinessEmail || "",
+      name: "businessEmail",
+      value: profile?.businessDetails?.businessEmail || "",
       section: "Business Details",
     },
     {
       key: "Business Mobile",
-      name: "bussinessMobile",
-      value: profile?.bussinessDetails?.bussinessMobile || "",
+      name: "businessPhone",
+      value: profile?.businessDetails?.businessPhone || "",
       section: "Business Details",
     },
     {
       key: "Business Address",
-      name: "bussinessAddress",
-      value: profile?.bussinessDetails?.bussinessAddress || "",
+      name: "businessAddress",
+      value: profile?.businessDetails?.businessAddress || "",
       section: "Business Details",
     },
     {
@@ -113,6 +113,18 @@ const SellerProfile = () => {
   const [form, setForm] = useState(initialForm);
   const [saved, setSaved] = useState(initialForm);
 
+  useEffect(() => {
+    dispatch(fetchSellerProfile());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (profile) {
+      const newForm = Object.fromEntries(fields.map((f) => [f.name, f.value]));
+      setForm(newForm);
+      setSaved(newForm);
+    }
+  }, [profile]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -123,11 +135,11 @@ const SellerProfile = () => {
       email: form.email,
       mobile: form.mobile,
       GSTIN: form.GSTIN,
-      bussinessDetails: {
-        bussinessName: form.bussinessName,
-        bussinessEmail: form.bussinessEmail,
-        bussinessMobile: form.bussinessMobile,
-        bussinessAddress: form.bussinessAddress,
+      businessDetails: {
+        businessName: form.businessName,
+        businessEmail: form.businessEmail,
+        businessPhone: form.businessPhone,
+        businessAddress: form.businessAddress,
       },
       bankDetails: {
         accountNumber: form.accountNumber,
@@ -180,7 +192,7 @@ const SellerProfile = () => {
                 fontWeight: "bold",
               }}
             >
-              {saved.bussinessName
+              {saved.businessName
                 ?.split(" ")
                 .map((n: string) => n[0])
                 .join("")
@@ -415,11 +427,11 @@ const SellerProfile = () => {
                               placeholder={`Enter ${field.key.toLowerCase()}`}
                               variant='outlined'
                               multiline={
-                                field.name === "bussinessAddress" ||
+                                field.name === "businessAddress" ||
                                 field.name === "accountNumber"
                               }
                               rows={
-                                field.name === "bussinessAddress" ||
+                                field.name === "businessAddress" ||
                                 field.name === "accountNumber"
                                   ? 3
                                   : 1

@@ -68,7 +68,7 @@ const PricingCard = ({ cart: cartProp }: PricingCardProps) => {
             className="flex justify-between items-center text-sm"
           >
             <span className="text-[#64748B]">{label}</span>
-            <spawn className={`font-medium ${color}`}>{value}</spawn>
+            <span className={`font-medium ${color}`}>{value}</span>
           </div>
         ))}
       </div>

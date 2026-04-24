@@ -7,10 +7,10 @@ import { toast } from "react-hot-toast";
 /* ---------------- TYPES ---------------- */
 
 interface BusinessDetails {
-  bussinessName: string;
-  bussinessEmail: string;
-  bussinessMobile: string;
-  bussinessAddress: string;
+  businessName: string;
+  businessEmail: string;
+  businessPhone: string;
+  businessAddress: string;
   logo?: string;
   banner?: string;
 }
@@ -27,7 +27,7 @@ interface Seller {
   email?: string;
   mobile?: string;
   GSTIN?: string;
-  bussinessDetails?: BusinessDetails;
+  businessDetails?: BusinessDetails;
   bankDetails?: BankDetails;
   accountStatus?: string;
   role?: string;

@@ -9,7 +9,7 @@ const initialState = {
   error: null as string | null,
 };
 
-export const fetchCart = createAsyncThunk<any, any>(
+export const fetchCart = createAsyncThunk<any, void>(
   "cart/fetchCart",
   async (_, { rejectWithValue }) => {
     try {
