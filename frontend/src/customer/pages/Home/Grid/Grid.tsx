@@ -92,14 +92,14 @@ const Grid = () => {
       </div>
 
       {/* Responsive Grid */}
-      <div className='grid gap-4 lg:gap-6 grid-cols-1 lg:grid-cols-12 grid-rows-none lg:grid-rows-12 h-auto lg:h-[700px]'>
-        {/* Desktop Layout (Mapping to standard grid positions) */}
-        <Cell index={0} colSpan='col-span-12 lg:col-span-3' rowSpan='h-[400px] lg:h-auto lg:row-span-12' />
-        <Cell index={1} colSpan='col-span-6 lg:col-span-2' rowSpan='h-[300px] lg:h-auto lg:row-span-6' />
-        <Cell index={2} colSpan='col-span-6 lg:col-span-4' rowSpan='h-[300px] lg:h-auto lg:row-span-6' />
-        <Cell index={3} colSpan='col-span-12 lg:col-span-3' rowSpan='h-[400px] lg:h-auto lg:row-span-12' />
-        <Cell index={4} colSpan='col-span-8 lg:col-span-4' rowSpan='h-[300px] lg:h-auto lg:row-span-6' />
-        <Cell index={5} colSpan='col-span-4 lg:col-span-2' rowSpan='h-[300px] lg:h-auto lg:row-span-6' />
+      <div className='grid gap-4 lg:gap-6 grid-cols-12 lg:grid-rows-12 h-auto lg:h-[700px]'>
+        {/* Mobile-First Pattern Logic */}
+        <Cell index={0} colSpan='col-span-12 lg:col-span-3' rowSpan='h-80 lg:h-auto lg:row-span-12' />
+        <Cell index={1} colSpan='col-span-6 lg:col-span-2' rowSpan='h-60 lg:h-auto lg:row-span-6' />
+        <Cell index={2} colSpan='col-span-6 lg:col-span-4' rowSpan='h-60 lg:h-auto lg:row-span-6' />
+        <Cell index={3} colSpan='col-span-12 lg:col-span-3' rowSpan='h-80 lg:h-auto lg:row-span-12' />
+        <Cell index={4} colSpan='col-span-7 lg:col-span-4' rowSpan='h-60 lg:h-auto lg:row-span-6' />
+        <Cell index={5} colSpan='col-span-5 lg:col-span-2' rowSpan='h-60 lg:h-auto lg:row-span-6' />
       </div>
     </div>
   );
