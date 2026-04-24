@@ -51,6 +51,11 @@ const menu = [
     path: "/admin/deals",
     icon: <LocalOffer sx={{ fontSize: 22 }} />,
   },
+  {
+    name: "Category Management",
+    path: "/admin/category-management",
+    icon: <Category sx={{ fontSize: 22 }} />,
+  },
 ];
 
 const AdminDrawerList = ({ toggleDrawwer }: any) => {

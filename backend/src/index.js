@@ -22,6 +22,7 @@ import { stripeWebhooks } from "./controller/stripWebhook.js";
 import { createCheckoutSession } from "./controller/createCheckoutSesssion.js";
 import AddressRouter from "./router/AddressRoutes.js";
 import { CouponRouter } from "./router/CouponRoutes.js";
+import AdminCategoryRoutes from "./router/AdminCategoryRoutes.js";
 
 const app = express();
 
@@ -71,6 +72,7 @@ app.use("/api/coupons", CouponRouter);
 
 app.use("/api/home", HomeCategoryRoutes);
 app.use("/api/admin/deals", DealRouter);
+app.use("/api/admin/categories", AdminCategoryRoutes);
 
 const PORT = 3000;
 

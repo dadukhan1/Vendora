@@ -8,6 +8,7 @@ import GridTable from "../admin/Homepage/GridTable";
 import ElectronicsTable from "../admin/Homepage/ElectronicsTable";
 import ShopByCategory from "../admin/Homepage/ShopByCategory";
 import Deal from "../admin/Deal/Deal";
+import CategoryManager from "../admin/Category/CategoryManager";
 import UpdateHomeCategory from "../admin/Homepage/UpdateHomeCategory";
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -34,6 +35,10 @@ const AdminRoutes = () => {
                 />
                 <Route path='/shop-by-category' element={<ShopByCategory />} />
                 <Route path='/deals' element={<Deal />} />
+                <Route
+                  path='/category-management'
+                  element={<CategoryManager />}
+                />
               </Routes>
             </ProtectedRoute>
           }

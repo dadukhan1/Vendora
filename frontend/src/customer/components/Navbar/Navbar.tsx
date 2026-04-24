@@ -18,8 +18,10 @@ import {
 
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
-import { mainCategory } from "../../../data/category/mainCategory";
-import { useState } from "react";
+import { fetchAllCategories } from "../../../Redux Toolkit/features/category/categorySlice.ts";
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/store";
+import { useNavigate } from "react-router";
 import CategorySheet from "./CategorySheet";
 import {
   AddShoppingCart,
@@ -30,35 +32,16 @@ import {
   ExpandLess,
   ExpandMore,
 } from "@mui/icons-material";
-import { useNavigate } from "react-router";
-import { useAppSelector } from "../../../Redux Toolkit/store";
-
-// Import all category data for mobile menu
-import { menLevel2 } from "../../../data/category/level2/menLevel2";
-import { womenLevel2 } from "../../../data/category/level2/womenLevel2";
-import { electronicLevel2 } from "../../../data/category/level2/electronicLevel2";
-import { furnitureLevel2 } from "../../../data/category/level2/furnitureLevel2";
-import { menLevel3 } from "../../../data/category/level3/menLevel3";
-import { womenLevel3 } from "../../../data/category/level3/womenLevel3";
-import { electronicLevel3 } from "../../../data/category/level3/electronicLevel3";
-import { furnitureLevel3 } from "../../../data/category/level3/furnitureLevel3";
-
-const categoryTwo: { [key: string]: any[] } = {
-  men: menLevel2,
-  women: womenLevel2,
-  electronics: electronicLevel2,
-  home_furniture: furnitureLevel2,
-};
-const categoryThree: { [key: string]: any[] } = {
-  men: menLevel3,
-  women: womenLevel3,
-  electronics: electronicLevel3,
-  home_furniture: furnitureLevel3,
-};
 
 const Navbar = () => {
+  const dispatch = useAppDispatch();
+  const { categories } = useAppSelector((state) => state.category);
   const { user } = useAppSelector((store) => store.user);
   const { seller } = useAppSelector((store) => store.seller);
+
+  useEffect(() => {
+    dispatch(fetchAllCategories());
+  }, [dispatch]);
   const activeRole = user?.role || (seller ? "ROLE_SELLER" : null);
   const canShowCustomerActions =
     !activeRole || user?.role === "ROLE_CUSTOMER";
@@ -89,14 +72,19 @@ const Navbar = () => {
     setExpandedLevel1(expandedLevel1 === categoryId ? null : categoryId);
   };
 
-  const handleCategoryNavigation = (categoryId: string) => {
-    navigate(`/products/${categoryId}`);
-    setMobileMenuOpen(false);
+  const getCategoriesByParentId = (parentCategoryId: string | null) => {
+    return categories.filter((cat) => {
+      let catParentId: string | null = null;
+      if (typeof cat.parentCategory === "object" && cat.parentCategory !== null) {
+        catParentId = (cat.parentCategory as any)._id;
+      } else {
+        catParentId = cat.parentCategory as string | null;
+      }
+      return catParentId === parentCategoryId;
+    });
   };
 
-  const getSubcategories = (parentCategoryId: string, categoryData: any[]) => {
-    return categoryData.filter((item) => item.parentCategoryId === parentCategoryId);
-  };
+  const level1Categories = getCategoriesByParentId(null);
 
   return (
     <Box
@@ -132,14 +120,14 @@ const Navbar = () => {
 
           {isLarge && (
             <ul className='flex items-center h-20 text-[0.9rem] font-bold text-[#475569]'>
-              {mainCategory.map((item) => (
+              {level1Categories.slice(0, 5).map((item) => (
                 <li
                   onMouseEnter={() => {
                     setShowSheet(true);
-                    setSelectedCategory(item.categoryId);
+                    setSelectedCategory(item._id);
                   }}
                   onMouseLeave={() => setShowSheet(false)}
-                  key={item.categoryId}
+                  key={item._id}
                   className='relative flex items-center h-20 px-5 cursor-pointer hover:text-[#0F52FF] transition-colors duration-150 group'
                 >
                   {item.name}
@@ -352,17 +340,17 @@ const Navbar = () => {
           <Box sx={{ flex: 1, overflowY: 'auto', px: 0.5 }}>
             <p className='px-3 text-[11px] font-black text-[#94A3B8] uppercase tracking-[2.5px] mb-4'>Categories</p>
             <List disablePadding>
-              {mainCategory.map((item) => (
-                <Box key={item.categoryId} sx={{ mb: 1 }}>
+              {level1Categories.map((item) => (
+                <Box key={item._id} sx={{ mb: 1 }}>
                   <ListItem
-                    onClick={() => handleLevel1Toggle(item.categoryId)}
+                    onClick={() => handleLevel1Toggle(item._id)}
                     sx={{
                       borderRadius: '16px',
                       py: 1.5,
                       px: 2,
                       cursor: 'pointer',
                       transition: 'all 0.2s',
-                      backgroundColor: expandedLevel1 === item.categoryId ? '#F1F5F9' : 'transparent',
+                      backgroundColor: expandedLevel1 === item._id ? '#F1F5F9' : 'transparent',
                       '&:hover': { backgroundColor: '#F1F5F9' }
                     }}
                   >
@@ -371,24 +359,27 @@ const Navbar = () => {
                       primaryTypographyProps={{
                         fontWeight: 800,
                         fontSize: '1rem',
-                        color: expandedLevel1 === item.categoryId ? '#0F52FF' : '#1E293B'
+                        color: expandedLevel1 === item._id ? '#0F52FF' : '#1E293B'
                       }}
                     />
                     <ListItemIcon sx={{ minWidth: 'auto', color: '#94A3B8' }}>
-                      {expandedLevel1 === item.categoryId ? <ExpandLess /> : <ExpandMore />}
+                      {expandedLevel1 === item._id ? <ExpandLess /> : <ExpandMore />}
                     </ListItemIcon>
                   </ListItem>
 
-                  <Collapse in={expandedLevel1 === item.categoryId} timeout="auto" unmountOnExit>
+                  <Collapse in={expandedLevel1 === item._id} timeout="auto" unmountOnExit>
                     <List disablePadding sx={{ pl: 2, mt: 1 }}>
-                      {categoryTwo[item.categoryId]?.map((lvl2) => (
-                        <Box key={lvl2.categoryId} sx={{ mb: 2 }}>
+                      {getCategoriesByParentId(item._id).map((lvl2) => (
+                        <Box key={lvl2._id} sx={{ mb: 2 }}>
                           <p className='px-3 py-1 text-[11px] font-black text-[#0F52FF] uppercase tracking-wider'>{lvl2.name}</p>
                           <List disablePadding>
-                            {getSubcategories(lvl2.categoryId, categoryThree[item.categoryId] || [])?.map((lvl3) => (
+                            {getCategoriesByParentId(lvl2._id).map((lvl3) => (
                               <ListItem
-                                key={lvl3.categoryId}
-                                onClick={() => handleCategoryNavigation(lvl3.categoryId)}
+                                key={lvl3._id}
+                                onClick={() => {
+                                  navigate(`/products/${lvl3.categoryId}`);
+                                  setMobileMenuOpen(false);
+                                }}
                                 sx={{
                                   borderRadius: '12px',
                                   py: 1,
@@ -471,7 +462,7 @@ const Navbar = () => {
           className='absolute top-20 left-0 right-0 bg-white shadow-[0_20px_40px_-5px_rgba(0,0,0,0.1)] border-b border-gray-100 animate-in fade-in slide-in-from-top-1 duration-300'
         >
           <div className='max-w-[1600px] mx-auto'>
-            <CategorySheet selectedCategory={selectedCategory} />
+            <CategorySheet categories={categories} selectedCategory={selectedCategory} />
           </div>
         </div>
       )}
