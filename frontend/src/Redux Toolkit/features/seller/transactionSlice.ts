@@ -11,7 +11,7 @@ const initialState = {
   error: null as string | null,
 };
 
-export const fetchSellerTransactions = createAsyncThunk<any, any>(
+export const fetchSellerTransactions = createAsyncThunk<any, void>(
   "seller/fetchSellerTransactions",
   async (_, { rejectWithValue }) => {
     try {

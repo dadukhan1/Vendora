@@ -18,6 +18,7 @@ class SellerService {
       bankDetails,
       businessDetails,
     } = req.body;
+    console.log(businessDetails);
 
     // Validate required fields
     if (!sellerName || !mobile || !email || !password || !GSTIN) {
@@ -97,6 +98,7 @@ class SellerService {
       }], { session });
 
       await session.commitTransaction();
+      console.log(newSeller)
       return newSeller;
     } catch (err) {
       await session.abortTransaction();
@@ -135,9 +137,9 @@ class SellerService {
     const updatedData = {
       ...existingSeller.toObject(),
       ...sellerData,
-      bussinessDetails: {
-        ...existingSeller.bussinessDetails,
-        ...sellerData.bussinessDetails,
+      businessDetails: {
+        ...existingSeller.businessDetails,
+        ...sellerData.businessDetails,
       },
       bankDetails: {
         ...existingSeller.bankDetails,

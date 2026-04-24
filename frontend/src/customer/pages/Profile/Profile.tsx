@@ -13,12 +13,10 @@ import {
   // CreditCard,  // Removed as we don't need saved card anymore
   LocationOn,
   Logout,
-  Settings,
 } from "@mui/icons-material";
 import {
   Box,
   Card,
-  CardHeader,
   CardContent,
   Divider,
   Avatar,

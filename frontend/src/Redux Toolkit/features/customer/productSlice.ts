@@ -3,11 +3,45 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../../config/api";
 
-const initialState = {
+/* ---------------- TYPES ---------------- */
+
+export interface Product {
+  _id: string;
+  item: string;
+  title?: string;
+  description: string;
+  mrpPrice: number;
+  sellingPrice: number;
+  discount: number;
+  quantity: number;
+  color: string;
+  images: string[];
+  category: any;
+  seller: any;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+interface ProductState {
+  product: Product | null;
+  products: Product[];
+  loading: boolean;
+  error: string | null;
+  searchProducts: Product[];
+  totalElements: number;
+  totalPages: number;
+  activeProductsQueryKey: string;
+  lastCategory: string;
+  lastSearchTerm: string;
+}
+
+/* ---------------- INITIAL STATE ---------------- */
+
+const initialState: ProductState = {
   product: null,
   products: [],
   loading: false,
-  error: null as string | null,
+  error: null,
   searchProducts: [],
   totalElements: 0,
   totalPages: 0,
@@ -30,7 +64,7 @@ const buildProductsQueryKey = (params: any) => {
   ].join("|");
 };
 
-export const fetchProductById = createAsyncThunk(
+export const fetchProductById = createAsyncThunk<Product, string>(
   "product/fetchProductById",
   async (productId: string, { rejectWithValue }) => {
     try {
@@ -44,7 +78,7 @@ export const fetchProductById = createAsyncThunk(
   },
 );
 
-export const searchProduct = createAsyncThunk(
+export const searchProduct = createAsyncThunk<Product[], string>(
   "product/searchProduct",
   async (query: string, { rejectWithValue }) => {
     try {
@@ -58,7 +92,7 @@ export const searchProduct = createAsyncThunk(
   },
 );
 
-export const getAllProducts = createAsyncThunk(
+export const getAllProducts = createAsyncThunk<any, any>(
   "product/getAllProducts",
   async (params: any, { rejectWithValue }) => {
     try {

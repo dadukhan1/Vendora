@@ -4,7 +4,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../../config/api";
 import toast from "react-hot-toast";
 
-export const fetchSellerProducts = createAsyncThunk<any, any>(
+export const fetchSellerProducts = createAsyncThunk<any, void>(
   "sellerProduct/fetchProducts",
   async (_, { rejectWithValue }) => {
     try {

@@ -150,7 +150,7 @@ const ProductDetails = () => {
                 className='inline-block bg-[#0F52FF]/10 text-[#0F52FF] text-[11px] font-bold
                 tracking-widest uppercase px-3 py-0.5 rounded-full mb-2'
               >
-                {product?.seller?.bussinessDetails?.bussinessName ||
+                {product?.seller?.businessDetails?.businessName ||
                   product?.seller?.sellerName ||
                   "Brand"}
               </span>

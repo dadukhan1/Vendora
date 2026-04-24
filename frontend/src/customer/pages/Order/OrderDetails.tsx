@@ -141,7 +141,7 @@ const OrderDetails = () => {
               marginBottom: 4,
             }}
           >
-            {currentOrder?.seller?.bussinessDetails?.bussinessName}
+            {currentOrder?.seller?.businessDetails?.businessName}
           </p>
           <p style={{ fontSize: 13, color: "#64748B", marginBottom: 4 }}>
             {orderItem?.product?.description}
