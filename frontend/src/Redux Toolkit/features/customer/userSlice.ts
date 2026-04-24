@@ -12,6 +12,7 @@ interface User {
   mobile?: string;
   address?: string;
   role?: string;
+  avatar?: string;
 }
 
 interface ErrorPayload {
