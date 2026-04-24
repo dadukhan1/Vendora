@@ -9,7 +9,7 @@ const DealRouter = express.Router();
 
 DealRouter.get("/", DealController.getAllDeals);
 DealRouter.post("/", authMiddleware, DealController.createDeal);
-DealRouter.patch("/:id", sellerAuthMiddleware, DealController.updateDeal);
-DealRouter.delete("/:id", sellerAuthMiddleware, DealController.deleteDeal);
+DealRouter.patch("/:id", authMiddleware, DealController.updateDeal);
+DealRouter.delete("/:id", authMiddleware, DealController.deleteDeal);
 
 export default DealRouter;
