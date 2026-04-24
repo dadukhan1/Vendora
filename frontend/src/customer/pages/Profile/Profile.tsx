@@ -20,6 +20,8 @@ import {
   Divider,
   Avatar,
   Button,
+  IconButton,
+  Tooltip,
 } from "@mui/material";
 import Addresses from "./Addresses";
 
@@ -118,10 +120,24 @@ const Profile = () => {
           >
             {initials}
           </Avatar>
-          <Box>
+          <Box sx={{ flex: 1 }}>
             <Box sx={{ fontSize: "1.1rem", fontWeight: 800, color: "#0f172a" }}>{user?.fullName}</Box>
             <Box sx={{ fontSize: "0.8rem", color: "#64748b", fontWeight: 500 }}>{user?.email}</Box>
           </Box>
+          
+          <Tooltip title="Logout">
+            <IconButton 
+              onClick={() => handleClick(menu.find(m => m.isLogout)!)}
+              sx={{ 
+                background: "#fffafb", 
+                color: "#ea580c", 
+                border: "1px solid #fee2e2",
+                "&:hover": { background: "#fee2e2" }
+              }}
+            >
+              <Logout sx={{ fontSize: 20 }} />
+            </IconButton>
+          </Tooltip>
         </Box>
 
         {/* Mobile Navigation Bar (Horizontal Scroll) */}
