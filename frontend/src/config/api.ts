@@ -2,10 +2,8 @@
 
 import axios from "axios";
 
-// No need to import dotenv/config in React - CRA handles this automatically
-
 const api = axios.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL: import.meta.env.REACT_APP_API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
