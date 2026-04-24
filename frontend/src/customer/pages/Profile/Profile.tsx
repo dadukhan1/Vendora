@@ -10,7 +10,6 @@ import { logout } from "../../../Redux Toolkit/features/auth/authSlice";
 import {
   GridView,
   Person,
-  // CreditCard,  // Removed as we don't need saved card anymore
   LocationOn,
   Logout,
 } from "@mui/icons-material";
@@ -20,8 +19,8 @@ import {
   CardContent,
   Divider,
   Avatar,
+  Button,
 } from "@mui/material";
-import { useState } from "react";
 import Addresses from "./Addresses";
 
 const menu = [
@@ -35,7 +34,6 @@ const menu = [
     path: "/account/orders",
     icon: <GridView sx={{ fontSize: 18 }} />,
   },
-  // Removed 'Saved Cards' menu entry
   {
     name: "Addresses",
     path: "/account/addresses",
@@ -54,7 +52,6 @@ const Profile = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
   const handleClick = (item: (typeof menu)[0]) => {
     if (item.isLogout) {
@@ -81,132 +78,160 @@ const Profile = () => {
       }}
     >
       <Box sx={{ maxWidth: 1200, mx: "auto" }}>
-        {/* Breadcrumb */}
+        {/* Breadcrumb - Hidden on very small screens for space */}
         <Box
           sx={{
-            display: "flex",
+            display: { xs: "none", sm: "flex" },
             alignItems: "center",
             gap: 1.5,
             mb: 4,
             px: 0.5,
           }}
         >
-          <Box
-            sx={{ fontSize: "0.875rem", color: "#94a3b8", cursor: "pointer" }}
-          >
-            Home
-          </Box>
+          <Box sx={{ fontSize: "0.875rem", color: "#94a3b8", cursor: "pointer" }}>Home</Box>
           <Box sx={{ fontSize: "0.875rem", color: "#cbd5e1" }}>/</Box>
-          <Box
+          <Box sx={{ fontSize: "0.875rem", fontWeight: 600, color: "#0F52FF" }}>My Account</Box>
+        </Box>
+
+        {/* Mobile Header: Avatar + User Info */}
+        <Box
+          sx={{
+            display: { xs: "flex", lg: "none" },
+            alignItems: "center",
+            gap: 2,
+            mb: 3,
+            p: 2,
+            background: "white",
+            borderRadius: 3,
+            boxShadow: "0 2px 8px rgba(0,0,0,0.04)"
+          }}
+        >
+          <Avatar
             sx={{
-              fontSize: "0.875rem",
-              fontWeight: 600,
-              color: "#1976d2",
+              width: 60,
+              height: 60,
+              background: "#0F52FF",
+              fontSize: "1.5rem",
+              fontWeight: 700,
+              boxShadow: "0 4px 12px rgba(15, 82, 255, 0.25)",
             }}
           >
-            My Account
+            {initials}
+          </Avatar>
+          <Box>
+            <Box sx={{ fontSize: "1.1rem", fontWeight: 800, color: "#0f172a" }}>{user?.fullName}</Box>
+            <Box sx={{ fontSize: "0.8rem", color: "#64748b", fontWeight: 500 }}>{user?.email}</Box>
           </Box>
+        </Box>
+
+        {/* Mobile Navigation Bar (Horizontal Scroll) */}
+        <Box
+          sx={{
+            display: { xs: "flex", lg: "none" },
+            gap: 1.5,
+            overflowX: "auto",
+            pb: 2,
+            mb: 3,
+            px: 0.5,
+            "::-webkit-scrollbar": { display: "none" },
+            msOverflowStyle: "none",
+            scrollbarWidth: "none",
+          }}
+        >
+          {menu.map((item) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <Button
+                key={item.path}
+                onClick={() => handleClick(item)}
+                startIcon={item.icon}
+                sx={{
+                  borderRadius: "14px",
+                  textTransform: "none",
+                  whiteSpace: "nowrap",
+                  minWidth: "auto",
+                  px: 3,
+                  py: 1.25,
+                  flexShrink: 0,
+                  fontWeight: 700,
+                  fontSize: "0.9rem",
+                  transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+                  ...(isActive ? {
+                    background: "#0F52FF",
+                    color: "white",
+                    boxShadow: "0 4px 12px rgba(25, 118, 210, 0.25)",
+                    "&:hover": { background: "#0F52FF" }
+                  } : {
+                    border: "1.5px solid #e2e8f0",
+                    color: item.isLogout ? "#ea580c" : "#64748b",
+                    background: "white",
+                    "&:hover": { borderColor: item.isLogout ? "#ea580c" : "#0F52FF", color: item.isLogout ? "#ea580c" : "#0F52FF" }
+                  })
+                }}
+              >
+                {item.name}
+              </Button>
+            );
+          })}
         </Box>
 
         <Box
           sx={{
             display: "grid",
-            gridTemplateColumns: { xs: "1fr", lg: "280px 1fr" },
-            gap: { xs: 3, lg: 4 },
+            gridTemplateColumns: { xs: "1fr", lg: "300px 1fr" },
+            gap: { xs: 3, lg: 5 },
             alignItems: "start",
           }}
         >
-          {/* ── Sidebar Card ── */}
+          {/* ── Sidebar Card (Desktop Only) ── */}
           <Card
             sx={{
-              borderRadius: 3,
+              display: { xs: "none", lg: "block" },
+              borderRadius: 4,
               border: "1px solid #e8eef7",
-              background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
-              boxShadow: "0 4px 16px rgba(0, 0, 0, 0.04)",
+              background: "white",
+              boxShadow: "0 10px 30px rgba(0, 0, 0, 0.03)",
               position: "sticky",
-              top: 24,
+              top: 100, // Adjusted for typical navbar spacing
               overflow: "hidden",
             }}
           >
             {/* Profile Section */}
             <CardContent
               sx={{
-                px: 2.5,
-                pt: 3,
-                pb: 2,
+                px: 3,
+                pt: 4,
+                pb: 3,
                 textAlign: "center",
-                borderBottom: "1px solid #e8eef7",
+                borderBottom: "1px solid #f1f5f9",
               }}
             >
-              {/* Avatar */}
-              <Box sx={{ mb: 2 }}>
+              <Box sx={{ mb: 2.5 }}>
                 <Avatar
                   sx={{
-                    width: 80,
-                    height: 80,
+                    width: 90,
+                    height: 90,
                     mx: "auto",
-                    background:
-                      "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
-                    fontSize: "2rem",
+                    background: "#0F52FF",
+                    fontSize: "2.5rem",
                     fontWeight: 700,
-                    boxShadow: "0 8px 20px rgba(25, 118, 210, 0.25)",
+                    boxShadow: "0 10px 25px rgba(15, 82, 255, 0.2)",
                   }}
                 >
                   {initials}
                 </Avatar>
               </Box>
 
-              {/* User Info */}
-              <Box
-                sx={{
-                  fontSize: "1rem",
-                  fontWeight: 700,
-                  color: "#0f172a",
-                  mb: 0.75,
-                  letterSpacing: "-0.3px",
-                }}
-              >
+              <Box sx={{ fontSize: "1.25rem", fontWeight: 800, color: "#0f172a", mb: 0.5 }}>
                 {user?.fullName}
               </Box>
-              <Box
-                sx={{
-                  fontSize: "0.8125rem",
-                  color: "#64748b",
-                  wordBreak: "break-all",
-                  fontWeight: 500,
-                }}
-              >
+              <Box sx={{ fontSize: "0.875rem", color: "#64748b", fontWeight: 500 }}>
                 {user?.email}
-              </Box>
-
-              {/* Online Indicator */}
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 0.75,
-                  mt: 1.5,
-                  fontSize: "0.75rem",
-                  color: "#22c55e",
-                  fontWeight: 600,
-                }}
-              >
-                <Box
-                  sx={{
-                    width: 8,
-                    height: 8,
-                    borderRadius: "50%",
-                    background: "#22c55e",
-                    display: "inline-block",
-                  }}
-                />
-                Active Now
               </Box>
             </CardContent>
 
             {/* Navigation */}
-            <Box sx={{ px: 1.5, py: 2 }}>
+            <Box sx={{ p: 1.5 }}>
               {menu.map((item, index) => {
                 const isActive = location.pathname === item.path;
                 const isLogout = !!item.isLogout;
@@ -214,114 +239,42 @@ const Profile = () => {
 
                 return (
                   <Box key={item.path}>
-                    {showDivider && (
-                      <Divider
-                        sx={{
-                          my: 1.5,
-                          opacity: 0.4,
-                        }}
-                      />
-                    )}
-
+                    {showDivider && <Divider sx={{ my: 1.5, opacity: 0.5 }} />}
                     <Box
                       onClick={() => handleClick(item)}
-                      onMouseEnter={() => setHoveredItem(item.path)}
-                      onMouseLeave={() => setHoveredItem(null)}
                       sx={{
                         display: "flex",
                         alignItems: "center",
-                        gap: 2.5,
+                        gap: 2,
                         px: 2.5,
-                        py: 2.25,
-                        borderRadius: 2,
+                        py: 2,
+                        borderRadius: 3,
                         cursor: "pointer",
-                        transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-                        mb: 0.75,
+                        transition: "all 0.25s ease",
+                        mb: 0.5,
                         ...(isActive
                           ? {
-                              background:
-                                "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)",
-                              borderLeft: "3px solid #1976d2",
-                              pl: "calc(2.5rem - 3px)",
-                              boxShadow: "0 2px 8px rgba(25, 118, 210, 0.12)",
-                            }
+                            background: "#eff6ff",
+                            color: "#0F52FF",
+                            "& .item-label": { fontWeight: 800 }
+                          }
                           : isLogout
                             ? {
-                                background:
-                                  hoveredItem === item.path
-                                    ? "linear-gradient(135deg, #fff7ed 0%, #fee2e2 100%)"
-                                    : "transparent",
-                                borderLeft: "3px solid transparent",
-                                "&:hover": {
-                                  pl: "calc(2.5rem - 3px)",
-                                  borderLeftColor: "#ea580c",
-                                  boxShadow:
-                                    "0 2px 8px rgba(234, 88, 12, 0.08)",
-                                },
-                              }
+                              color: "#ea580c",
+                              "&:hover": { background: "#fff7ed" }
+                            }
                             : {
-                                background:
-                                  hoveredItem === item.path
-                                    ? "#f1f5ff"
-                                    : "transparent",
-                                borderLeft: "3px solid transparent",
-                                "&:hover": {
-                                  pl: "calc(2.5rem - 3px)",
-                                  borderLeftColor: "#cbd5e1",
-                                },
-                              }),
+                              color: "#475569",
+                              "&:hover": { background: "#f8fafc", color: "#1e293b" }
+                            }),
                       }}
                     >
-                      {/* Icon */}
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          color: isActive
-                            ? "#1976d2"
-                            : isLogout
-                              ? "#ea580c"
-                              : "#64748b",
-                          transition: "color 0.2s",
-                        }}
-                      >
-                        {item.icon}
-                      </Box>
-
-                      {/* Label */}
-                      <Box
-                        sx={{
-                          flex: 1,
-                          fontSize: "0.9375rem",
-                          fontWeight: isActive ? 700 : 600,
-                          color: isActive
-                            ? "#1976d2"
-                            : isLogout
-                              ? "#ea580c"
-                              : "#475569",
-                          transition: "color 0.2s",
-                        }}
-                      >
+                      <Box sx={{ display: "flex", color: 'inherit' }}>{item.icon}</Box>
+                      <Box className="item-label" sx={{ flex: 1, fontSize: "0.95rem", fontWeight: 600 }}>
                         {item.name}
                       </Box>
-
-                      {/* Hover indicator dot */}
-                      {hoveredItem === item.path && !isActive && (
-                        <Box
-                          sx={{
-                            width: 6,
-                            height: 6,
-                            borderRadius: "50%",
-                            background: "#cbd5e1",
-                            animation:
-                              "pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-                            "@keyframes pulse": {
-                              "0%, 100%": { opacity: 0.6 },
-                              "50%": { opacity: 1 },
-                            },
-                          }}
-                        />
+                      {isActive && (
+                        <Box sx={{ width: 6, height: 6, borderRadius: "50%", background: "#0F52FF" }} />
                       )}
                     </Box>
                   </Box>
@@ -331,21 +284,12 @@ const Profile = () => {
           </Card>
 
           {/* ── Main Content ── */}
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 3,
-            }}
-          >
+          <Box sx={{ flex: 1 }}>
             <Routes>
               <Route path='/' element={<UserDetails />} />
               <Route path='/orders' element={<Order />} />
               <Route path='/addresses' element={<Addresses />} />
-              <Route
-                path='/orders/:orderId/item/:orderItemId'
-                element={<OrderDetails />}
-              />
+              <Route path='/orders/:orderId/item/:orderItemId' element={<OrderDetails />} />
             </Routes>
           </Box>
         </Box>

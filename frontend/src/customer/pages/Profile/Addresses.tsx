@@ -105,7 +105,7 @@ const handleConfirmDelete = async () => {
           <LocationOn
             sx={{
               fontSize: 32,
-              color: "#1976d2",
+              color: "#0F52FF",
               opacity: 0.15,
             }}
           />
@@ -118,7 +118,7 @@ const handleConfirmDelete = async () => {
             startIcon={<Add />}
             onClick={handleOpenDialog}
             sx={{
-              background: "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
+              background: "#0F52FF",
               color: "white",
               textTransform: "none",
               fontSize: "0.95rem",
@@ -126,10 +126,10 @@ const handleConfirmDelete = async () => {
               borderRadius: 2,
               px: 3,
               py: 1.25,
-              boxShadow: "0 4px 20px rgba(25, 118, 210, 0.28)",
+              boxShadow: "0 4px 20px rgba(15, 82, 255, 0.28)",
               "&:hover": {
-                background: "linear-gradient(135deg, #1565c0 0%, #0d47a1 100%)",
-                boxShadow: "0 6px 24px rgba(25, 118, 210, 0.35)",
+                background: "#0040cc",
+                boxShadow: "0 6px 24px rgba(15, 82, 255, 0.35)",
               },
               transition: "all 0.3s ease",
             }}
@@ -151,7 +151,7 @@ const handleConfirmDelete = async () => {
               gap: 2,
             }}
           >
-            <CircularProgress size={40} sx={{ color: "#1976d2" }} />
+            <CircularProgress size={40} sx={{ color: "#0F52FF" }} />
             <Box sx={{ color: "#64748b", fontWeight: 500 }}>
               Loading addresses...
             </Box>
@@ -234,7 +234,7 @@ const handleConfirmDelete = async () => {
                       <LocationOn
                         sx={{
                           fontSize: 18,
-                          color: "#1976d2",
+                          color: "#0F52FF",
                           mt: 0.5,
                           flexShrink: 0,
                         }}
@@ -271,7 +271,7 @@ const handleConfirmDelete = async () => {
                       <Phone
                         sx={{
                           fontSize: 18,
-                          color: "#1976d2",
+                          color: "#0F52FF",
                           flexShrink: 0,
                         }}
                       />
