@@ -63,6 +63,13 @@ const CreateCategoryForm: React.FC<CreateCategoryFormProps> = ({ categories, onS
     }
   };
 
+  const hasChildren = categories.some((cat) => {
+    if (typeof cat.parentCategory === 'object' && cat.parentCategory !== null) {
+      return cat.parentCategory._id === editCategory?._id;
+    }
+    return cat.parentCategory === editCategory?._id;
+  });
+
   return (
     <Box sx={{ p: 4, borderRadius: '24px', border: editCategory ? 'none' : '1px solid #edf2f7', bgcolor: '#ffffff' }}>
       <Typography variant="h6" sx={{ fontWeight: 800, mb: 4, color: '#2d3748' }}>
@@ -107,6 +114,8 @@ const CreateCategoryForm: React.FC<CreateCategoryFormProps> = ({ categories, onS
             value={formData.parentCategory}
             onChange={handleChange}
             variant="outlined"
+            disabled={hasChildren}
+            helperText={hasChildren ? "Cannot change parent because this category already has sub-categories." : ""}
             slotProps={{
                inputLabel: { shrink: true }
             }}
