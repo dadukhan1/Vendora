@@ -111,7 +111,7 @@ export default function OrderTable() {
               </StyledTableCell>
               <StyledTableCell align='right'>
                 <div className='flex gap-1 flex-wrap'>
-                  {order?.orderItems?.map((orderItem, index) => (
+                  {order?.orderItems?.map((orderItem: any, index: number) => (
                     <div key={index} className='flex gap-3 flex-wrap'>
                       <img
                         className='w-20 rounded-md'

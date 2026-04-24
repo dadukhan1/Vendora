@@ -19,7 +19,7 @@ const fieldSx = {
   "& .MuiInputLabel-root": { fontSize: 14, color: "#64748B" },
 };
 
-const AddressForm = ({ paymentGateway, onClose }: any) => {
+const AddressForm = ({ onClose }: any) => {
   const dispatch = useAppDispatch();
 
   const formik = useFormik({

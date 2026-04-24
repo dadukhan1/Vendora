@@ -24,7 +24,7 @@ import { menLevel3 } from "../../data/category/level3/menLevel3";
 import { womenLevel3 } from "../../data/category/level3/womenLevel3";
 import { furnitureLevel3 } from "../../data/category/level3/furnitureLevel3";
 import { electronicLevel3 } from "../../data/category/level3/electronicLevel3";
-import { createProduct, fetchSellerProducts } from "../../Redux Toolkit/features/seller/sellerProductsSlice";
+import { createProduct } from "../../Redux Toolkit/features/seller/sellerProductsSlice";
 import { useAppDispatch, useAppSelector } from "../../Redux Toolkit/store";
 // import Loader from "../../components/Loader";
 
@@ -49,7 +49,6 @@ const categoryThree = {
 
 const AddProducts = () => {
   const dispatch = useAppDispatch();
-  const [uploadImage, setUploadImage] = useState(false);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const formik = useFormik({
     initialValues: {
@@ -142,11 +141,7 @@ const AddProducts = () => {
                 <AddPhotoAlternate className='text-gray-700' />
               </span>
 
-              {uploadImage && (
-                <div className='absolute left-0 right-0 top-0 bottom-0 w-24 h-24 flex items-center justify-center'>
-                  <CircularProgress />
-                </div>
-              )}
+
             </label>
             <div className='flex flex-wrap gap-2 mt-2'>
               {formik.values.images.length > 0 &&

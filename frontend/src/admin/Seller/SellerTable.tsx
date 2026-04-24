@@ -137,7 +137,7 @@ export default function SellerTable() {
                 </StyledTableCell>
                 <StyledTableCell align='right'>{seller?.GSTIN}</StyledTableCell>
                 <StyledTableCell align='right'>
-                  {seller?.bussinessDetails?.bussinessName}
+                  {seller?.businessDetails?.businessName}
                 </StyledTableCell>
                 <StyledTableCell align='right'>
                   {seller?.accountStatus}

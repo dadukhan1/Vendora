@@ -3,11 +3,36 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../../config/api";
 
+import type { Product } from "../customer/productSlice";
+
 /* ---------------- TYPES ---------------- */
 
-interface Order {
+export interface OrderItem {
   _id: string;
-  status?: string;
+  product: Product;
+  quantity: number;
+  size: string;
+  orderId: string;
+}
+
+export interface Address {
+  _id?: string;
+  name: string;
+  mobile: string;
+  address: string;
+  city: string;
+  state: string;
+  pinCode: string;
+  locality: string;
+}
+
+export interface Order {
+  _id: string;
+  orderItems: OrderItem[];
+  shippingAddress: Address;
+  orderStatus: string;
+  totalPrice?: number;
+  orderDate?: string;
 }
 
 interface SellerOrderState {

@@ -2,7 +2,7 @@
 
 import { useNavigate } from "react-router";
 import Deal from "./Deal/Deal";
-import ElectronicCategory from "./ElectronicCategory/ElectronicCategory";
+
 import Grid from "./Grid/Grid";
 import HomeCateogry from "./HomeCategory/HomeCategory";
 import { Storefront } from "@mui/icons-material";
