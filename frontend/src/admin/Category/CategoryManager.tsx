@@ -37,11 +37,23 @@ const CategoryManager = () => {
   };
 
   return (
-    <Box sx={{ p: { xs: 2, md: 4 }, maxWidth: 1200, mx: 'auto' }}>
+    <Box sx={{ p: { xs: 1.5, sm: 2, md: 4 }, maxWidth: 1200, mx: 'auto' }}>
       {/* Header Section */}
-      <Box sx={{ mb: 5, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <Box sx={{ 
+        mb: { xs: 3, md: 5 }, 
+        display: 'flex', 
+        flexDirection: { xs: 'column', sm: 'row' },
+        alignItems: { xs: 'flex-start', sm: 'center' }, 
+        justifyContent: 'space-between',
+        gap: 2
+      }}>
         <Box>
-          <Typography variant="h4" sx={{ fontWeight: 900, color: '#1a202c', letterSpacing: '-0.02em' }}>
+          <Typography variant="h4" sx={{ 
+            fontWeight: 900, 
+            color: '#1a202c', 
+            letterSpacing: '-0.02em',
+            fontSize: { xs: '1.75rem', md: '2.125rem' } 
+          }}>
             Category Hub
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
@@ -49,7 +61,7 @@ const CategoryManager = () => {
           </Typography>
         </Box>
         
-        <Box sx={{ display: 'flex', gap: 1.5 }}>
+        <Box sx={{ display: 'flex', gap: 1.5, width: { xs: '100%', sm: 'auto' } }}>
           <IconButton
             onClick={() => dispatch(fetchAllCategories())}
             sx={{ 
@@ -67,6 +79,7 @@ const CategoryManager = () => {
             onClick={() => setShowForm(!showForm)}
             startIcon={showForm ? undefined : <AddCircleOutline />}
             sx={{ 
+              flex: { xs: 1, sm: 'none' },
               borderRadius: '12px',
               textTransform: 'none',
               fontWeight: 700,

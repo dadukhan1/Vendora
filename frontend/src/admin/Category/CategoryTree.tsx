@@ -35,8 +35,8 @@ const CategoryTree: React.FC<CategoryTreeProps> = ({
       display: 'flex', 
       flexDirection: 'column', 
       gap: 1.5,
-      ml: level > 0 ? { xs: 2, md: 4 } : 0, 
-      pl: level > 0 ? 3 : 0,
+      ml: level > 0 ? { xs: 1, sm: 2, md: 4 } : 0, 
+      pl: level > 0 ? { xs: 1.5, sm: 2.5, md: 3 } : 0,
       borderLeft: level > 0 ? '1px solid #e2e8f0' : 'none'
     }}>
       {children.map((category) => (
@@ -45,8 +45,8 @@ const CategoryTree: React.FC<CategoryTreeProps> = ({
             sx={{ 
               display: 'flex', 
               alignItems: 'center', 
-              gap: 2, 
-              p: '10px 14px', 
+              gap: { xs: 1, sm: 2 }, 
+              p: { xs: '8px 10px', sm: '10px 14px' }, 
               borderRadius: '14px', 
               transition: 'all 0.2s',
               bgcolor: level === 0 ? 'white' : 'transparent',
@@ -61,9 +61,9 @@ const CategoryTree: React.FC<CategoryTreeProps> = ({
             {/* Level Icon */}
             <Box sx={{ color: '#a0aec0', display: 'flex', alignItems: 'center' }}>
               {level === 0 ? (
-                <Folder sx={{ fontSize: 20, color: '#0F52FF' }} />
+                <Folder sx={{ fontSize: { xs: 18, sm: 20 }, color: '#0F52FF' }} />
               ) : (
-                <SubdirectoryArrowRight sx={{ fontSize: 16 }} />
+                <SubdirectoryArrowRight sx={{ fontSize: { xs: 14, sm: 16 } }} />
               )}
             </Box>
             
@@ -73,9 +73,9 @@ const CategoryTree: React.FC<CategoryTreeProps> = ({
               alt={category.name || 'Category'}
               variant="rounded"
               sx={{ 
-                width: 32, 
-                height: 32, 
-                fontSize: '12px',
+                width: { xs: 28, sm: 32 }, 
+                height: { xs: 28, sm: 32 }, 
+                fontSize: { xs: '10px', sm: '12px' },
                 bgcolor: '#edf2f7',
                 color: '#4a5568',
                 fontWeight: 700,
@@ -86,11 +86,12 @@ const CategoryTree: React.FC<CategoryTreeProps> = ({
             </Avatar>
             
             {/* Name and ID */}
-            <Box sx={{ flex: 1 }}>
+            <Box sx={{ flex: 1, minWidth: 0 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Typography 
+                  noWrap
                   sx={{ 
-                    fontSize: level === 0 ? '1rem' : '0.9rem', 
+                    fontSize: { xs: level === 0 ? '0.9rem' : '0.8rem', sm: level === 0 ? '1rem' : '0.9rem' }, 
                     fontWeight: level === 0 ? 800 : 500,
                     color: '#2d3748'
                   }}
@@ -99,6 +100,7 @@ const CategoryTree: React.FC<CategoryTreeProps> = ({
                 </Typography>
                 <Tooltip title="Internal Category ID">
                    <Box sx={{ 
+                    display: { xs: 'none', sm: 'block' },
                     fontSize: '10px', 
                     fontWeight: 700, 
                     color: '#0F52FF',
@@ -113,7 +115,7 @@ const CategoryTree: React.FC<CategoryTreeProps> = ({
                 </Tooltip>
               </Box>
               {level === 0 && (
-                 <Typography sx={{ fontSize: '11px', color: '#718096' }}>
+                 <Typography sx={{ fontSize: '10px', color: '#718096', display: { xs: 'none', sm: 'block' } }}>
                    Root Category
                  </Typography>
               )}
@@ -124,20 +126,30 @@ const CategoryTree: React.FC<CategoryTreeProps> = ({
               <IconButton 
                 size="small" 
                 onClick={(e) => { e.stopPropagation(); onEdit(category); }}
-                sx={{ color: '#0F52FF', bgcolor: 'rgba(15, 82, 255, 0.05)', '&:hover': { bgcolor: 'rgba(15, 82, 255, 0.1)' } }}
+                sx={{ 
+                  color: '#0F52FF', 
+                  p: { xs: 0.5, sm: 1 },
+                  bgcolor: 'rgba(15, 82, 255, 0.05)', 
+                  '&:hover': { bgcolor: 'rgba(15, 82, 255, 0.1)' } 
+                }}
               >
-                <Edit sx={{ fontSize: 16 }} />
+                <Edit sx={{ fontSize: { xs: 14, sm: 16 } }} />
               </IconButton>
               <IconButton 
                 size="small" 
                 onClick={(e) => { e.stopPropagation(); onDelete(category._id); }}
-                sx={{ color: '#f56565', bgcolor: 'rgba(245, 101, 101, 0.05)', '&:hover': { bgcolor: 'rgba(245, 101, 101, 0.1)' } }}
+                sx={{ 
+                  color: '#f56565', 
+                  p: { xs: 0.5, sm: 1 },
+                  bgcolor: 'rgba(245, 101, 101, 0.05)', 
+                  '&:hover': { bgcolor: 'rgba(245, 101, 101, 0.1)' } 
+                }}
               >
-                <Delete sx={{ fontSize: 16 }} />
+                <Delete sx={{ fontSize: { xs: 14, sm: 16 } }} />
               </IconButton>
             </Box>
 
-            <ChevronRight sx={{ color: '#cbd5e0', fontSize: 18 }} />
+            <ChevronRight sx={{ color: '#cbd5e0', fontSize: 18, display: { xs: 'none', sm: 'block' } }} />
           </Box>
           
           <CategoryTree 
