@@ -12,6 +12,8 @@ import Cart from "../customer/pages/Cart/Cart";
 import { ComingSoon } from "../customer/components/CommingSoon";
 import ProtectedRoute from "./ProtectedRoute";
 import NotAuthorized from "../common/NotAuthorized";
+import PaymentSuccess from "../customer/pages/Checkout/PaymentSuccess";
+import PaymentCancel from "../customer/pages/Checkout/PaymentCancel";
 
 const CustomerRoutes = () => {
   return (
@@ -20,6 +22,8 @@ const CustomerRoutes = () => {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/unauthorized' element={<NotAuthorized />} />
+        <Route path='/success' element={<PaymentSuccess />} />
+        <Route path='/cancel' element={<PaymentCancel />} />
         <Route
           path='/*'
           element={

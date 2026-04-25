@@ -30,14 +30,13 @@ export const createCheckoutSession = async (req, res) => {
         },
       ],
       mode: "payment",
-      success_url: "http://localhost:5173/success",
-      cancel_url: "http://localhost:5173/cancel",
-      metadata: { orderId }, // webhook mein order ID milega
+      success_url: `${process.env.FRONTEND_URL}/success`,
+      cancel_url: `${process.env.FRONTEND_URL}/cancel`,
+      metadata: { orderId },
     });
 
     res.json({ url: session.url });
   } catch (error) {
-    console.error("Stripe session error:", error);
     res.status(500).json({ error: "Failed to create checkout session" });
   }
 };
