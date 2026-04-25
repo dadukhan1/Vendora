@@ -36,7 +36,7 @@ class OrderService {
 
       // Group items by seller
       const itemsBySeller = cart.cartItems.reduce((acc, item) => {
-        const sellerId = item.product.seller.toString();
+        const sellerId = (item.product.seller._id).toString();
         acc[sellerId] = acc[sellerId] || [];
         acc[sellerId].push(item);
         return acc;
