@@ -19,6 +19,7 @@ const CreateCategoryForm: React.FC<CreateCategoryFormProps> = ({ categories, onS
     parentCategory: "",
     order: 0,
     isActive: true,
+    showOnHomepage: false,
   });
 
   useEffect(() => {
@@ -32,6 +33,7 @@ const CreateCategoryForm: React.FC<CreateCategoryFormProps> = ({ categories, onS
           : (editCategory.parentCategory as string || ""),
         order: editCategory.order || 0,
         isActive: editCategory.isActive !== undefined ? editCategory.isActive : true,
+        showOnHomepage: editCategory.showOnHomepage || false,
       });
     }
   }, [editCategory]);
@@ -62,7 +64,7 @@ const CreateCategoryForm: React.FC<CreateCategoryFormProps> = ({ categories, onS
     } else {
       const resultAction = await dispatch(createCategory(payload));
       if (createCategory.fulfilled.match(resultAction)) {
-        setFormData({ name: "", categoryId: "", image: "", parentCategory: "", order: 0, isActive: true });
+        setFormData({ name: "", categoryId: "", image: "", parentCategory: "", order: 0, isActive: true, showOnHomepage: false });
         toast.success("Category created successfully");
         onSuccess();
       } else if (createCategory.rejected.match(resultAction)) {
@@ -125,23 +127,44 @@ const CreateCategoryForm: React.FC<CreateCategoryFormProps> = ({ categories, onS
             sx={{ '& .MuiOutlinedInput-root': { borderRadius: '12px' } }}
           />
 
-          <Box sx={{ display: 'flex', alignItems: 'center', px: 2, border: '1px solid #e2e8f0', borderRadius: '12px' }}>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={formData.isActive}
-                  onChange={handleChange}
-                  name="isActive"
-                  color="primary"
-                />
-              }
-              label={
-                <Box>
-                  <Typography variant="body2" fontWeight="700">Category Active</Typography>
-                  <Typography variant="caption" color="text.secondary">Currently {formData.isActive ? 'Visible' : 'Hidden'}</Typography>
-                </Box>
-              }
-            />
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', px: 2, py: 1, border: '1px solid #e2e8f0', borderRadius: '12px', bgcolor: formData.isActive ? 'transparent' : '#fff5f5' }}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={formData.isActive}
+                    onChange={handleChange}
+                    name="isActive"
+                    color="primary"
+                  />
+                }
+                label={
+                  <Box>
+                    <Typography variant="body2" fontWeight="700">Category Active</Typography>
+                    <Typography variant="caption" color="text.secondary">Currently {formData.isActive ? 'Visible' : 'Hidden'}</Typography>
+                  </Box>
+                }
+              />
+            </Box>
+
+            <Box sx={{ display: 'flex', alignItems: 'center', px: 2, py: 1, border: '1px solid #e2e8f0', borderRadius: '12px', bgcolor: formData.showOnHomepage ? 'rgba(15, 82, 255, 0.04)' : 'transparent' }}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={formData.showOnHomepage}
+                    onChange={handleChange}
+                    name="showOnHomepage"
+                    color="primary"
+                  />
+                }
+                label={
+                  <Box>
+                    <Typography variant="body2" fontWeight="700">Promote to Home</Typography>
+                    <Typography variant="caption" color="text.secondary">{formData.showOnHomepage ? 'Featured on Landing' : 'Standard Category'}</Typography>
+                  </Box>
+                }
+              />
+            </Box>
           </Box>
 
           <TextField

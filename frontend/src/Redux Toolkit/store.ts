@@ -24,6 +24,7 @@ import couponAdminSlice from "./features/admin/couponSlice.ts";
 import addressSlice from "./features/customer/addressSlice.ts";
 import dealSlice from "./features/admin/dealSlice.ts";
 import categorySlice from "./features/category/categorySlice.ts";
+import bannerSlice from "./features/banner/bannerSlice.ts";
 
 const rootReducer = combineReducers({
   auth: authSlice,
@@ -46,6 +47,7 @@ const rootReducer = combineReducers({
   adminCoupon: couponAdminSlice,
   deal: dealSlice,
   category: categorySlice,
+  banners: bannerSlice,
 });
 
 const store = configureStore({

@@ -65,3 +65,18 @@ export const deactivateCategory = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+export const toggleHomepage = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const category = await CategoryService.getCategoryById(id);
+    if (!category) return res.status(404).json({ message: "Category not found" });
+
+    const updated = await CategoryService.updateCategory(id, {
+      showOnHomepage: !category.showOnHomepage,
+    });
+    res.status(200).json(updated);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};

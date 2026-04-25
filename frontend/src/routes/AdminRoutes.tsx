@@ -4,12 +4,11 @@ import { Route, Routes } from "react-router";
 import SellerTable from "../admin/Seller/SellerTable";
 import Coupon from "../admin/Coupon/Coupon";
 import CouponForm from "../admin/Coupon/CouponForm";
-import GridTable from "../admin/Homepage/GridTable";
 import ElectronicsTable from "../admin/Homepage/ElectronicsTable";
 import ShopByCategory from "../admin/Homepage/ShopByCategory";
 import Deal from "../admin/Deal/Deal";
 import CategoryManager from "../admin/Category/CategoryManager";
-import UpdateHomeCategory from "../admin/Homepage/UpdateHomeCategory";
+import HomeManager from "../admin/Homepage/HomeManager";
 import ProtectedRoute from "./ProtectedRoute";
 
 const AdminRoutes = () => {
@@ -24,11 +23,7 @@ const AdminRoutes = () => {
                 <Route path='/' element={<SellerTable />} />
                 <Route path='/coupons' element={<Coupon />} />
                 <Route path='/add-coupon' element={<CouponForm />} />
-                <Route path='/home-page/*' element={<GridTable />} />
-                <Route
-                  path='/home-page/update/:id'
-                  element={<UpdateHomeCategory />}
-                />
+                <Route path='/home-page' element={<HomeManager />} />
                 <Route
                   path='/electronics-category'
                   element={<ElectronicsTable />}

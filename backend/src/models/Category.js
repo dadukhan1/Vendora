@@ -35,6 +35,10 @@ const categorySchema = new Schema(
       type: Number,
       default: 0,
     },
+    showOnHomepage: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true },
 );

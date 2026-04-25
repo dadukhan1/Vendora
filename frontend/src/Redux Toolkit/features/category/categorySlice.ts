@@ -12,6 +12,7 @@ export interface Category {
   level: number;
   isActive: boolean;
   order: number;
+  showOnHomepage: boolean;
   children?: Category[]; // For hierarchy rendering
 }
 

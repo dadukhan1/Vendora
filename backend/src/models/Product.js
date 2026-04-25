@@ -51,6 +51,14 @@ const productSchema = new Schema({
     type: String,
     required: true,
   },
-});
+  isFeatured: {
+    type: Boolean,
+    default: false,
+  },
+  isBanner: {
+    type: Boolean,
+    default: false,
+  },
+}, { timestamps: true });
 
 export const Product = model("Product", productSchema);

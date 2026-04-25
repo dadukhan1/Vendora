@@ -23,6 +23,8 @@ import { createCheckoutSession } from "./controller/createCheckoutSesssion.js";
 import AddressRouter from "./router/AddressRoutes.js";
 import { CouponRouter } from "./router/CouponRoutes.js";
 import AdminCategoryRoutes from "./router/AdminCategoryRoutes.js";
+import BannerRouter from "./router/BannerRoutes.js";
+import AdminProductRouter from "./router/AdminProductRoutes.js";
 
 const app = express();
 
@@ -73,6 +75,8 @@ app.use("/api/coupons", CouponRouter);
 app.use("/api/home", HomeCategoryRoutes);
 app.use("/api/admin/deals", DealRouter);
 app.use("/api/admin/categories", AdminCategoryRoutes);
+app.use("/api/admin/products", AdminProductRouter);
+app.use("/api/banners", BannerRouter);
 
 const PORT = 3000;
 

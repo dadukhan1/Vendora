@@ -18,6 +18,7 @@ export interface Product {
   images: string[];
   category: any;
   seller: any;
+  isFeatured?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -61,6 +62,7 @@ const buildProductsQueryKey = (params: any) => {
     p.minPrice ?? "",
     p.maxPrice ?? "",
     p.minDiscount ?? "",
+    p.isFeatured ?? "",
   ].join("|");
 };
 

@@ -209,6 +209,10 @@ class ProductService {
       }
     }
 
+    if (query.isFeatured) {
+      filterQuery.isFeatured = query.isFeatured === "true";
+    }
+
     let sortQuery = {};
 
     if (query.sort === "price_low") {
@@ -217,6 +221,10 @@ class ProductService {
 
     if (query.sort === "price_high") {
       sortQuery.sellingPrice = -1;
+    }
+
+    if (query.sort === "newest") {
+      sortQuery.createdAt = -1;
     }
 
     const products = await Product.find(filterQuery)
