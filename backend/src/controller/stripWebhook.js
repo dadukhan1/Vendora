@@ -17,7 +17,7 @@ export const stripeWebhooks = async (req, res) => {
     event = stripeInstance.webhooks.constructEvent(
       req.body,
       sig,
-      process.env.STRIPE_WEBHOOK_SECRETT,
+      process.env.STRIPE_WEBHOOK_SECRET,
     );
   } catch (error) {
     console.error("Webhook signature failed:", error.message);
