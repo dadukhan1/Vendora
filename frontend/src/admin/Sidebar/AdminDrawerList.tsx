@@ -4,10 +4,8 @@ import {
   Add,
   Category,
   Dashboard,
-  ElectricBolt,
   Home,
   IntegrationInstructions,
-  LocalOffer,
   Logout,
 } from "@mui/icons-material";
 import { Avatar, Divider } from "@mui/material";
@@ -35,21 +33,6 @@ const menu = [
     name: "Home Page",
     path: "/admin/home-page",
     icon: <Home sx={{ fontSize: 22 }} />,
-  },
-  {
-    name: "Electronics Category",
-    path: "/admin/electronics-category",
-    icon: <ElectricBolt sx={{ fontSize: 22 }} />,
-  },
-  {
-    name: "Shop By Category",
-    path: "/admin/shop-by-category",
-    icon: <Category sx={{ fontSize: 22 }} />,
-  },
-  {
-    name: "Deals",
-    path: "/admin/deals",
-    icon: <LocalOffer sx={{ fontSize: 22 }} />,
   },
   {
     name: "Category Management",
