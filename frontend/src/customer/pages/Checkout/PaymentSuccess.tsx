@@ -1,14 +1,13 @@
 /** @format */
 
 import { CheckCircleOutline, ShoppingBag, ArrowForward } from "@mui/icons-material";
-import { Box, Button, Container, Typography, Paper, useTheme } from "@mui/material";
+import { Box, Button, Container, Typography, Paper } from "@mui/material";
 import { useNavigate } from "react-router";
 import { useEffect } from "react";
 // import confetti from 'canvas-confetti'; // Optional: add if available
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
-  const theme = useTheme();
 
   useEffect(() => {
     // Basic success celebration could go here if library was available
