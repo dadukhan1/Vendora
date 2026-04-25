@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAppDispatch } from "../../Redux Toolkit/store";
 import { createCategory, updateCategory, type Category } from "../../Redux Toolkit/features/category/categorySlice.ts";
 import toast from "react-hot-toast";
-import { Button, TextField, MenuItem, Typography, Box } from "@mui/material";
+import { Button, TextField, MenuItem, Typography, Box, FormControlLabel, Switch } from "@mui/material";
 
 interface CreateCategoryFormProps {
   categories: Category[];
@@ -17,6 +17,8 @@ const CreateCategoryForm: React.FC<CreateCategoryFormProps> = ({ categories, onS
     categoryId: "",
     image: "",
     parentCategory: "",
+    order: 0,
+    isActive: true,
   });
 
   useEffect(() => {
@@ -28,12 +30,18 @@ const CreateCategoryForm: React.FC<CreateCategoryFormProps> = ({ categories, onS
         parentCategory: typeof editCategory.parentCategory === 'object' && editCategory.parentCategory !== null 
           ? editCategory.parentCategory._id 
           : (editCategory.parentCategory as string || ""),
+        order: editCategory.order || 0,
+        isActive: editCategory.isActive !== undefined ? editCategory.isActive : true,
       });
     }
   }, [editCategory]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value, type, checked } = e.target;
+    setFormData({ 
+      ...formData, 
+      [name]: type === 'checkbox' ? checked : (type === 'number' ? Number(value) : value) 
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -54,7 +62,7 @@ const CreateCategoryForm: React.FC<CreateCategoryFormProps> = ({ categories, onS
     } else {
       const resultAction = await dispatch(createCategory(payload));
       if (createCategory.fulfilled.match(resultAction)) {
-        setFormData({ name: "", categoryId: "", image: "", parentCategory: "" });
+        setFormData({ name: "", categoryId: "", image: "", parentCategory: "", order: 0, isActive: true });
         toast.success("Category created successfully");
         onSuccess();
       } else if (createCategory.rejected.match(resultAction)) {
@@ -71,7 +79,7 @@ const CreateCategoryForm: React.FC<CreateCategoryFormProps> = ({ categories, onS
   });
 
   return (
-    <Box sx={{ p: 4, borderRadius: '24px', border: editCategory ? 'none' : '1px solid #edf2f7', bgcolor: '#ffffff' }}>
+    <Box sx={{ p: { xs: 2, sm: 4 }, borderRadius: '24px', border: editCategory ? 'none' : '1px solid #edf2f7', bgcolor: '#ffffff' }}>
       <Typography variant="h6" sx={{ fontWeight: 800, mb: 4, color: '#2d3748' }}>
         {editCategory ? "Update Category Node" : "Configure Category Node"}
       </Typography>
@@ -87,9 +95,7 @@ const CreateCategoryForm: React.FC<CreateCategoryFormProps> = ({ categories, onS
             required
             variant="outlined"
             placeholder="e.g. Mens Wear"
-            slotProps={{
-               inputLabel: { shrink: true }
-            }}
+            slotProps={{ inputLabel: { shrink: true } }}
             sx={{ '& .MuiOutlinedInput-root': { borderRadius: '12px' } }}
           />
           <TextField
@@ -101,11 +107,43 @@ const CreateCategoryForm: React.FC<CreateCategoryFormProps> = ({ categories, onS
             required
             variant="outlined"
             placeholder="e.g. mens_clothing"
-            slotProps={{
-               inputLabel: { shrink: true }
-            }}
+            slotProps={{ inputLabel: { shrink: true } }}
             sx={{ '& .MuiOutlinedInput-root': { borderRadius: '12px' } }}
           />
+
+          <TextField
+            fullWidth
+            label="Display Order"
+            name="order"
+            type="number"
+            value={formData.order}
+            onChange={handleChange}
+            required
+            variant="outlined"
+            placeholder="0"
+            slotProps={{ inputLabel: { shrink: true } }}
+            sx={{ '& .MuiOutlinedInput-root': { borderRadius: '12px' } }}
+          />
+
+          <Box sx={{ display: 'flex', alignItems: 'center', px: 2, border: '1px solid #e2e8f0', borderRadius: '12px' }}>
+            <FormControlLabel
+              control={
+                <Switch 
+                  checked={formData.isActive} 
+                  onChange={handleChange} 
+                  name="isActive"
+                  color="primary"
+                />
+              }
+              label={
+                <Box>
+                  <Typography variant="body2" fontWeight="700">Category Active</Typography>
+                  <Typography variant="caption" color="text.secondary">Currently {formData.isActive ? 'Visible' : 'Hidden'}</Typography>
+                </Box>
+              }
+            />
+          </Box>
+
           <TextField
             fullWidth
             select
@@ -116,9 +154,7 @@ const CreateCategoryForm: React.FC<CreateCategoryFormProps> = ({ categories, onS
             variant="outlined"
             disabled={hasChildren}
             helperText={hasChildren ? "Cannot change parent because this category already has sub-categories." : ""}
-            slotProps={{
-               inputLabel: { shrink: true }
-            }}
+            slotProps={{ inputLabel: { shrink: true } }}
             sx={{ '& .MuiOutlinedInput-root': { borderRadius: '12px' } }}
           >
             <MenuItem value="">
@@ -144,9 +180,7 @@ const CreateCategoryForm: React.FC<CreateCategoryFormProps> = ({ categories, onS
             required
             variant="outlined"
             placeholder="https://..."
-            slotProps={{
-               inputLabel: { shrink: true }
-            }}
+            slotProps={{ inputLabel: { shrink: true } }}
             sx={{ '& .MuiOutlinedInput-root': { borderRadius: '12px' } }}
           />
         </Box>

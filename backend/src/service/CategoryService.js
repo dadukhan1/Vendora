@@ -4,7 +4,14 @@ import { Category } from "../models/Category.js";
 
 class CategoryService {
   async getAllCategories() {
-    return await Category.find().populate("parentCategory");
+    // Sort by isActive (true first) and then by order ascending
+    return await Category.find()
+      .populate("parentCategory")
+      .sort({ isActive: -1, order: 1 });
+  }
+
+  async toggleCategoryActive(id, isActive) {
+    return await Category.findByIdAndUpdate(id, { isActive }, { new: true });
   }
 
   async getCategoryById(id) {

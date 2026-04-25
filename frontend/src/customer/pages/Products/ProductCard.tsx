@@ -63,9 +63,8 @@ const ProductCard = ({ item }: any) => {
             {item.images.map((_: any, index: number) => (
               <span
                 key={index}
-                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                  index === currentImage ? "bg-white scale-125" : "bg-white/50"
-                }`}
+                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${index === currentImage ? "bg-white scale-125" : "bg-white/50"
+                  }`}
               />
             ))}
           </div>

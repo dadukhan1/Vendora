@@ -27,6 +27,14 @@ const categorySchema = new Schema(
       type: Number,
       default: 1, // 1 for root, 2 for sub, etc.
     },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    order: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true },
 );

@@ -74,6 +74,7 @@ const Navbar = () => {
 
   const getCategoriesByParentId = (parentCategoryId: string | null) => {
     return categories.filter((cat) => {
+      if (cat.isActive === false) return false; // Filter out inactive categories
       let catParentId: string | null = null;
       if (typeof cat.parentCategory === "object" && cat.parentCategory !== null) {
         catParentId = (cat.parentCategory as any)._id;

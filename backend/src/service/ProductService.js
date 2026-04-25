@@ -141,6 +141,17 @@ class ProductService {
     return await Product.find({ seller: sellerId });
   }
 
+  async getAllChildCategoryIds(parentId) {
+    // Only return IDs for categories that are active
+    const children = await Category.find({ parentCategory: parentId, isActive: true });
+    if (children.length === 0) return [parentId];
+
+    const nestedIds = await Promise.all(
+      children.map((child) => this.getAllChildCategoryIds(child._id)),
+    );
+    return [parentId, ...nestedIds.flat()];
+  }
+
   async getAllProducts(query) {
     const filterQuery = {};
 
@@ -148,15 +159,13 @@ class ProductService {
     const limit = 12;
 
     if (query.category) {
-      // Support both:
-      // - categoryId (used on listing pages)
-      // - category ObjectId (stored on Product as `product.category`)
       let category = await Category.findOne({ categoryId: query.category });
       if (!category) {
         category = await Category.findById(query.category);
       }
 
-      if (!category) {
+      // If category is not found or is deactivated, don't show any products
+      if (!category || (category.isActive === false && !query.isAdmin)) {
         return {
           content: [],
           totalPages: 0,
@@ -164,7 +173,9 @@ class ProductService {
         };
       }
 
-      filterQuery.category = category._id;
+      // Recursively find all ACTIVE child category IDs
+      const categoryIds = await this.getAllChildCategoryIds(category._id);
+      filterQuery.category = { $in: categoryIds };
     }
 
     if (query.color) {

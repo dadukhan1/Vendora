@@ -10,6 +10,8 @@ export interface Category {
   image: string;
   parentCategory: string | { _id: string; name: string; categoryId: string } | null;
   level: number;
+  isActive: boolean;
+  order: number;
   children?: Category[]; // For hierarchy rendering
 }
 
@@ -26,6 +28,22 @@ const initialState: CategoryState = {
 };
 
 const getToken = () => localStorage.getItem("token");
+
+export const toggleCategoryStatus = createAsyncThunk<
+  Category,
+  { id: string; active: boolean },
+  { rejectValue: string }
+>("/category/toggleCategoryStatus", async ({ id, active }, { rejectWithValue }) => {
+  try {
+    const endpoint = active ? "activate" : "deactivate";
+    const response = await api.put(`/admin/categories/${id}/${endpoint}`, {}, {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    });
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(error.response?.data?.message || `Failed to ${active ? 'activate' : 'deactivate'} category`);
+  }
+});
 
 export const fetchAllCategories = createAsyncThunk<
   Category[],
@@ -109,6 +127,12 @@ const categorySlice = createSlice({
         state.categories.push(action.payload);
       })
       .addCase(updateCategory.fulfilled, (state, action) => {
+        const index = state.categories.findIndex((cat) => cat._id === action.payload._id);
+        if (index !== -1) {
+          state.categories[index] = action.payload;
+        }
+      })
+      .addCase(toggleCategoryStatus.fulfilled, (state, action) => {
         const index = state.categories.findIndex((cat) => cat._id === action.payload._id);
         if (index !== -1) {
           state.categories[index] = action.payload;

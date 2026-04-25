@@ -1,7 +1,17 @@
 import React from "react";
-import type { Category } from "../../Redux Toolkit/features/category/categorySlice.ts";
-import { ChevronRight, Folder, SubdirectoryArrowRight, Edit, Delete } from "@mui/icons-material";
-import { Box, Typography, Avatar, Tooltip, IconButton } from "@mui/material";
+import { type Category, toggleCategoryStatus } from "../../Redux Toolkit/features/category/categorySlice.ts";
+import { useAppDispatch } from "../../Redux Toolkit/store";
+import { 
+  SubdirectoryArrowRight, 
+  Edit, 
+  Delete, 
+  Visibility, 
+  VisibilityOff, 
+  SwapVert,
+  FolderOpen
+} from "@mui/icons-material";
+import { Box, Typography, Avatar, Tooltip, IconButton, Chip } from "@mui/material";
+import toast from "react-hot-toast";
 
 interface CategoryTreeProps {
   categories: Category[];
@@ -18,6 +28,7 @@ const CategoryTree: React.FC<CategoryTreeProps> = ({
   onEdit,
   onDelete,
 }) => {
+  const dispatch = useAppDispatch();
   const children = categories.filter((cat) => {
     let catParentId: string | null = null;
     if (typeof cat.parentCategory === 'object' && cat.parentCategory !== null) {
@@ -28,7 +39,17 @@ const CategoryTree: React.FC<CategoryTreeProps> = ({
     return catParentId === parentId;
   });
 
-  if (children.length === 0 || level > 5) return null; // Added level safety limit
+  if (children.length === 0 || level > 5) return null;
+
+  const handleToggleActive = async (category: Category) => {
+    const newStatus = !category.isActive;
+    const result = await dispatch(toggleCategoryStatus({ id: category._id, active: newStatus }));
+    if (toggleCategoryStatus.fulfilled.match(result)) {
+      toast.success(`Category ${newStatus ? 'activated' : 'deactivated'}`);
+    } else {
+      toast.error("Status update failed");
+    }
+  };
 
   return (
     <Box sx={{ 
@@ -51,105 +72,115 @@ const CategoryTree: React.FC<CategoryTreeProps> = ({
               transition: 'all 0.2s',
               bgcolor: level === 0 ? 'white' : 'transparent',
               boxShadow: level === 0 ? '0 1px 3px rgba(0,0,0,0.05)' : 'none',
+              opacity: category.isActive ? 1 : 0.6,
+              filter: category.isActive ? 'none' : 'grayscale(1)',
               '&:hover': { 
                 bgcolor: level === 0 ? '#f7fafc' : 'rgba(15, 82, 255, 0.04)',
                 transform: 'translateX(4px)',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                opacity: 1,
+                filter: 'none'
               }
             }}
           >
             {/* Level Icon */}
             <Box sx={{ color: '#a0aec0', display: 'flex', alignItems: 'center' }}>
               {level === 0 ? (
-                <Folder sx={{ fontSize: { xs: 18, sm: 20 }, color: '#0F52FF' }} />
+                <FolderOpen sx={{ fontSize: { xs: 18, sm: 20 }, color: '#0F52FF' }} />
               ) : (
                 <SubdirectoryArrowRight sx={{ fontSize: { xs: 14, sm: 16 } }} />
               )}
             </Box>
             
-            {/* Category Image / Avatar */}
+            {/* Category Image */}
             <Avatar 
               src={category.image} 
-              alt={category.name || 'Category'}
               variant="rounded"
               sx={{ 
                 width: { xs: 28, sm: 32 }, 
                 height: { xs: 28, sm: 32 }, 
-                fontSize: { xs: '10px', sm: '12px' },
                 bgcolor: '#edf2f7',
-                color: '#4a5568',
-                fontWeight: 700,
                 border: '1px solid #e2e8f0'
               }}
             >
-              {category.name?.charAt(0) || 'C'}
+              {category.name?.charAt(0)}
             </Avatar>
             
-            {/* Name and ID */}
+            {/* Name and Order */}
             <Box sx={{ flex: 1, minWidth: 0 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                 <Typography 
                   noWrap
                   sx={{ 
-                    fontSize: { xs: level === 0 ? '0.9rem' : '0.8rem', sm: level === 0 ? '1rem' : '0.9rem' }, 
-                    fontWeight: level === 0 ? 800 : 500,
+                    fontSize: { xs: '0.85rem', sm: level === 0 ? '0.95rem' : '0.85rem' }, 
+                    fontWeight: level === 0 ? 800 : 600,
                     color: '#2d3748'
                   }}
                 >
-                  {category.name || 'Unnamed Category'}
+                  {category.name}
                 </Typography>
-                <Tooltip title="Internal Category ID">
-                   <Box sx={{ 
-                    display: { xs: 'none', sm: 'block' },
-                    fontSize: '10px', 
-                    fontWeight: 700, 
-                    color: '#0F52FF',
-                    bgcolor: '#ebf4ff',
-                    px: 1,
-                    py: 0.2,
-                    borderRadius: '6px',
-                    textTransform: 'uppercase'
-                  }}>
-                    {category.categoryId || 'N/A'}
-                  </Box>
-                </Tooltip>
+
+                <Box sx={{ display: 'flex', gap: 0.5 }}>
+                  {!category.isActive && (
+                    <Chip 
+                      label="Inactive" 
+                      size="small" 
+                      color="error" 
+                      variant="outlined"
+                      sx={{ fontSize: '8px', height: '16px', fontWeight: 900, textTransform: 'uppercase' }} 
+                    />
+                  )}
+                  {category.order > 0 && (
+                     <Chip 
+                        icon={<SwapVert sx={{ fontSize: '10px !important' }} />}
+                        label={`Order: ${category.order}`} 
+                        size="small"
+                        sx={{ fontSize: '8px', height: '16px', fontWeight: 700, bgcolor: '#f1f5f9' }} 
+                     />
+                  )}
+                </Box>
               </Box>
-              {level === 0 && (
-                 <Typography sx={{ fontSize: '10px', color: '#718096', display: { xs: 'none', sm: 'block' } }}>
-                   Root Category
-                 </Typography>
-              )}
+              <Typography sx={{ fontSize: '9px', fontWeight: 700, color: '#a0aec0', textTransform: 'uppercase' }}>
+                ID: {category.categoryId}
+              </Typography>
             </Box>
             
             {/* Actions */}
             <Box sx={{ display: 'flex', gap: 0.5 }}>
-              <IconButton 
-                size="small" 
-                onClick={(e) => { e.stopPropagation(); onEdit(category); }}
-                sx={{ 
-                  color: '#0F52FF', 
-                  p: { xs: 0.5, sm: 1 },
-                  bgcolor: 'rgba(15, 82, 255, 0.05)', 
-                  '&:hover': { bgcolor: 'rgba(15, 82, 255, 0.1)' } 
-                }}
-              >
-                <Edit sx={{ fontSize: { xs: 14, sm: 16 } }} />
-              </IconButton>
-              <IconButton 
-                size="small" 
-                onClick={(e) => { e.stopPropagation(); onDelete(category._id); }}
-                sx={{ 
-                  color: '#f56565', 
-                  p: { xs: 0.5, sm: 1 },
-                  bgcolor: 'rgba(245, 101, 101, 0.05)', 
-                  '&:hover': { bgcolor: 'rgba(245, 101, 101, 0.1)' } 
-                }}
-              >
-                <Delete sx={{ fontSize: { xs: 14, sm: 16 } }} />
-              </IconButton>
+              <Tooltip title={category.isActive ? "Deactivate" : "Activate"}>
+                <IconButton 
+                  size="small" 
+                  onClick={(e) => { e.stopPropagation(); handleToggleActive(category); }}
+                  sx={{ 
+                    color: category.isActive ? '#38a169' : '#e53e3e',
+                    bgcolor: category.isActive ? 'rgba(56, 161, 105, 0.05)' : 'rgba(229, 62, 62, 0.05)',
+                    '&:hover': { bgcolor: category.isActive ? 'rgba(56, 161, 105, 0.1)' : 'rgba(229, 62, 62, 0.1)' } 
+                  }}
+                >
+                  {category.isActive ? <Visibility sx={{ fontSize: 16 }} /> : <VisibilityOff sx={{ fontSize: 16 }} />}
+                </IconButton>
+              </Tooltip>
+              
+              <Tooltip title="Edit">
+                <IconButton 
+                  size="small" 
+                  onClick={(e) => { e.stopPropagation(); onEdit(category); }}
+                  sx={{ color: '#0F52FF', bgcolor: 'rgba(15, 82, 255, 0.05)' }}
+                >
+                  <Edit sx={{ fontSize: 16 }} />
+                </IconButton>
+              </Tooltip>
+              
+              <Tooltip title="Delete">
+                <IconButton 
+                  size="small" 
+                  onClick={(e) => { e.stopPropagation(); onDelete(category._id); }}
+                  sx={{ color: '#f56565', bgcolor: 'rgba(245, 101, 101, 0.05)' }}
+                >
+                  <Delete sx={{ fontSize: 16 }} />
+                </IconButton>
+              </Tooltip>
             </Box>
-
-            <ChevronRight sx={{ color: '#cbd5e0', fontSize: 18, display: { xs: 'none', sm: 'block' } }} />
           </Box>
           
           <CategoryTree 

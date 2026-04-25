@@ -46,3 +46,22 @@ export const deleteCategory = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+export const activateCategory = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const category = await CategoryService.toggleCategoryActive(id, true);
+    res.status(200).json(category);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+export const deactivateCategory = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const category = await CategoryService.toggleCategoryActive(id, false);
+    res.status(200).json(category);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
