@@ -15,6 +15,11 @@ type CartItem = {
     title?: string;
     sellingPrice?: number | string;
     images?: string[];
+    seller?: {
+      businessDetails?: {
+        businessName?: string;
+      };
+    };
   };
 };
 
@@ -90,7 +95,7 @@ const CartItemCard = ({ item }: CartItemCardProps) => {
                 mb: 0.5,
               }}
             >
-              Zosh Clothing
+              {item?.product?.seller?.businessDetails?.businessName || "Vendor"}
             </Typography>
             <Typography
               sx={{
@@ -116,7 +121,7 @@ const CartItemCard = ({ item }: CartItemCardProps) => {
                 textOverflow: "ellipsis",
               }}
             >
-              Sold by: Natural Lifestyle Products Pvt. Ltd.
+              Sold by: {item?.product?.seller?.businessDetails?.businessName || "Vendora Partner"}
             </Typography>
             <Typography sx={{ fontSize: "0.76rem", color: "#64748b" }}>
               <Box component='span' sx={{ color: "#0f172a", fontWeight: 700 }}>

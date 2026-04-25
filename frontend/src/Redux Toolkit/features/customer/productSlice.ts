@@ -72,7 +72,6 @@ export const fetchProductById = createAsyncThunk<Product, string>(
     try {
       const response = await api.get(`/products/${productId}`);
       const data = response.data;
-      console.log(data);
       return data;
     } catch (error: any) {
       return rejectWithValue(error.message);
@@ -86,7 +85,6 @@ export const searchProduct = createAsyncThunk<Product[], string>(
     try {
       const response = await api.get(`/products/search`, { params: { q: query } });
       const data = response.data;
-      console.log("Search results:", data);
       return data;
     } catch (error: any) {
       return rejectWithValue(error.message);
@@ -105,7 +103,6 @@ export const getAllProducts = createAsyncThunk<any, any>(
         },
       });
       const data = response.data;
-      console.log("All products:", data);
       return data;
     } catch (error: any) {
       return rejectWithValue(error.message);

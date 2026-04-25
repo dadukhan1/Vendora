@@ -34,19 +34,15 @@ const Cart = () => {
   const [couponCode, setCouponCode] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
 
-  // ERROR #1: fetchCart expects an argument (likely userId/cartId), but is called with 0 arguments.
-  // If your API and Redux slice allow for fetchCart() with zero arguments, then this is fine.
-  // But based on your lint, you probably need to pass an argument.
   useEffect(() => {
-    dispatch(fetchCart()); // <-- POSSIBLE ERROR: Should this be fetchCart(someId)?
+    dispatch(fetchCart());
   }, [dispatch]);
 
   useEffect(() => {
     if (couponState?.couponApplied) {
       setCouponApplied(true);
       toast.success("Coupon applied!");
-      // ERROR #2: Again, fetchCart expects an argument but is called with zero.
-      dispatch(fetchCart()); // <-- POSSIBLE ERROR: Should this be fetchCart(someId)?
+      dispatch(fetchCart());
     }
     if (couponState?.error) {
       toast.error(couponState?.error);
@@ -55,16 +51,15 @@ const Cart = () => {
 
   const itemCount = cart?.cartItems?.length ?? 0;
 
-  // Calculate current total if present in cart
   const cartTotal =
     typeof cart?.cartTotal === "number"
       ? cart.cartTotal
       : (cart?.cartItems?.reduce(
-          (sum: number, item: CartItem) =>
-            sum +
-            Number(item?.product?.sellingPrice ?? 0) * Number(item.quantity),
-          0,
-        ) ?? 0);
+        (sum: number, item: CartItem) =>
+          sum +
+          Number(item?.product?.sellingPrice ?? 0) * Number(item.quantity),
+        0,
+      ) ?? 0);
 
   const handleApplyCoupon = async () => {
     if (!couponCode?.trim()) {
@@ -78,9 +73,8 @@ const Cart = () => {
           cartTotal,
         }),
       ).unwrap();
-      // Note: fetchCart now handled in useEffect after coupon applied
     } catch (e: any) {
-      // Already handled by toast in couponSlice
+      toast.error(e.message || "Failed to apply coupon");
     }
   };
 

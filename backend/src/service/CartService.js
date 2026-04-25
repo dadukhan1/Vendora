@@ -16,7 +16,13 @@ class CartService {
 
     const cartItems = await CartItem
       .find({ cart: cart._id })
-      .populate("product");
+      .populate({
+        path: "product",
+        populate: {
+          path: "seller",
+          select: "businessDetails.businessName"
+        }
+      });
 
     let totalMrpPrice = 0;
     let totalSellingPrice = 0;

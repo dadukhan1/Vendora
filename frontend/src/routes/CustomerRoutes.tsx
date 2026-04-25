@@ -11,6 +11,7 @@ import Profile from "../customer/pages/Profile/Profile";
 import Cart from "../customer/pages/Cart/Cart";
 import { ComingSoon } from "../customer/components/CommingSoon";
 import ProtectedRoute from "./ProtectedRoute";
+import NotAuthorized from "../common/NotAuthorized";
 
 const CustomerRoutes = () => {
   return (
@@ -18,6 +19,7 @@ const CustomerRoutes = () => {
       <Navbar />
       <Routes>
         <Route path='/' element={<Home />} />
+        <Route path='/unauthorized' element={<NotAuthorized />} />
         <Route
           path='/*'
           element={
