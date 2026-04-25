@@ -20,10 +20,8 @@ export const fetchCart = createAsyncThunk<any, void>(
         },
       });
       const data = response.data;
-      console.log("Fetch cart response:", data);
       return data;
     } catch (error) {
-      console.error("Error fetching cart:", error);
       return rejectWithValue(error);
     }
   },
@@ -40,10 +38,8 @@ export const addItemToCart = createAsyncThunk<any, any>(
         },
       });
       const data = response.data;
-      console.log("Add item to cart response:", data);
       return data;
     } catch (error) {
-      console.error("Error adding item to cart:", error);
       return rejectWithValue(error);
     }
   },
@@ -60,10 +56,8 @@ export const deleteCartItem = createAsyncThunk<any, any>(
         },
       });
       const data = response.data;
-      console.log("Delete cart item response:", data);
       return data;
     } catch (error) {
-      console.error("Error deleting cart item:", error);
       return rejectWithValue(error);
     }
   },
@@ -73,7 +67,6 @@ export const updateCartItem = createAsyncThunk<any, any>(
   "cart/updateCartItem",
   async ({ cartItemId, quantity }, { rejectWithValue }) => {
     try {
-      console.log(cartItemId, quantity);
       const token = localStorage.getItem("token");
       const response = await api.put(
         `/cart/items/${cartItemId}`,
@@ -85,10 +78,8 @@ export const updateCartItem = createAsyncThunk<any, any>(
         },
       );
       const data = response.data;
-      console.log("Update cart item response:", data);
       return data;
     } catch (error) {
-      console.error("Error updating cart item:", error);
       return rejectWithValue(error);
     }
   },
