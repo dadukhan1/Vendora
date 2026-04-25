@@ -27,8 +27,8 @@ const CreateCategoryForm: React.FC<CreateCategoryFormProps> = ({ categories, onS
         name: editCategory.name || "",
         categoryId: editCategory.categoryId || "",
         image: editCategory.image || "",
-        parentCategory: typeof editCategory.parentCategory === 'object' && editCategory.parentCategory !== null 
-          ? editCategory.parentCategory._id 
+        parentCategory: typeof editCategory.parentCategory === 'object' && editCategory.parentCategory !== null
+          ? editCategory.parentCategory._id
           : (editCategory.parentCategory as string || ""),
         order: editCategory.order || 0,
         isActive: editCategory.isActive !== undefined ? editCategory.isActive : true,
@@ -38,9 +38,9 @@ const CreateCategoryForm: React.FC<CreateCategoryFormProps> = ({ categories, onS
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
-    setFormData({ 
-      ...formData, 
-      [name]: type === 'checkbox' ? checked : (type === 'number' ? Number(value) : value) 
+    setFormData({
+      ...formData,
+      [name]: type === 'checkbox' ? checked : (type === 'number' ? Number(value) : value)
     });
   };
 
@@ -50,7 +50,7 @@ const CreateCategoryForm: React.FC<CreateCategoryFormProps> = ({ categories, onS
       ...formData,
       parentCategory: formData.parentCategory === "" ? null : formData.parentCategory,
     };
-    
+
     if (editCategory) {
       const resultAction = await dispatch(updateCategory({ id: editCategory._id, data: payload }));
       if (updateCategory.fulfilled.match(resultAction)) {
@@ -83,7 +83,7 @@ const CreateCategoryForm: React.FC<CreateCategoryFormProps> = ({ categories, onS
       <Typography variant="h6" sx={{ fontWeight: 800, mb: 4, color: '#2d3748' }}>
         {editCategory ? "Update Category Node" : "Configure Category Node"}
       </Typography>
-      
+
       <form onSubmit={handleSubmit}>
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3 }}>
           <TextField
@@ -128,9 +128,9 @@ const CreateCategoryForm: React.FC<CreateCategoryFormProps> = ({ categories, onS
           <Box sx={{ display: 'flex', alignItems: 'center', px: 2, border: '1px solid #e2e8f0', borderRadius: '12px' }}>
             <FormControlLabel
               control={
-                <Switch 
-                  checked={formData.isActive} 
-                  onChange={handleChange} 
+                <Switch
+                  checked={formData.isActive}
+                  onChange={handleChange}
                   name="isActive"
                   color="primary"
                 />
@@ -189,16 +189,16 @@ const CreateCategoryForm: React.FC<CreateCategoryFormProps> = ({ categories, onS
           type="submit"
           variant="contained"
           fullWidth
-          sx={{ 
-            mt: 5, 
-            py: 1.8, 
-            borderRadius: '16px', 
-            backgroundColor: '#0F52FF', 
+          sx={{
+            mt: 5,
+            py: 1.8,
+            borderRadius: '16px',
+            backgroundColor: '#0F52FF',
             fontWeight: 800,
             fontSize: '1rem',
             textTransform: 'none',
             boxShadow: '0 10px 15px -3px rgba(15, 82, 255, 0.2)',
-            '&:hover': { backgroundColor: '#0042E0' } 
+            '&:hover': { backgroundColor: '#0042E0' }
           }}
         >
           {editCategory ? "Apply Transformations" : "Initialize Category"}
