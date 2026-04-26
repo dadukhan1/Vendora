@@ -23,7 +23,6 @@ class ProductController {
       const product = await ProductService.createProduct(req, seller);
       return res.status(201).json({ product });
     } catch (error) {
-      console.log(error.message);
       res.status(500).json({ message: error.message });
     }
   }
@@ -33,7 +32,6 @@ class ProductController {
       await ProductService.deleteProduct(req.params.productId);
       res.status(200).json({ message: "Product deleted successfully" });
     } catch (error) {
-      console.log("-----------", error.message);
       res.status(500).json({ message: error.message });
     }
   }
