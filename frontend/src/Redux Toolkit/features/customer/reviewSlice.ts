@@ -10,6 +10,8 @@ const initialState = {
   error: null as string | null,
   canReview: false,
   alreadyReviewed: false,
+  purchaseCount: 0,
+  reviewCount: 0,
 };
 
 const getToken = () => localStorage.getItem("token");

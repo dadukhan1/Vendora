@@ -2,6 +2,9 @@
 
 import ReviewService from "../service/ReviewService.js";
 import ProductService from "../service/ProductService.js";
+import { Order } from "../models/Order.js";
+import { Review } from "../models/Review.js";
+import { OrderItem } from "../models/OrderItem.js";
 
 class ReviewController {
   async createReview(req, res) {
@@ -50,7 +53,6 @@ class ReviewController {
         return acc + totalQuantity;
       }, 0);
 
-      const Review = (await import("../models/Review.js")).Review;
       const reviewCount = await Review.countDocuments({ user: user._id, product: productId });
 
       const canReview = purchaseCount > reviewCount;

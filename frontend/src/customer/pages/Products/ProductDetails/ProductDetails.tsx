@@ -38,7 +38,7 @@ const ProductDetails = () => {
   const { product, loading } = useAppSelector((store) => store.products);
   const { wishlist } = useAppSelector((store) => store.wishlist);
   const { cart } = useAppSelector((store) => store.cart);
-  const { reviews, canReview, alreadyReviewed } = useAppSelector((store) => store.review);
+  const { reviews, canReview, alreadyReviewed, purchaseCount, reviewCount } = useAppSelector((store) => store.review);
   const { jwt } = useAppSelector((store) => store.auth);
   const navigate = useNavigate();
   const [showReviewForm, setShowReviewForm] = useState(false);
@@ -353,8 +353,13 @@ const ProductDetails = () => {
                 {!showReviewForm && alreadyReviewed && (
                   <div className='flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-full border border-slate-200'>
                     <Star className='text-slate-400' sx={{ fontSize: 16 }} />
-                    <span className='text-sm font-bold text-slate-500'>You've already reviewed this</span>
+                    <span className='text-sm font-bold text-slate-500'>You've reviewed all your purchases</span>
                   </div>
+                )}
+                {!showReviewForm && canReview && purchaseCount > 1 && (
+                  <p className='text-xs font-bold text-[#0F52FF] mt-2 text-right'>
+                    You have {purchaseCount - reviewCount} pending review{purchaseCount - reviewCount > 1 ? 's' : ''}
+                  </p>
                 )}
               </div>
 
