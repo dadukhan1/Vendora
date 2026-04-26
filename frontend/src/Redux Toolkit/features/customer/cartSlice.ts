@@ -2,6 +2,7 @@
 
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../../config/api";
+import { toast } from "react-hot-toast";
 
 const initialState = {
   cart: null as any,
@@ -88,7 +89,28 @@ export const updateCartItem = createAsyncThunk<any, any>(
 const cartSlice = createSlice({
   name: "cart",
   initialState,
-  reducers: {},
+  reducers: {
+    addItemToCartOptimistic: (state, action: { payload: any }) => {
+        if (!state.cart) {
+            state.cart = { cartItems: [] };
+        }
+        const product = action.payload;
+        // Check if already exists (shouldn't happen with the new toggle logic, but good for safety)
+        if (state.cart.cartItems.some((item: any) => item.product?._id === product._id)) return;
+        
+        state.cart.cartItems.push({
+            _id: `temp-${Date.now()}`,
+            product: product,
+            quantity: 1,
+            sellingPrice: product.sellingPrice,
+            mrpPrice: product.mrpPrice
+        });
+    },
+    removeItemFromCartOptimistic: (state, action: { payload: string }) => {
+        if (!state.cart) return;
+        state.cart.cartItems = state.cart.cartItems.filter((item: any) => item.product?._id !== action.payload);
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchCart.pending, (state) => {
       state.loading = true;
@@ -110,10 +132,12 @@ const cartSlice = createSlice({
     builder.addCase(addItemToCart.fulfilled, (state, action) => {
       state.loading = false;
       state.cart = action.payload;
+      // Removed success toast per user request
     });
     builder.addCase(addItemToCart.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message || "Failed to add item to cart";
+      toast.error(state.error);
     });
 
     builder.addCase(deleteCartItem.pending, (state) => {
@@ -128,7 +152,8 @@ const cartSlice = createSlice({
     });
     builder.addCase(deleteCartItem.rejected, (state, action) => {
       state.loading = false;
-      state.error = action.error.message || "Failed to delete cart item";
+      state.error = (action.payload as any)?.message || "Failed to delete cart item";
+      toast.error(state.error);
     });
 
     builder.addCase(updateCartItem.pending, (state) => {
@@ -149,4 +174,5 @@ const cartSlice = createSlice({
   },
 });
 
+export const { addItemToCartOptimistic, removeItemFromCartOptimistic } = cartSlice.actions;
 export default cartSlice.reducer;

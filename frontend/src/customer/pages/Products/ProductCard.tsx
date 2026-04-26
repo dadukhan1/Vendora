@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/store";
-import { toggleWishlist } from "../../../Redux Toolkit/features/customer/wishlistSlice";
+import { toggleWishlist, toggleWishlistOptimistic } from "../../../Redux Toolkit/features/customer/wishlistSlice";
 
 const ProductCard = ({ item }: any) => {
   const [currentImage, setCurrentImage] = useState(0);
@@ -23,6 +23,10 @@ const ProductCard = ({ item }: any) => {
       navigate("/signin");
       return;
     }
+    if (!item?._id) return;
+    // Optimistic update
+    dispatch(toggleWishlistOptimistic(item));
+    // Backend update
     dispatch(toggleWishlist(item._id));
   };
 

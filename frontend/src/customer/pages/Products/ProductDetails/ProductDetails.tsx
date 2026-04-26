@@ -6,6 +6,7 @@ import {
   ArrowBackIos,
   ArrowForwardIos,
   Favorite,
+  FavoriteBorder,
   LocalShipping,
   Remove,
   Shield,
@@ -21,8 +22,9 @@ import {
   useAppSelector,
 } from "../../../../Redux Toolkit/store";
 import { fetchProductById } from "../../../../Redux Toolkit/features/customer/productSlice";
-import { addItemToCart } from "../../../../Redux Toolkit/features/customer/cartSlice";
-import { useParams } from "react-router";
+import { addItemToCart, addItemToCartOptimistic, deleteCartItem, removeItemFromCartOptimistic } from "../../../../Redux Toolkit/features/customer/cartSlice";
+import { toggleWishlist, toggleWishlistOptimistic } from "../../../../Redux Toolkit/features/customer/wishlistSlice";
+import { useNavigate, useParams } from "react-router";
 
 const ProductDetails = () => {
   const [currentImage, setCurrentImage] = useState(0);
@@ -30,6 +32,12 @@ const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const dispatch = useAppDispatch();
   const { product, loading } = useAppSelector((store) => store.products);
+  const { wishlist } = useAppSelector((store) => store.wishlist);
+  const { cart } = useAppSelector((store) => store.cart);
+  const { jwt } = useAppSelector((store) => store.auth);
+  const navigate = useNavigate();
+
+  const isWishlisted = wishlist?.products?.some((p: any) => p._id === product?._id);
 
   useEffect(() => {
     if (!productId) return;
@@ -38,12 +46,46 @@ const ProductDetails = () => {
     dispatch(fetchProductById(productId));
   }, [dispatch, productId]);
 
+  const isProductInCart = cart?.cartItems?.some((item: any) => item.product?._id === product?._id);
+
   const handleAddItemToCart = () => {
-    dispatch(addItemToCart({ size: "M", productId: product?._id, quantity }));
+    if (!jwt) {
+      navigate("/signin");
+      return;
+    }
+    if (!product) return;
+
+    if (isProductInCart) {
+      const cartItem = cart.cartItems.find((item: any) => item.product._id === product._id);
+      if (cartItem) {
+        // Optimistic update
+        dispatch(removeItemFromCartOptimistic(product._id));
+        // Backend update
+        dispatch(deleteCartItem(cartItem._id));
+      }
+    } else {
+      // Optimistic update
+      dispatch(addItemToCartOptimistic(product));
+      // Backend update
+      dispatch(addItemToCart({ size: "M", productId: product._id, quantity }));
+    }
   };
 
   const handleQuantityChange = (delta: number) => {
     setQuantity((q) => Math.max(1, q + delta));
+  };
+
+  const handleToggleWishlist = () => {
+    if (!jwt) {
+      navigate("/signin");
+      return;
+    }
+    if (product?._id) {
+      // Optimistic update
+      dispatch(toggleWishlistOptimistic(product));
+      // Backend update
+      dispatch(toggleWishlist(product._id));
+    }
   };
 
   const images: string[] = product?.images ?? [];
@@ -86,10 +128,9 @@ const ProductDetails = () => {
                   key={i}
                   onClick={() => setCurrentImage(i)}
                   className={`flex-shrink-0 rounded-xl p-0.5 bg-white transition-all duration-200
-                    ${
-                      i === currentImage
-                        ? "border-2 border-[#0F52FF]"
-                        : "border-2 border-[#E2E8F0] hover:border-[#94A3B8]"
+                    ${i === currentImage
+                      ? "border-2 border-[#0F52FF]"
+                      : "border-2 border-[#E2E8F0] hover:border-[#94A3B8]"
                     }`}
                 >
                   <img
@@ -235,27 +276,32 @@ const ProductDetails = () => {
 
             {/* CTA buttons */}
             <div className='flex gap-4 pt-2'>
-              {/* Add to Cart */}
+              {/* Add to Cart / Remove from Cart */}
               <button
                 onClick={handleAddItemToCart}
-                className='flex-1 flex items-center justify-center gap-2 bg-[#0F52FF] text-white
-                  rounded-[14px] py-4 text-[15px] font-bold tracking-wide cursor-pointer
-                  shadow-[0_4px_20px_rgba(15,82,255,0.35)] hover:opacity-90
-                  active:scale-[.98] transition-all duration-150 border-none'
+                className={`flex-1 flex items-center justify-center gap-2 rounded-[14px] py-4 text-[15px] font-bold tracking-wide cursor-pointer
+                  active:scale-[.98] transition-all duration-300 border-none
+                  ${isProductInCart
+                    ? 'bg-[#F1F5F9] text-[#475569] hover:bg-[#E2E8F0]'
+                    : 'bg-[#0F52FF] text-white shadow-[0_4px_20px_rgba(15,82,255,0.35)] hover:opacity-90'
+                  }`}
               >
-                <AddShoppingCart fontSize='small' />
-                Add to Cart
+                {isProductInCart ? <Remove fontSize='small' /> : <AddShoppingCart fontSize='small' />}
+                {isProductInCart ? 'Remove from Cart' : 'Add to Cart'}
               </button>
 
               {/* Wishlist */}
               <button
-                className='flex-1 flex items-center justify-center gap-2 bg-white text-[#FF4F00]
-                  border-[1.5px] border-[#FF4F00] rounded-[14px] py-4 text-[15px] font-bold
-                  tracking-wide cursor-pointer hover:bg-[#FF4F00]/10
-                  active:scale-[.98] transition-all duration-150'
+                onClick={handleToggleWishlist}
+                className={`flex-1 flex items-center justify-center gap-2 border-[1.5px] rounded-[14px] py-4 text-[15px] font-bold
+                  tracking-wide cursor-pointer active:scale-[.98] transition-all duration-300
+                  ${isWishlisted
+                    ? 'bg-[#FF4F00] text-white border-[#FF4F00] shadow-[0_4px_15px_rgba(255,79,0,0.3)]'
+                    : 'bg-white text-[#FF4F00] border-[#FF4F00] hover:bg-[#FF4F00]/5'
+                  }`}
               >
-                <Favorite fontSize='small' />
-                Wishlist
+                {isWishlisted ? <Favorite fontSize='small' /> : <FavoriteBorder fontSize='small' />}
+                {isWishlisted ? 'Remove from Wishlist' : 'Save to Wishlist'}
               </button>
             </div>
 
@@ -279,7 +325,7 @@ const ProductDetails = () => {
               Similar Products
             </h2>
           </div>
-          <SimilarProduct 
+          <SimilarProduct
             category={product?.category}
             currentProductId={product?._id}
           />

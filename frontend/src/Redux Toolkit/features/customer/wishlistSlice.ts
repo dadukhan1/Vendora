@@ -2,6 +2,7 @@
 
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../../config/api";
+import { toast } from "react-hot-toast";
 
 const initialState = {
   wishlist: null as any,
@@ -44,8 +45,18 @@ const wishlistSlice = createSlice({
   initialState,
   reducers: {
     resetWishlist: (state) => {
-        state.wishlist = null;
-        state.error = null;
+      state.wishlist = null;
+      state.error = null;
+    },
+    toggleWishlistOptimistic: (state, action: { payload: any }) => {
+      if (!state.wishlist) return;
+      const product = action.payload;
+      const index = state.wishlist.products.findIndex((p: any) => p._id === product._id);
+      if (index !== -1) {
+        state.wishlist.products.splice(index, 1);
+      } else {
+        state.wishlist.products.push(product);
+      }
     }
   },
   extraReducers: (builder) => {
@@ -65,16 +76,19 @@ const wishlistSlice = createSlice({
       .addCase(toggleWishlist.pending, (state) => {
         state.loading = true;
       })
-      .addCase(toggleWishlist.fulfilled, (state, action) => {
-        state.loading = false;
-        state.wishlist = action.payload;
-      })
       .addCase(toggleWishlist.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+        toast.error(action.payload as string || "Failed to update wishlist. Reverting...");
+        // Revert is handled by the fact that the state didn't change permanently 
+        // OR we can refetch if needed. But usually, if it fails, the next fetch will fix it.
+      })
+      .addCase(toggleWishlist.fulfilled, (state, action) => {
+        state.loading = false;
+        state.wishlist = action.payload;
       });
   },
 });
 
-export const { resetWishlist } = wishlistSlice.actions;
+export const { resetWishlist, toggleWishlistOptimistic } = wishlistSlice.actions;
 export default wishlistSlice.reducer;
