@@ -10,12 +10,6 @@ import jwtProvider from "../utils/jwtProvider.js";
 
 class AuthService {
   async sendLoginOtp(email) {
-    const SIGNIN_PREFIX = "signin_";
-
-    // Remove prefix first, before the if block
-    if (email.startsWith(SIGNIN_PREFIX)) {
-      email = email.substring(SIGNIN_PREFIX.length).trim();
-    }
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
