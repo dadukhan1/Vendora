@@ -14,6 +14,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import NotAuthorized from "../common/NotAuthorized";
 import PaymentSuccess from "../customer/pages/Checkout/PaymentSuccess";
 import PaymentCancel from "../customer/pages/Checkout/PaymentCancel";
+import Wishlist from "../customer/pages/Wishlist/Wishlist";
 
 const CustomerRoutes = () => {
   return (
@@ -30,6 +31,7 @@ const CustomerRoutes = () => {
             <ProtectedRoute requiredRole='ROLE_CUSTOMER'>
               <Routes>
                 <Route path='/cart' element={<Cart />} />
+                <Route path='/wishlist' element={<Wishlist />} />
                 <Route path='/checkout/address' element={<Checkout />} />
                 <Route path='/account/*' element={<Profile />} />
               </Routes>

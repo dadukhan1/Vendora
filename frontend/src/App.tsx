@@ -16,6 +16,7 @@ import { fetchSellerProfile } from "./Redux Toolkit/features/seller/sellerSlice"
 // import { createHomeCategory } from "./Redux Toolkit/features/customer/homeCategorySlice";
 // import { homeCategories } from "./data/homeCategory";
 import { Toaster } from "react-hot-toast";
+import { getWishlist } from "./Redux Toolkit/features/customer/wishlistSlice";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -32,6 +33,7 @@ function App() {
         dispatch(profile(auth.jwt));
         dispatch(fetchSellerProfile());
       }
+      dispatch(getWishlist());
     }
   }, [auth.jwt, auth.role, user.user, seller.profile, dispatch]);
 

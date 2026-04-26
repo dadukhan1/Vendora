@@ -38,6 +38,7 @@ const Navbar = () => {
   const { categories } = useAppSelector((state) => state.category);
   const { user } = useAppSelector((store) => store.user);
   const { seller } = useAppSelector((store) => store.seller);
+  const { wishlist } = useAppSelector((store) => store.wishlist);
 
   useEffect(() => {
     dispatch(fetchAllCategories());
@@ -191,8 +192,17 @@ const Navbar = () => {
 
           <div className='flex items-center gap-0.5 sm:gap-2'>
             {canShowCustomerActions && (
-              <IconButton className='text-[#475569] hover:text-[#0F52FF] hover:bg-blue-50 transition-all'>
-                <FavoriteBorder sx={{ fontSize: 24 }} />
+              <IconButton 
+                onClick={() => navigate("/wishlist")}
+                className='text-[#475569] hover:text-[#0F52FF] hover:bg-blue-50 transition-all'
+              >
+                <Badge 
+                  badgeContent={wishlist?.products?.length || 0} 
+                  color="primary"
+                  sx={{ "& .MuiBadge-badge": { fontSize: 10, height: 18, minWidth: 18, bgcolor: '#FF4F00' } }}
+                >
+                  <FavoriteBorder sx={{ fontSize: 24 }} />
+                </Badge>
               </IconButton>
             )}
 

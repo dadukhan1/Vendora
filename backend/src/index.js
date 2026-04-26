@@ -25,6 +25,7 @@ import { CouponRouter } from "./router/CouponRoutes.js";
 import AdminCategoryRoutes from "./router/AdminCategoryRoutes.js";
 import BannerRouter from "./router/BannerRoutes.js";
 import AdminProductRouter from "./router/AdminProductRoutes.js";
+import { WishlistRouter } from "./router/wishlistRoutes.js";
 
 const app = express();
 
@@ -58,6 +59,7 @@ app.use("/api/products", ProductRouter);
 app.use("/api/seller/products", SellerProductRouter);
 
 app.use("/api/cart", CartRouter);
+app.use("/api/wishlist", WishlistRouter);
 
 app.use("/api/address", AddressRouter);
 

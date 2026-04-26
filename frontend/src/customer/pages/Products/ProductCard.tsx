@@ -2,11 +2,29 @@
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { Favorite, FavoriteBorder } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/store";
+import { toggleWishlist } from "../../../Redux Toolkit/features/customer/wishlistSlice";
 
 const ProductCard = ({ item }: any) => {
   const [currentImage, setCurrentImage] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { wishlist } = useAppSelector((state) => state.wishlist);
+  const { jwt } = useAppSelector((state) => state.auth);
+
+  const isWishlisted = wishlist?.products?.some((p: any) => p._id === item._id);
+
+  const handleToggleWishlist = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!jwt) {
+      navigate("/signin");
+      return;
+    }
+    dispatch(toggleWishlist(item._id));
+  };
 
   useEffect(() => {
     let interval: any;
@@ -57,6 +75,26 @@ const ProductCard = ({ item }: any) => {
             {item.discount}% OFF
           </div>
         )}
+
+        {/* Wishlist Button */}
+        <div className='absolute top-4 right-4 z-20'>
+          <IconButton
+            onClick={handleToggleWishlist}
+            sx={{
+              bgcolor: "white",
+              "&:hover": { bgcolor: "#F8FAFC", transform: "scale(1.1)" },
+              transition: "all 0.3s",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+            }}
+            size='small'
+          >
+            {isWishlisted ? (
+              <Favorite sx={{ fontSize: 20, color: "#FF4F00" }} />
+            ) : (
+              <FavoriteBorder sx={{ fontSize: 20, color: "#64748B" }} />
+            )}
+          </IconButton>
+        </div>
 
         {/* Dot indicators - Minimalist */}
         {item.images.length > 1 && (
