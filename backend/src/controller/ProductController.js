@@ -16,8 +16,6 @@ class ProductController {
 
   async createProduct(req, res) {
     try {
-      //   await createProductSchema.validate(req.body, { abortEarly: false });
-
       const seller = req.seller;
 
       const product = await ProductService.createProduct(req, seller);
