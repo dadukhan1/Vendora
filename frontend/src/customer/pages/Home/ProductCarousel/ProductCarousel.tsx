@@ -42,10 +42,10 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ title, subtitle, quer
     <div className='px-5 lg:px-20'>
       <div className='flex items-end justify-between mb-8'>
         <div>
-          <p className={`text-[10px] lg:text-xs font-black uppercase tracking-[0.3em] mb-2`} style={{ color }}>
+          <p className={`text-[10px] lg:text-xs font-black uppercase tracking-[0.3em] mb-1 lg:mb-2`} style={{ color }}>
             {subtitle}
           </p>
-          <h2 className='text-3xl lg:text-4xl font-black text-[#0F172A] tracking-tighter'>
+          <h2 className='text-2xl lg:text-4xl font-black text-[#0F172A] tracking-tighter'>
             {title}
           </h2>
         </div>

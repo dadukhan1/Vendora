@@ -16,7 +16,7 @@ const Navbar = ({ DrawerList }: any) => {
         <IconButton
           onClick={toggleDrawwer(true)}
           className='hover:bg-blue-50 transition-colors'
-          sx={{ color: '#0F52FF' }}
+          sx={{ color: '#0F52FF', display: { lg: 'none' } }}
         >
           <MenuIcon />
         </IconButton>

@@ -411,7 +411,7 @@ const Navbar = () => {
 
           <div className='mt-auto pt-6 border-t border-gray-100'>
             {!user ? (
-              <div className='space-y-3 px-1'>
+              <div className='space-y-3 px-1 flex flex-col gap-4'>
                 <Button
                   fullWidth
                   variant='outlined'
@@ -433,7 +433,7 @@ const Navbar = () => {
                     boxShadow: '0 4px 14px rgba(15, 82, 255, 0.25)'
                   }}
                 >
-                  Become a Seller
+                  Sell on Vendora
                 </Button>
               </div>
             ) : (

@@ -59,8 +59,8 @@ const BannerSlider = () => {
   };
 
   return (
-    <div className='px-4 lg:px-16 pt-4 relative group'>
-      <div className='relative h-[450px] lg:h-[600px] w-full overflow-hidden rounded-[32px] lg:rounded-[48px] shadow-2xl bg-slate-900'>
+    <div className='px-2 lg:px-16 pt-2 lg:pt-4 relative group'>
+      <div className='relative h-[400px] lg:h-[600px] w-full overflow-hidden rounded-[24px] lg:rounded-[48px] shadow-2xl bg-slate-900'>
         {allSlides.map((banner, index) => (
           <div
             key={banner._id}
@@ -72,55 +72,55 @@ const BannerSlider = () => {
             <img
               src={banner.image}
               alt={banner.title}
-              className={`w-full h-full object-cover transition-transform duration-10000 ease-linear ${index === current ? 'scale-110' : 'scale-100'}`}
+              className={`w-full h-full object-cover transition-transform duration-10000 ease-out ${index === current ? 'scale-110' : 'scale-100'}`}
             />
-            <div className='absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent' />
+            <div className='absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-black/90 via-black/40 to-black/10 lg:to-transparent' />
 
             {/* Content Container */}
-            <div className='absolute inset-0 flex flex-col justify-center px-10 lg:px-24 max-w-4xl'>
-              <div className='space-y-6 lg:space-y-8'>
-                <div className={`flex items-center gap-3 transition-opacity duration-700 delay-300 ${index === current ? 'opacity-100' : 'opacity-0'}`}>
-                   <div className='w-8 h-[2px] bg-[#0F52FF]' />
-                   <p className='text-[10px] lg:text-xs text-[#0F52FF] font-black uppercase tracking-[0.4em]'>
+            <div className='absolute inset-0 flex flex-col justify-end lg:justify-center px-6 lg:px-24 pb-12 lg:pb-0 max-w-4xl'>
+              <div className='space-y-4 lg:space-y-8'>
+                <div className={`flex items-center gap-2 lg:gap-3 transition-all duration-1000 delay-300 transform ${index === current ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
+                   <div className='w-6 lg:w-8 h-[1.5px] lg:h-[2px] bg-[#0F52FF]' />
+                   <p className='text-[8px] lg:text-xs text-[#0F52FF] font-black uppercase tracking-[0.3em] lg:tracking-[0.4em]'>
                      {banner.type === 'master' ? 'Welcome to Vendora' : (banner.productId ? 'Staff Pick' : 'Exclusive Highlight')}
                    </p>
                 </div>
 
-                <h2 className={`text-4xl lg:text-7xl font-black text-white tracking-tighter leading-[1.1] transition-all duration-700 delay-500 transform ${index === current ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
+                <h2 className={`text-3xl lg:text-7xl font-black text-white tracking-tighter leading-[1.1] transition-all duration-1000 delay-500 transform ${index === current ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
                   {banner.title}
                 </h2>
 
-                <p className={`text-white/70 text-sm lg:text-xl font-medium max-w-2xl leading-relaxed transition-all duration-700 delay-700 transform ${index === current ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
+                <p className={`text-white/70 text-xs lg:text-xl font-medium max-w-2xl leading-relaxed transition-all duration-1000 delay-700 transform ${index === current ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
                   {banner.description}
                 </p>
 
                 {/* Conditional Actions */}
-                <div className={`flex flex-wrap gap-4 pt-4 lg:pt-8 transition-all duration-700 delay-1000 transform ${index === current ? 'translate-y-0 opacity-100' : 'translate-y-16 opacity-0'}`}>
+                <div className={`flex flex-wrap gap-3 pt-2 lg:pt-8 transition-all duration-700 delay-1000 transform ${index === current ? 'translate-y-0 opacity-100' : 'translate-y-16 opacity-0'}`}>
                   {banner.type === "master" ? (
                     <>
                       <button
                         onClick={() => navigate("/products/all")}
-                        className='px-10 py-5 bg-[#0F52FF] hover:bg-white hover:text-[#0F172A] text-white text-base font-black rounded-full transition-all duration-300 shadow-xl flex items-center gap-3 group'
+                        className='px-6 lg:px-10 py-3.5 lg:py-5 bg-[#0F52FF] hover:bg-white hover:text-[#0F172A] text-white text-sm lg:text-base font-black rounded-full transition-all duration-300 shadow-xl flex items-center gap-2 lg:gap-3 group'
                       >
                         Shop Now
-                        <ArrowForward className='group-hover:translate-x-1 transition-transform' />
+                        <ArrowForward className='scale-90 lg:scale-100 group-hover:translate-x-1 transition-transform' />
                       </button>
                       <button
                         onClick={() => navigate("/become-seller")}
-                        className='px-10 py-5 bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-md text-base font-black rounded-full transition-all duration-300 flex items-center gap-3 group'
+                        className='px-6 lg:px-10 py-3.5 lg:py-5 bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-md text-sm lg:text-base font-black rounded-full transition-all duration-300 flex items-center gap-2 lg:gap-3 group'
                       >
-                        <Storefront className='group-hover:scale-110 transition-transform' />
-                        Become a Seller
+                        <Storefront className='scale-90 lg:scale-100 group-hover:scale-110 transition-transform' />
+                        Sell
                       </button>
                     </>
                   ) : (
                     <button
                         onClick={() => handleNavigate(banner)}
-                        className='relative group flex items-center gap-4 px-10 py-5 bg-white text-[#0F172A] hover:bg-[#0F52FF] hover:text-white text-base font-black rounded-full transition-all duration-300 shadow-2xl overflow-hidden'
+                        className='relative group flex items-center gap-3 lg:gap-4 px-6 lg:px-10 py-3.5 lg:py-5 bg-white text-[#0F172A] hover:bg-[#0F52FF] hover:text-white text-sm lg:text-base font-black rounded-full transition-all duration-300 shadow-2xl overflow-hidden'
                       >
-                        <span className='relative z-10'>{banner.productId ? "Explore Product" : "View Collection"}</span>
-                        <div className='w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-white/20 transition-colors'>
-                           <ArrowForward className='w-4 h-4 group-hover:translate-x-1 transition-transform' />
+                        <span className='relative z-10'>{banner.productId ? "Explore" : "View Collection"}</span>
+                        <div className='w-6 h-6 lg:w-8 lg:h-8 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-white/20 transition-colors'>
+                           <ArrowForward className='w-3 h-3 lg:w-4 lg:h-4 group-hover:translate-x-1 transition-transform' />
                         </div>
                       </button>
                   )}
@@ -130,9 +130,9 @@ const BannerSlider = () => {
           </div>
         ))}
 
-        {/* Navigation Controls */}
+        {/* Navigation Controls - Hidden on Mobile */}
         {allSlides.length > 1 && (
-          <div className='absolute bottom-10 right-10 flex gap-4 z-30'>
+          <div className='absolute bottom-10 right-10 hidden lg:flex gap-4 z-30'>
              <IconButton 
                 onClick={prev} 
                 sx={{ bgcolor: 'white/10', backdropFilter: 'blur(10px)', color: 'white', border: '1px solid white/10', '&:hover': { bgcolor: '#0F52FF' } }}
