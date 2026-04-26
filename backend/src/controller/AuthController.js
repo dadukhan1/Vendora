@@ -4,7 +4,7 @@ import { UserRoles } from "../domain/UserRoles.js";
 import AuthService from "../service/AuthService.js";
 
 class AuthController {
-  async sendLoginOtp(req, res) {
+  async sendSigninOtp(req, res) {
     try {
       const { email } = req.body;
 
@@ -12,7 +12,7 @@ class AuthController {
         return res.status(400).json({ message: "Email is required!" });
       }
 
-      await AuthService.sendLoginOtp(email);
+      await AuthService.sendSigninOtp(email);
 
       res.status(200).json({ message: "OTP send successfully. " });
     } catch (error) {

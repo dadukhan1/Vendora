@@ -5,8 +5,8 @@ import { ArrowForward } from "@mui/icons-material";
 import { useFormik } from "formik";
 import { useAppDispatch, useAppSelector } from "../../Redux Toolkit/store";
 import {
-  sendLoginOtp,
-  verifyLogin,
+  sendSigninOtp,
+  verifySignin,
 } from "../../Redux Toolkit/features/seller/sellerAuth";
 import { useNavigate } from "react-router";
 
@@ -25,7 +25,7 @@ const inputSx = {
   "& input::placeholder": { color: "#94A3B8", opacity: 1 },
 };
 
-const SellerLogin = () => {
+const SellerSignin = () => {
   const { sellerAuth } = useAppSelector((store) => store);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -34,15 +34,15 @@ const SellerLogin = () => {
     initialValues: { email: "", otp: "" },
     onSubmit: async (values) => {
       if (sellerAuth.otpSent) {
-        const resultAction = await dispatch(verifyLogin(values));
-        if (verifyLogin.fulfilled.match(resultAction)) {
+        const resultAction = await dispatch(verifySignin(values));
+        if (verifySignin.fulfilled.match(resultAction)) {
           navigate("/");
           window.location.reload();
         } else {
-          console.error("Failed to Login:", resultAction.payload);
+          console.error("Failed to Signin:", resultAction.payload);
         }
       } else {
-        dispatch(sendLoginOtp(values));
+        dispatch(sendSigninOtp(values));
       }
     },
   });
@@ -149,7 +149,7 @@ const SellerLogin = () => {
           {sellerAuth.loading
             ? "Please wait..."
             : sellerAuth.otpSent
-              ? "Verify & Login"
+              ? "Verify & Signin"
               : "Send OTP"}
         </Button>
       </form>
@@ -157,4 +157,4 @@ const SellerLogin = () => {
   );
 };
 
-export default SellerLogin;
+export default SellerSignin;

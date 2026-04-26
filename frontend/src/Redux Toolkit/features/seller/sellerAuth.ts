@@ -11,12 +11,12 @@ const initialState = {
   error: null as string | null,
 };
 
-export const sendLoginOtp = createAsyncThunk<any, any>(
-  "seller/sendLoginOtp",
+export const sendSigninOtp = createAsyncThunk<any, any>(
+  "seller/sendSigninOtp",
   async (values, { rejectWithValue }) => {
     try {
       const { email } = values;
-      const response = await api.post("/auth/sent/login-signup-otp", { email });
+      const response = await api.post("/auth/sent/signin-signup-otp", { email });
       const data = response.data;
       return data;
     } catch (error) {
@@ -25,12 +25,12 @@ export const sendLoginOtp = createAsyncThunk<any, any>(
     }
   },
 );
-export const verifyLogin = createAsyncThunk<any, any>(
-  "seller/verifyLoginOtp",
+export const verifySignin = createAsyncThunk<any, any>(
+  "seller/verifySigninOtp",
   async ({ email, otp }, { rejectWithValue }) => {
     try {
       // const { email, otp } = values;
-      const response = await api.post("/seller/verify/login-otp", {
+      const response = await api.post("/seller/verify/signin-otp", {
         email,
         otp,
       });
@@ -90,16 +90,16 @@ const sellerAthSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(sendLoginOtp.pending, (state) => {
+      .addCase(sendSigninOtp.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(sendLoginOtp.fulfilled, (state) => {
+      .addCase(sendSigninOtp.fulfilled, (state) => {
         state.loading = false;
         state.otpSent = true;
         toast.success("OTP sent to your email. Please check and enter it.");
       })
-      .addCase(sendLoginOtp.rejected, (state, action) => {
+      .addCase(sendSigninOtp.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
         toast.error(state.error || "Failed to send OTP. Please try again.");
@@ -120,16 +120,16 @@ const sellerAthSlice = createSlice({
         state.error = action.payload as string;
         toast.error(state.error || "Failed to sign up. Please try again.");
       })
-      .addCase(verifyLogin.pending, (state) => {
+      .addCase(verifySignin.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(verifyLogin.fulfilled, (state, action) => {
+      .addCase(verifySignin.fulfilled, (state, action) => {
         state.loading = false;
         state.jwt = action.payload.jwt;
-        toast.success("Login successful!");
+        toast.success("Signin successful!");
       })
-      .addCase(verifyLogin.rejected, (state, action) => {
+      .addCase(verifySignin.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
         toast.error(state.error || "Failed to verify OTP. Please try again.");

@@ -91,7 +91,7 @@ class SellerController {
     }
   }
 
-  async verifyLoginOtp(req, res) {
+  async verifySigninOtp(req, res) {
     try {
       const { otp, email } = req.body;
       const seller = await SellerService.getSellerByEmail(email);
@@ -106,7 +106,7 @@ class SellerController {
       const token = jwtProvider.createJwt({ email });
 
       const authResponse = {
-        message: "Login Successfull",
+        message: "Signin Successfull",
         jwt: token,
         role: UserRoles.SELLER,
       };

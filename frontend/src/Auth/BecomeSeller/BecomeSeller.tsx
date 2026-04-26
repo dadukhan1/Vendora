@@ -2,7 +2,7 @@
 
 import { Button, Chip } from "@mui/material";
 import { useState } from "react";
-import SellerLogin from "./SellerLogin";
+import SellerSignin from "./SellerSignin";
 import SellerAccountForm from "./SellerAccountForm";
 import {
   Storefront,
@@ -20,7 +20,7 @@ const stats = [
 ];
 
 const BecomeSeller = () => {
-  const [isLogin, setIsLogin] = useState(false);
+  const [isSignin, setIsSignin] = useState(false);
   const navigate = useNavigate();
 
   return (
@@ -47,23 +47,23 @@ const BecomeSeller = () => {
         {/* Heading */}
         <div className='mb-6'>
           <h1 className='text-2xl font-bold text-[#0F172A] leading-tight mb-1'>
-            {isLogin ? "Welcome back" : "Start selling today"}
+            {isSignin ? "Welcome back" : "Start selling today"}
           </h1>
           <p className='text-sm text-[#64748B]'>
-            {isLogin
+            {isSignin
               ? "Sign in to manage your store and orders."
               : "Create your seller account and reach millions of buyers."}
           </p>
         </div>
 
         {/* Form */}
-        <div>{isLogin ? <SellerLogin /> : <SellerAccountForm />}</div>
+        <div>{isSignin ? <SellerSignin /> : <SellerAccountForm />}</div>
 
         {/* Divider */}
         <div className='flex items-center gap-3 mt-8 mb-4'>
           <div className='flex-1 h-px bg-[#E2E8F0]' />
           <span className='text-xs text-[#94A3B8]'>
-            {isLogin ? "New seller?" : "Already have an account?"}
+            {isSignin ? "New seller?" : "Already have an account?"}
           </span>
           <div className='flex-1 h-px bg-[#E2E8F0]' />
         </div>
@@ -72,7 +72,7 @@ const BecomeSeller = () => {
         <Button
           fullWidth
           variant='outlined'
-          onClick={() => setIsLogin(!isLogin)}
+          onClick={() => setIsSignin(!isSignin)}
           sx={{
             py: "11px",
             textTransform: "none",
@@ -88,7 +88,7 @@ const BecomeSeller = () => {
             },
           }}
         >
-          {isLogin ? "Create an account" : "Sign in instead"}
+          {isSignin ? "Create an account" : "Sign in instead"}
         </Button>
       </section>
 

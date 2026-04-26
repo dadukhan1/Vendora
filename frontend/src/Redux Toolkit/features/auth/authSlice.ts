@@ -14,13 +14,13 @@ const initialState = {
   otpSent: false,
 };
 
-export const sendLoginSignupOTP = createAsyncThunk<
+export const sendSigninSignupOTP = createAsyncThunk<
   { message: string },
   { email: string },
   { rejectValue: string }
->("/auth/sendLoginSignupOTP", async ({ email }, { rejectWithValue }) => {
+>("/auth/sendSigninSignupOTP", async ({ email }, { rejectWithValue }) => {
   try {
-    const response = await api.post(`${API_URL}/sent/login-signup-otp`, {
+    const response = await api.post(`${API_URL}/sent/signin-signup-otp`, {
       email,
     });
 
@@ -81,18 +81,18 @@ const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(sendLoginSignupOTP.pending, (state) => {
+    builder.addCase(sendSigninSignupOTP.pending, (state) => {
       state.loading = true;
       state.error = null;
     });
 
-    builder.addCase(sendLoginSignupOTP.fulfilled, (state) => {
+    builder.addCase(sendSigninSignupOTP.fulfilled, (state) => {
       state.loading = false;
       state.otpSent = true;
       toast.success("OTP sent to your email");
     });
 
-    builder.addCase(sendLoginSignupOTP.rejected, (state, action) => {
+    builder.addCase(sendSigninSignupOTP.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload as string;
       toast.error("OTP sending failed: " + state.error);

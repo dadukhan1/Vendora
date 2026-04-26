@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import { useAppDispatch, useAppSelector } from "../Redux Toolkit/store";
 import { useNavigate } from "react-router";
 import {
-  sendLoginSignupOTP,
+  sendSigninSignupOTP,
   signup,
 } from "../Redux Toolkit/features/auth/authSlice";
 
@@ -18,7 +18,7 @@ const SignupForm = () => {
     initialValues: { fullName: "", email: "", otp: "" },
     onSubmit: async (values) => {
       if (!auth.otpSent) {
-        await dispatch(sendLoginSignupOTP({ email: values.email }));
+        await dispatch(sendSigninSignupOTP({ email: values.email }));
       } else {
         await dispatch(signup(values));
         navigate("/");
@@ -143,7 +143,7 @@ const SignupForm = () => {
             <button
               type='button'
               onClick={() =>
-                dispatch(sendLoginSignupOTP({ email: formik.values.email }))
+                dispatch(sendSigninSignupOTP({ email: formik.values.email }))
               }
               className='text-[#0F52FF] font-semibold hover:underline underline-offset-2'
             >

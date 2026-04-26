@@ -41,7 +41,7 @@ function App() {
         <Route path='/become-seller' element={<BecomeSeller />} />
         <Route path='/seller/*' element={<SellerDashboard />} />
         <Route path='/admin/*' element={<AdminDashboard />} />
-        <Route path='/login' element={<Auth />} />
+        <Route path='/signin' element={<Auth />} />
         <Route path='/*' element={<CustomerRoutes />} />
       </Routes>
     </ThemeProvider>

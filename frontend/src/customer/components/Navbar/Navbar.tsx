@@ -273,7 +273,7 @@ const Navbar = () => {
             ) : (
               <div className='flex items-center gap-2 ml-1'>
                 <Button
-                  onClick={() => navigate("/login")}
+                  onClick={() => navigate("/signin")}
                   variant='outlined'
                   sx={{
                     textTransform: "none",
@@ -287,7 +287,7 @@ const Navbar = () => {
                     "&:hover": { borderColor: "#0F52FF", color: "#0F52FF", backgroundColor: 'white' },
                   }}
                 >
-                  Login
+                  Signin
                 </Button>
                 <Button
                   onClick={() => navigate("/become-seller")}
@@ -415,7 +415,7 @@ const Navbar = () => {
                 <Button
                   fullWidth
                   variant='outlined'
-                  onClick={() => { navigate("/login"); setMobileMenuOpen(false); }}
+                  onClick={() => { navigate("/signin"); setMobileMenuOpen(false); }}
                   sx={{ borderRadius: '14px', py: 1.5, textTransform: 'none', fontWeight: 700, borderColor: '#E2E8F0', color: '#475569' }}
                 >
                   Sign In

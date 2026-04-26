@@ -4,12 +4,12 @@ import { CircularProgress, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import { useAppDispatch, useAppSelector } from "../Redux Toolkit/store";
 import {
-  sendLoginSignupOTP,
+  sendSigninSignupOTP,
   signin,
 } from "../Redux Toolkit/features/auth/authSlice";
 import { useNavigate } from "react-router";
 
-const LoginForm = () => {
+const SigninForm = () => {
   const { auth } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ const LoginForm = () => {
           window.location.reload();
         }
       } else {
-        await dispatch(sendLoginSignupOTP(values));
+        await dispatch(sendSigninSignupOTP(values));
       }
     },
   });
@@ -116,7 +116,7 @@ const LoginForm = () => {
               <span>Please wait...</span>
             </>
           ) : auth.otpSent ? (
-            "Login →"
+            "Signin →"
           ) : (
             "Send OTP"
           )}
@@ -129,7 +129,7 @@ const LoginForm = () => {
             <button
               type='button'
               onClick={() =>
-                dispatch(sendLoginSignupOTP({ email: formik.values.email }))
+                dispatch(sendSigninSignupOTP({ email: formik.values.email }))
               }
               className='text-[#0F52FF] font-semibold hover:underline underline-offset-2'
             >
@@ -150,4 +150,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default SigninForm;

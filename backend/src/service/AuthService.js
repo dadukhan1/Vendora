@@ -9,7 +9,7 @@ import { Cart } from "../models/Cart.js";
 import jwtProvider from "../utils/jwtProvider.js";
 
 class AuthService {
-  async sendLoginOtp(email) {
+  async sendSigninOtp(email) {
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -33,8 +33,8 @@ class AuthService {
     await verificationCode.save();
 
     // send email to user
-    const subject = "Vendora Login/Signup OTP";
-    const body = `Your OTP is ${otp}. Please enter it to complete the login process.`;
+    const subject = "Vendora Signin/Signup OTP";
+    const body = `Your OTP is ${otp}. Please enter it to complete the signin process.`;
     await sendVerificationEmail(email, subject, body);
   }
 
@@ -78,7 +78,7 @@ class AuthService {
     await VerificationCode.deleteOne({ email });
 
     return {
-      message: "Login success",
+      message: "Signin success",
       jwt: jwtProvider.createJwt({ email }),
       role: user.role,
     };

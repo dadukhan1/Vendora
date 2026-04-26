@@ -1,7 +1,7 @@
 /** @format */
 import { useState } from "react";
 import SignupForm from "./SignupForm";
-import LoginForm from "./LoginForm";
+import SigninForm from "./SigninForm";
 import { Link } from "react-router";
 
 // const GoogleIcon = () => (
@@ -38,7 +38,7 @@ import { Link } from "react-router";
 // );
 
 const Auth = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isSignin, setIsSignin] = useState(true);
 
   return (
     <div className='min-h-screen bg-slate-50 flex items-center justify-center px-4 relative overflow-hidden'>
@@ -106,7 +106,7 @@ const Auth = () => {
             Vendora
           </h1>
           <p className='relative mt-1 text-sm text-slate-400'>
-            {isLogin
+            {isSignin
               ? "Welcome back — sign in to continue"
               : "Create your account to get started"}
           </p>
@@ -116,12 +116,12 @@ const Auth = () => {
         <div className='px-7 pt-6 pb-7'>
           {/* Tab Switcher */}
           <div className='flex bg-slate-50 border border-slate-200 rounded-xl p-1 gap-1 mb-6'>
-            {["Login", "Sign Up"].map((label) => {
-              const active = label === "Login" ? isLogin : !isLogin;
+            {["Signin", "Sign Up"].map((label) => {
+              const active = label === "Signin" ? isSignin : !isSignin;
               return (
                 <button
                   key={label}
-                  onClick={() => setIsLogin(label === "Login")}
+                  onClick={() => setIsSignin(label === "Signin")}
                   className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 ${
                     active
                       ? "bg-white text-[#0F52FF] shadow-sm shadow-blue-100"
@@ -135,8 +135,8 @@ const Auth = () => {
           </div>
 
           {/* Form */}
-          <div key={isLogin ? "login" : "signup"}>
-            {isLogin ? <LoginForm /> : <SignupForm />}
+          <div key={isSignin ? "signin" : "signup"}>
+            {isSignin ? <SigninForm /> : <SignupForm />}
           </div>
 
           {/* Divider */}
@@ -160,12 +160,12 @@ const Auth = () => {
 
           {/* Switch */}
           <p className='text-center text-sm text-slate-500 pt-4'>
-            {isLogin ? "No account? " : "Have an account? "}
+            {isSignin ? "No account? " : "Have an account? "}
             <button
-              onClick={() => setIsLogin(!isLogin)}
+              onClick={() => setIsSignin(!isSignin)}
               className='text-[#FF4F00] font-semibold hover:underline underline-offset-2 transition-all'
             >
-              {isLogin ? "Create one" : "Sign in"}
+              {isSignin ? "Create one" : "Sign in"}
             </button>
           </p>
         </div>
