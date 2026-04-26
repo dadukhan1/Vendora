@@ -7,6 +7,7 @@ import UserDetails from "./UserDetails";
 import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/store";
 import { clearUser } from "../../../Redux Toolkit/features/customer/userSlice";
 import { logout } from "../../../Redux Toolkit/features/auth/authSlice";
+import { logoutSeller } from "../../../Redux Toolkit/features/seller/sellerSlice";
 import {
   GridView,
   Person,
@@ -59,6 +60,7 @@ const Profile = () => {
     if (item.isLogout) {
       dispatch(logout());
       dispatch(clearUser());
+      dispatch(logoutSeller());
     }
     navigate(item.path);
   };

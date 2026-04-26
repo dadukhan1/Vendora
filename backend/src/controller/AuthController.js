@@ -16,7 +16,6 @@ class AuthController {
 
       res.status(200).json({ message: "OTP send successfully. " });
     } catch (error) {
-      console.log(error.message);
       const statusCode = error.message === "User not found" ? 404 : 500;
       res.status(statusCode).json({ message: error.message });
     }
@@ -24,25 +23,39 @@ class AuthController {
 
   async createUser(req, res) {
     try {
-      const jwt = await AuthService.createUser(req);
-
-      const response = {
-        message: "User created successfully",
-        jwt,
-        role: UserRoles.CUSTOMER,
-      };
+      const response = await AuthService.createUser(req);
 
       return res.status(200).json(response);
     } catch (error) {
-      const statusCode = error.message.includes("already exists") ? 409 : 500;
+      let statusCode = 500;
+      if (error.message.includes("already exists")) {
+        statusCode = 409;
+      } else if (
+        error.message === "All fields are required" ||
+        error.message === "Invalid OTP"
+      ) {
+        statusCode = 400;
+      }
       res.status(statusCode).json({ message: error.message });
     }
   }
 
   async signIn(req, res) {
-    const response = await AuthService.signIn(req);
-
-    res.status(201).json(response);
+    try {
+      const response = await AuthService.signIn(req);
+      res.status(200).json(response);
+    } catch (error) {
+      let statusCode = 500;
+      if (error.message === "User not found!") {
+        statusCode = 404;
+      } else if (
+        error.message === "All fields are required" ||
+        error.message === "Invalid OTP"
+      ) {
+        statusCode = 400;
+      }
+      res.status(statusCode).json({ message: error.message });
+    }
   }
 }
 

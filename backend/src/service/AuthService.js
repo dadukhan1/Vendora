@@ -39,14 +39,21 @@ class AuthService {
   }
 
   async createUser(req) {
-    const { email, fullName } = req.body;
-    if (!email || !fullName) {
+    const { email, fullName, otp } = req.body;
+    if (!email || !fullName || !otp) {
       throw new Error("All fields are required");
     }
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       throw new Error("User already exists with same email.");
     }
+
+    const verificationCode = await VerificationCode.findOne({ email });
+    if (!verificationCode || verificationCode.otp !== otp) {
+      throw new Error("Invalid OTP");
+    }
+
+    await VerificationCode.deleteOne({ email });
 
     const user = await User.create({
       email,
@@ -55,7 +62,11 @@ class AuthService {
 
     await Cart.create({ user: user._id });
 
-    return jwtProvider.createJwt({ email });
+    return {
+      message: "User created successfully",
+      jwt: jwtProvider.createJwt({ email }),
+      role: user.role,
+    };
   }
 
   async signIn(req) {

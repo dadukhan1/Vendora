@@ -116,7 +116,7 @@ const SigninForm = () => {
               <span>Please wait...</span>
             </>
           ) : auth.otpSent ? (
-            "Signin →"
+            "Sign in →"
           ) : (
             "Send OTP"
           )}

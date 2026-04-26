@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 const API_URL = "/auth";
 
 const initialState = {
-  jwt: null,
+  jwt: localStorage.getItem("token"),
   role: null,
   loading: false,
   error: null as string | null,

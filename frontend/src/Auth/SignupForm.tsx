@@ -1,6 +1,6 @@
 /** @format */
 
-import { CircularProgress, Snackbar, TextField } from "@mui/material";
+import { CircularProgress, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import { useAppDispatch, useAppSelector } from "../Redux Toolkit/store";
 import { useNavigate } from "react-router";
@@ -152,12 +152,6 @@ const SignupForm = () => {
           </p>
         )}
       </form>
-
-      <Snackbar
-        open={auth.otpSent}
-        autoHideDuration={2000}
-        message='✅ OTP sent to your email'
-      />
 
       <style>{`
         @keyframes fadeSlideIn {

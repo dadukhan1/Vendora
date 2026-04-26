@@ -162,7 +162,16 @@ export const updateSellerProfile = createAsyncThunk<
 const sellerSlice = createSlice({
   name: "sellers",
   initialState,
-  reducers: {},
+  reducers: {
+    logoutSeller: (state) => {
+      state.seller = null;
+      state.profile = null;
+      state.sellers = [];
+      state.selectedSeller = null;
+      state.report = null;
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchSellerProfile.pending, (state) => {
@@ -206,4 +215,5 @@ const sellerSlice = createSlice({
   },
 });
 
+export const { logoutSeller } = sellerSlice.actions;
 export default sellerSlice.reducer;

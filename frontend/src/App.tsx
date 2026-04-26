@@ -18,16 +18,14 @@ import { Toaster } from "react-hot-toast";
 
 function App() {
   const dispatch = useAppDispatch();
-  const { auth } = useAppSelector((store) => store);
+  const { auth, user } = useAppSelector((store) => store);
 
   useEffect(() => {
-    const jwt = localStorage.getItem("token");
-
-    if (jwt && !auth.jwt) {
-      dispatch(profile(jwt));
+    if (auth.jwt && !user.user) {
+      dispatch(profile(auth.jwt));
       dispatch(fetchSellerProfile());
     }
-  }, [auth.jwt, dispatch]);
+  }, [auth.jwt, user.user, dispatch]);
 
   useEffect(() => {
     // dispatch(createHomeCategory(homeCategories));
