@@ -19,6 +19,8 @@ export interface Product {
   category: any;
   seller: any;
   isFeatured?: boolean;
+  numReviews?: number;
+  avgRating?: number;
   createdAt?: string;
   updatedAt?: string;
 }

@@ -59,6 +59,14 @@ const productSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  numReviews: {
+    type: Number,
+    default: 0,
+  },
+  avgRating: {
+    type: Number,
+    default: 0,
+  },
 }, { timestamps: true });
 
 export const Product = model("Product", productSchema);

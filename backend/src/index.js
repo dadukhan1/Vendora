@@ -26,6 +26,7 @@ import AdminCategoryRoutes from "./router/AdminCategoryRoutes.js";
 import BannerRouter from "./router/BannerRoutes.js";
 import AdminProductRouter from "./router/AdminProductRoutes.js";
 import { WishlistRouter } from "./router/wishlistRoutes.js";
+import { ReviewRouter } from "./router/reviewRoutes.js";
 
 const app = express();
 
@@ -60,6 +61,7 @@ app.use("/api/seller/products", SellerProductRouter);
 
 app.use("/api/cart", CartRouter);
 app.use("/api/wishlist", WishlistRouter);
+app.use("/api/reviews", ReviewRouter);
 
 app.use("/api/address", AddressRouter);
 

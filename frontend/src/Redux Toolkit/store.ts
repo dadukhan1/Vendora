@@ -26,6 +26,7 @@ import dealSlice from "./features/admin/dealSlice.ts";
 import categorySlice from "./features/category/categorySlice.ts";
 import bannerSlice from "./features/banner/bannerSlice.ts";
 import wishlistSlice from "./features/customer/wishlistSlice.ts";
+import reviewSlice from "./features/customer/reviewSlice.ts";
 
 const rootReducer = combineReducers({
   auth: authSlice,
@@ -35,6 +36,7 @@ const rootReducer = combineReducers({
   cart: cartSlice,
   coupon: couponSlice,
   wishlist: wishlistSlice,
+  review: reviewSlice,
   homeCategory: homeCategorySlice,
   address: addressSlice,
 

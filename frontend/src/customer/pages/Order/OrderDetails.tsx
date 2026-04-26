@@ -15,7 +15,7 @@ import {
   orderById,
   orderItemById,
 } from "../../../Redux Toolkit/features/customer/orderSlice";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 // Order status color mapping
 const orderStatusColors: Record<
@@ -53,6 +53,7 @@ const paymentStatusColors: Record<string, { bg: string; text: string }> = {
 };
 
 const OrderDetails = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { orderItemId, orderId } = useParams();
   const { orderItem, currentOrder } = useAppSelector(
@@ -127,12 +128,27 @@ const OrderDetails = () => {
           }}
         >
           <img
+            onClick={() => navigate(`/product-details/${orderItem?.product?.category}/${orderItem?.product?.title}/${orderItem?.product?._id}`)}
             src={orderItem?.product?.images[0]}
             alt='Product'
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            style={{ width: "100%", height: "100%", objectFit: "cover", cursor: 'pointer' }}
           />
         </div>
         <div style={{ textAlign: "center" }}>
+          <p
+            onClick={() => navigate(`/product-details/${orderItem?.product?.category}/${orderItem?.product?.title}/${orderItem?.product?._id}`)}
+            style={{
+              fontSize: 18,
+              fontWeight: 800,
+              color: "#0F172A",
+              lineHeight: 1.3,
+              cursor: 'pointer'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.color = "#0F52FF"}
+            onMouseLeave={(e) => e.currentTarget.style.color = "#0F172A"}
+          >
+            {orderItem?.product?.title}
+          </p>
           <p
             style={{
               fontSize: 13,
@@ -324,7 +340,7 @@ const OrderDetails = () => {
                       {currentOrder?.paymentStatus === "COMPLETED"
                         ? "Payment Successful"
                         : currentOrder?.paymentStatus === "PENDING" &&
-                          "Pay on Delivery"}
+                        "Pay on Delivery"}
                     </span>
                   </>
                 }

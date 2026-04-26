@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { Favorite, FavoriteBorder } from "@mui/icons-material";
+import { Favorite, FavoriteBorder, Star } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/store";
 import { toggleWishlist, toggleWishlistOptimistic } from "../../../Redux Toolkit/features/customer/wishlistSlice";
@@ -125,6 +125,16 @@ const ProductCard = ({ item }: any) => {
         <p className='text-[0.75rem] text-[#64748B] font-medium uppercase tracking-widest'>
           {item.category?.name || item.category}
         </p>
+
+        {/* Rating Display */}
+        <div className='flex items-center gap-2'>
+           <div className='flex items-center gap-0.5 px-1.5 py-0.5 bg-green-50 rounded text-[0.75rem] font-bold text-green-700'>
+              {item.avgRating || 0} <Star sx={{ fontSize: 12 }} />
+           </div>
+           <span className='text-[0.75rem] text-[#94A3B8] font-medium'>
+             ({item.numReviews || 0})
+           </span>
+        </div>
 
         <div className='flex items-baseline gap-2 pt-1'>
           <span className='text-[1.1rem] font-black text-[#0F172A]'>

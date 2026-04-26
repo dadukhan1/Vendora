@@ -25,6 +25,10 @@ import { fetchProductById } from "../../../../Redux Toolkit/features/customer/pr
 import { addItemToCart, addItemToCartOptimistic, deleteCartItem, removeItemFromCartOptimistic } from "../../../../Redux Toolkit/features/customer/cartSlice";
 import { toggleWishlist, toggleWishlistOptimistic } from "../../../../Redux Toolkit/features/customer/wishlistSlice";
 import { useNavigate, useParams } from "react-router";
+import { Rating } from "@mui/material";
+import { checkUserPurchase, fetchReviewsByProduct } from "../../../../Redux Toolkit/features/customer/reviewSlice";
+import ReviewCard from "./ReviewCard";
+import ReviewForm from "./ReviewForm";
 
 const ProductDetails = () => {
   const [currentImage, setCurrentImage] = useState(0);
@@ -34,8 +38,10 @@ const ProductDetails = () => {
   const { product, loading } = useAppSelector((store) => store.products);
   const { wishlist } = useAppSelector((store) => store.wishlist);
   const { cart } = useAppSelector((store) => store.cart);
+  const { reviews, canReview, alreadyReviewed } = useAppSelector((store) => store.review);
   const { jwt } = useAppSelector((store) => store.auth);
   const navigate = useNavigate();
+  const [showReviewForm, setShowReviewForm] = useState(false);
 
   const isWishlisted = wishlist?.products?.some((p: any) => p._id === product?._id);
 
@@ -44,7 +50,11 @@ const ProductDetails = () => {
     // Ensure the user lands at the top when switching products.
     window.scrollTo({ top: 0, behavior: "smooth" });
     dispatch(fetchProductById(productId));
-  }, [dispatch, productId]);
+    dispatch(fetchReviewsByProduct(productId));
+    if (jwt) {
+      dispatch(checkUserPurchase(productId));
+    }
+  }, [dispatch, productId, jwt]);
 
   const isProductInCart = cart?.cartItems?.some((item: any) => item.product?._id === product?._id);
 
@@ -202,12 +212,13 @@ const ProductDetails = () => {
 
             {/* Rating */}
             <div className='flex items-center gap-3'>
-              <div className='flex items-center gap-1 bg-[#0F52FF]/10 px-2.5 py-1 rounded-lg'>
-                <Star className='!text-[#0F52FF] !text-[18px]' />
-                <span className='font-bold text-[#0F52FF] text-sm'>4.0</span>
+              <div className='flex items-center gap-1 bg-green-50 px-2.5 py-1 rounded-lg border border-green-100'>
+                <Star className='!text-green-600 !text-[18px]' />
+                <span className='font-black text-green-700 text-sm'>{product?.avgRating || 0}</span>
               </div>
-              <span className='text-[#64748B] text-sm'>478 Ratings</span>
-              <span className='text-[#64748B] text-sm'>· 124 Reviews</span>
+              <p className='text-sm font-bold text-[#64748B]'>
+                {product?.numReviews || 0} customer reviews
+              </p>
             </div>
 
             {/* Price card */}
@@ -307,13 +318,64 @@ const ProductDetails = () => {
 
             {/* Description */}
             {product?.description && (
-              <div className='border-t border-[#E2E8F0] pt-4 text-sm text-[#64748B] leading-relaxed'>
-                <p className='font-semibold text-[#0F172A] mb-1.5'>
-                  About this product
-                </p>
-                {product.description}
+              <div className='border-t border-[#E2E8F0] pt-6'>
+                <h3 className='text-lg font-black text-[#0F172A] mb-3'>
+                  Product Details
+                </h3>
+                <div className='text-[0.925rem] text-[#475569] leading-relaxed'>
+                  {product.description}
+                </div>
               </div>
             )}
+
+            {/* Reviews Section */}
+            <div className='border-t border-[#E2E8F0] pt-10 mt-10'>
+              <div className='flex items-center justify-between mb-8'>
+                <div>
+                  <h2 className='text-2xl font-black text-[#0F172A] tracking-tight'>
+                    Customer Reviews
+                  </h2>
+                  <div className='flex items-center gap-2 mt-1'>
+                    <Rating value={product?.avgRating || 0} readOnly precision={0.5} />
+                    <span className='text-sm font-bold text-[#64748B]'>Based on {product?.numReviews || 0} reviews</span>
+                  </div>
+                </div>
+                {!showReviewForm && canReview && (
+                  <button
+                    onClick={() => {
+                      setShowReviewForm(true);
+                    }}
+                    className='px-6 py-2.5 border-[1.5px] border-[#0F52FF] text-[#0F52FF] font-black rounded-full text-sm hover:bg-blue-50 transition-all'
+                  >
+                    Write a Review
+                  </button>
+                )}
+                {!showReviewForm && alreadyReviewed && (
+                  <div className='flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-full border border-slate-200'>
+                    <Star className='text-slate-400' sx={{ fontSize: 16 }} />
+                    <span className='text-sm font-bold text-slate-500'>You've already reviewed this</span>
+                  </div>
+                )}
+              </div>
+
+              {showReviewForm && (
+                <div className='mb-10'>
+                  <ReviewForm productId={product?._id} onCancel={() => setShowReviewForm(false)} />
+                </div>
+              )}
+
+              <div className='space-y-2'>
+                {reviews.length > 0 ? (
+                  reviews.map((review) => (
+                    <ReviewCard key={review._id} review={review} />
+                  ))
+                ) : (
+                  <div className='py-10 text-center bg-slate-50 rounded-2xl border border-dashed border-gray-200'>
+                    <p className='text-[#64748B] font-medium'>No reviews yet. Be the first to review this product!</p>
+                  </div>
+                )}
+              </div>
+            </div>
           </section>
         </div>
 
