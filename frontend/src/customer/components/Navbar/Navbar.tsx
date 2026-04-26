@@ -39,6 +39,7 @@ const Navbar = () => {
   const { user } = useAppSelector((store) => store.user);
   const { seller } = useAppSelector((store) => store.seller);
   const { wishlist } = useAppSelector((store) => store.wishlist);
+  const { cart } = useAppSelector((store) => store.cart);
 
   useEffect(() => {
     dispatch(fetchAllCategories());
@@ -211,7 +212,11 @@ const Navbar = () => {
                 onClick={() => navigate("/cart")}
                 className='text-[#475569] hover:text-[#0F52FF] hover:bg-blue-50 transition-all'
               >
-                <Badge badgeContent={0} color="primary" sx={{ "& .MuiBadge-badge": { fontSize: 10, height: 18, minWidth: 18 } }}>
+                <Badge 
+                  badgeContent={cart?.cartItems?.length || 0} 
+                  color="primary" 
+                  sx={{ "& .MuiBadge-badge": { fontSize: 10, height: 18, minWidth: 18, bgcolor: '#0F52FF' } }}
+                >
                   <AddShoppingCart sx={{ fontSize: 24 }} />
                 </Badge>
               </IconButton>
