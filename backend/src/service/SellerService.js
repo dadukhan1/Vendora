@@ -18,7 +18,6 @@ class SellerService {
       bankDetails,
       businessDetails,
     } = req.body;
-    console.log(businessDetails);
 
     // Validate required fields
     if (!sellerName || !mobile || !email || !password || !GSTIN) {
@@ -98,7 +97,6 @@ class SellerService {
       }], { session });
 
       await session.commitTransaction();
-      console.log(newSeller)
       return newSeller;
     } catch (err) {
       await session.abortTransaction();
@@ -117,13 +115,6 @@ class SellerService {
     const seller = await Seller.findOne({ email });
     if (!seller) {
       throw new Error("Seller Not Found");
-    }
-    return seller;
-  }
-  async getSellerById(id) {
-    const seller = await Seller.findById(id);
-    if (!seller) {
-      throw new Error("Seller not found!");
     }
     return seller;
   }
@@ -159,10 +150,6 @@ class SellerService {
       { $set: { accountStatus: status } },
       { new: true },
     );
-  }
-
-  async deleteSeller(sellerId) {
-    return await Seller.findByIdAndDelete(sellerId);
   }
 }
 

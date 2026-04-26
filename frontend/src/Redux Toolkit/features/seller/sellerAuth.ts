@@ -30,12 +30,13 @@ export const verifySignin = createAsyncThunk<any, any>(
   async ({ email, otp }, { rejectWithValue }) => {
     try {
       // const { email, otp } = values;
-      const response = await api.post("/seller/verify/signin-otp", {
+      const response = await api.post("/seller/signin", {
         email,
         otp,
       });
       const data = response.data;
       localStorage.setItem("token", data.jwt);
+      localStorage.setItem("role", data.role);
       return data;
     } catch (error) {
       console.error("Error sending OTP:", error);
@@ -48,7 +49,6 @@ export const signup = createAsyncThunk<any, any>(
   "seller/signup",
   async (values, { rejectWithValue }) => {
     try {
-      console.log(values);
       const {
         sellerName,
         mobile,
@@ -58,7 +58,7 @@ export const signup = createAsyncThunk<any, any>(
         businessDetails,
         password,
       } = values;
-      const response = await api.post("/seller", {
+      const response = await api.post("/seller/signup", {
         sellerName,
         email: businessDetails.businessEmail,
         mobile,

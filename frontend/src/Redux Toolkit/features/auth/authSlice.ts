@@ -8,7 +8,7 @@ const API_URL = "/auth";
 
 const initialState = {
   jwt: localStorage.getItem("token"),
-  role: null,
+  role: localStorage.getItem("role"),
   loading: false,
   error: null as string | null,
   otpSent: false,
@@ -43,6 +43,7 @@ export const signup = createAsyncThunk<any, any>(
         otp,
       });
       localStorage.setItem("token", response.data.jwt);
+      localStorage.setItem("role", response.data.role);
       return response.data;
     } catch (error) {
       console.error("Error sending OTP:", error);
@@ -61,6 +62,7 @@ export const signin = createAsyncThunk<any, any>(
         otp,
       });
       localStorage.setItem("token", response.data.jwt);
+      localStorage.setItem("role", response.data.role);
       console.log(response.data);
       return response.data;
     } catch (error) {
@@ -76,6 +78,7 @@ const authSlice = createSlice({
   reducers: {
     logout: (state) => {
       localStorage.removeItem("token");
+      localStorage.removeItem("role");
       state.jwt = null;
       state.role = null;
     },

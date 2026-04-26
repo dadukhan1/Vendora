@@ -32,7 +32,6 @@ class UserController {
         user,
       });
     } catch (error) {
-      console.error("Error updating profile:", error);
       res.status(500).json({
         message: error.message || "An error occurred while updating profile",
       });

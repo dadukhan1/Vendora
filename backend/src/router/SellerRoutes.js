@@ -7,10 +7,10 @@ import sellerAuthMiddleware from "../middlewares/SellerAuthMiddleware.js";
 const router = express.Router();
 
 router.get("/profile", sellerController.getSellerProfile);
-router.post("/", sellerController.createSeller);
 router.get("/", sellerController.getAllSellers);
 router.patch("/", sellerAuthMiddleware, sellerController.updateSeller);
 
-router.post("/verify/signin-otp", sellerController.verifySigninOtp);
+router.post("/signup", sellerController.createSeller);
+router.post("/signin", sellerController.signInSeller);
 
 export const SellerRouter = router;

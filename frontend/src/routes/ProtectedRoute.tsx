@@ -13,23 +13,31 @@ type Props = {
 
 const ProtectedRoute = ({ children, requiredRole }: Props) => {
   const { user, error: userError } = useAppSelector((store) => store.user);
-  const { seller, error: sellerError } = useAppSelector((store) => store.seller);
-  const { jwt } = useAppSelector((store) => store.auth);
+  const { profile: sellerProfile, error: sellerError } = useAppSelector((store) => store.seller);
+  const { jwt, role: authRole } = useAppSelector((store) => store.auth);
 
-  const role = user?.role || (seller ? "ROLE_SELLER" : null);
+  const role = user?.role || (sellerProfile ? "ROLE_SELLER" : null);
 
   // 1. If no JWT, redirect to home immediately
   if (!jwt) {
     return <Navigate to="/" replace />;
   }
 
-  // 2. If we have a JWT but no role yet, we are likely initializing or loading
-  if (!role) {
-    // If we hit an error during profile fetch, redirect to home
+  // 2. Immediate Role Mismatch Check (if role is in session)
+  if (authRole && authRole !== requiredRole) {
+    return <Navigate to="/unauthorized" replace />;
+  }
+
+  // 3. Initialization/Loading state
+  const isProfileLoading = authRole
+    ? (authRole === "ROLE_SELLER" ? !sellerProfile : !user)
+    : (!user && !sellerProfile);
+
+  if (isProfileLoading) {
     if (userError || sellerError) {
       return <Navigate to="/" replace />;
     }
-    // Otherwise show loading spinner
+
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
         <CircularProgress />
@@ -37,9 +45,9 @@ const ProtectedRoute = ({ children, requiredRole }: Props) => {
     );
   }
 
-  // 3. Role check
-  if (role !== requiredRole) {
-    return <Navigate to='/unauthorized' replace />;
+  // 4. Final Authorization Check
+  if (!role || role !== requiredRole) {
+    return <Navigate to="/unauthorized" replace />;
   }
 
   return <>{children}</>;
