@@ -79,6 +79,9 @@ const reviewSlice = createSlice({
       .addCase(createReview.fulfilled, (state, action) => {
         state.loading = false;
         state.reviews.unshift(action.payload);
+        state.reviewCount += 1;
+        state.canReview = state.purchaseCount > state.reviewCount;
+        state.alreadyReviewed = state.reviewCount >= state.purchaseCount;
         toast.success("Review submitted successfully!");
       })
       .addCase(createReview.rejected, (state, action) => {

@@ -46,12 +46,17 @@ class ReviewController {
       const user = req.user;
       const { productId } = req.params;
 
-      const userOrders = await Order.find({ user: user._id }).populate("orderItems");
-      const purchaseCount = userOrders.reduce((acc, order) => {
-        const productItems = order.orderItems.filter(item => item.product.toString() === productId.toString());
-        const totalQuantity = productItems.reduce((q, item) => q + (item.quantity || 1), 0);
-        return acc + totalQuantity;
-      }, 0);
+      const userOrders = await Order.find({ 
+          user: user._id, 
+          orderStatus: { $ne: "CANCELLED" }
+      }).populate("orderItems");
+
+      const purchaseCount = userOrders.filter(order => 
+          order.orderItems.some(item => {
+              const itemProdId = item.product?._id ? item.product._id.toString() : item.product.toString();
+              return itemProdId === productId.toString();
+          })
+      ).length;
 
       const reviewCount = await Review.countDocuments({ user: user._id, product: productId });
 

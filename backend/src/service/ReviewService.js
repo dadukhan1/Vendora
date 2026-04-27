@@ -9,16 +9,18 @@ class ReviewService {
   async createReview(user, product, requestData) {
     const { reviewText, rating, images } = requestData;
 
-    // Count how many times the user has purchased the product
-    const userOrders = await Order.find({ user: user._id }).populate("orderItems");
-    const purchaseCount = userOrders.reduce((acc, order) => {
-      const productItems = order.orderItems.filter(item => {
-        const itemProdId = item.product?._id ? item.product._id.toString() : item.product.toString();
-        return itemProdId === product._id.toString();
-      });
-      const totalQuantity = productItems.reduce((q, item) => q + (item.quantity || 1), 0);
-      return acc + totalQuantity;
-    }, 0);
+    // Count how many unique orders contain this product (any status except CANCELLED)
+    const userOrders = await Order.find({ 
+        user: user._id, 
+        orderStatus: { $ne: "CANCELLED" }
+    }).populate("orderItems");
+
+    const purchaseCount = userOrders.filter(order => 
+        order.orderItems.some(item => {
+            const itemProdId = item.product?._id ? item.product._id.toString() : item.product.toString();
+            return itemProdId === product._id.toString();
+        })
+    ).length;
 
     if (purchaseCount === 0) {
       throw new Error("Only verified buyers can leave a review for this product.");
