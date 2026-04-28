@@ -7,8 +7,7 @@ class WishlistService {
     let wishlist = await Wishlist.findOne({ user: user._id }).populate({
       path: "products",
       populate: [
-        { path: "category" },
-        { path: "seller" }
+        { path: "category" }
       ]
     });
     if (!wishlist) {
@@ -19,7 +18,7 @@ class WishlistService {
 
   async addProductToWishlist(user, product) {
     let wishlist = await Wishlist.findOne({ user: user._id });
-    
+
     if (!wishlist) {
       wishlist = await Wishlist.create({ user: user._id });
     }
