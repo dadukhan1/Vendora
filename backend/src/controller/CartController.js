@@ -30,14 +30,15 @@ class CartController {
 
       const product = await ProductService.findProductById(productId);
 
-      const cartItem = await CartService.addCartItems(
+      await CartService.addCartItems(
         user,
         product,
         size,
         quantity,
       );
 
-      res.status(200).json(cartItem);
+      const updatedCart = await CartService.findUserCart(user);
+      res.status(200).json(updatedCart);
     } catch (error) {
       console.log("ERROR OCCURRED:", error.message);
       res.status(500).json({ message: error.message });

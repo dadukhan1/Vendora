@@ -19,7 +19,7 @@ class CartItemService {
 
   async updateCartItem(userId, cartItemId, quantity) {
     if (quantity === 0) {
-      await CartItem.deleteOne({ _id: cartItemId, user: userId });
+      await CartItem.deleteOne({ _id: cartItemId, userId });
       return { message: "Item removed from cart" };
     }
 
@@ -34,8 +34,6 @@ class CartItemService {
 
     const update = {
       quantity,
-      mrpPrice: quantity * cartItem.product.mrpPrice,
-      sellingPrice: quantity * cartItem.product.sellingPrice,
     };
 
     const updatedItem = await CartItem.findOneAndUpdate(

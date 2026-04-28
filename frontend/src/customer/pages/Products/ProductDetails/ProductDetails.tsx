@@ -66,7 +66,7 @@ const ProductDetails = () => {
     if (!product) return;
 
     if (isProductInCart) {
-      const cartItem = cart.cartItems.find((item: any) => item.product._id === product._id);
+      const cartItem = cart?.cartItems?.find((item: any) => item.product?._id === product?._id);
       if (cartItem) {
         // Optimistic update
         dispatch(removeItemFromCartOptimistic(product._id));
@@ -206,7 +206,7 @@ const ProductDetails = () => {
                   "Brand"}
               </span>
               <h1 className='text-2xl font-bold leading-snug text-[#0F172A]'>
-                {product?.item}
+                {product?.title}
               </h1>
             </div>
 
