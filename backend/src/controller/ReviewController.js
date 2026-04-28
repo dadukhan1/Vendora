@@ -30,16 +30,16 @@ class ReviewController {
     }
   }
 
-  async deleteReview(req, res) {
-    try {
-      const user = req.user;
-      const { reviewId } = req.params;
-      const result = await ReviewService.deleteReview(reviewId, user._id);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  }
+  // async deleteReview(req, res) {
+  //   try {
+  //     const user = req.user;
+  //     const { reviewId } = req.params;
+  //     const result = await ReviewService.deleteReview(reviewId, user._id);
+  //     res.status(200).json(result);
+  //   } catch (error) {
+  //     res.status(500).json({ message: error.message });
+  //   }
+  // }
 
   async checkPurchaseStatus(req, res) {
     try {

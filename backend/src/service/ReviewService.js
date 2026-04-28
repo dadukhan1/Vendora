@@ -59,17 +59,17 @@ class ReviewService {
       .sort({ createdAt: -1 });
   }
 
-  async deleteReview(reviewId, userId) {
-    const review = await Review.findById(reviewId);
-    if (!review) {
-      throw new Error("Review not found");
-    }
-    if (review.user.toString() !== userId.toString()) {
-      throw new Error("You are not authorized to delete this review");
-    }
-    await Review.findByIdAndDelete(reviewId);
-    return { message: "Review deleted successfully" };
-  }
+  // async deleteReview(reviewId, userId) {
+  //   const review = await Review.findById(reviewId);
+  //   if (!review) {
+  //     throw new Error("Review not found");
+  //   }
+  //   if (review.user.toString() !== userId.toString()) {
+  //     throw new Error("You are not authorized to delete this review");
+  //   }
+  //   await Review.findByIdAndDelete(reviewId);
+  //   return { message: "Review deleted successfully" };
+  // }
 
   async canUserReview(userId, productId) {
     const userOrders = await Order.find({ user: userId }).populate("orderItems");

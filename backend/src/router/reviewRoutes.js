@@ -9,6 +9,6 @@ const router = express.Router();
 router.get("/product/:productId", ReviewController.getProductReviews);
 router.get("/product/:productId/check-purchase", authMiddleware, ReviewController.checkPurchaseStatus);
 router.post("/product/:productId", authMiddleware, ReviewController.createReview);
-router.delete("/:reviewId", authMiddleware, ReviewController.deleteReview);
+// router.delete("/:reviewId", authMiddleware, ReviewController.deleteReview);
 
 export const ReviewRouter = router;
