@@ -193,6 +193,7 @@ const Cart = () => {
 
           {/* Add from Wishlist */}
           <div
+            onClick={() => navigate("/wishlist")}
             className="bg-white border border-[#E2E8F0] rounded-2xl px-5 py-4
             flex justify-between items-center cursor-pointer hover:border-[#FF4F00]/40
             transition-colors group"

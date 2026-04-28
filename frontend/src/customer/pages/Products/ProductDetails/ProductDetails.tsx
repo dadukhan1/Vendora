@@ -329,59 +329,59 @@ const ProductDetails = () => {
             )}
 
             {/* Reviews Section */}
-            <div className='border-t border-[#E2E8F0] pt-10 mt-10'>
-              <div className='flex items-center justify-between mb-8'>
-                <div>
-                  <h2 className='text-2xl font-black text-[#0F172A] tracking-tight'>
-                    Customer Reviews
-                  </h2>
-                  <div className='flex items-center gap-2 mt-1'>
-                    <Rating value={product?.avgRating || 0} readOnly precision={0.5} />
-                    <span className='text-sm font-bold text-[#64748B]'>Based on {product?.numReviews || 0} reviews</span>
-                  </div>
+          </section>
+          <div className='border-t border-[#E2E8F0] pt-10 mt-10'>
+            <div className='flex items-center justify-between mb-8'>
+              <div>
+                <h2 className='text-2xl font-black text-[#0F172A] tracking-tight'>
+                  Customer Reviews
+                </h2>
+                <div className='flex items-center gap-2 mt-1'>
+                  <Rating value={product?.avgRating || 0} readOnly precision={0.5} />
+                  <span className='text-sm font-bold text-[#64748B]'>Based on {product?.numReviews || 0} reviews</span>
                 </div>
-                {!showReviewForm && canReview && (
-                  <button
-                    onClick={() => {
-                      setShowReviewForm(true);
-                    }}
-                    className='px-6 py-2.5 border-[1.5px] border-[#0F52FF] text-[#0F52FF] font-black rounded-full text-sm hover:bg-blue-50 transition-all'
-                  >
-                    Write a Review
-                  </button>
-                )}
-                {!showReviewForm && alreadyReviewed && (
-                  <div className='flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-full border border-slate-200'>
-                    <Star className='text-slate-400' sx={{ fontSize: 16 }} />
-                    <span className='text-sm font-bold text-slate-500'>You've reviewed all your purchases</span>
-                  </div>
-                )}
-                {!showReviewForm && canReview && purchaseCount > 1 && (
-                  <p className='text-xs font-bold text-[#0F52FF] mt-2 text-right'>
-                    You have {purchaseCount - reviewCount} pending review{purchaseCount - reviewCount > 1 ? 's' : ''}
-                  </p>
-                )}
               </div>
-
-              {showReviewForm && (
-                <div className='mb-10'>
-                  <ReviewForm productId={product?._id} onCancel={() => setShowReviewForm(false)} />
+              {!showReviewForm && canReview && (
+                <button
+                  onClick={() => {
+                    setShowReviewForm(true);
+                  }}
+                  className='px-6 py-2.5 border-[1.5px] border-[#0F52FF] text-[#0F52FF] font-black rounded-full text-sm hover:bg-blue-50 transition-all'
+                >
+                  Write a Review
+                </button>
+              )}
+              {!showReviewForm && alreadyReviewed && (
+                <div className='flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-full border border-slate-200'>
+                  <Star className='text-slate-400' sx={{ fontSize: 16 }} />
+                  <span className='text-sm font-bold text-slate-500'>You've reviewed all your purchases</span>
                 </div>
               )}
-
-              <div className='space-y-2'>
-                {reviews.length > 0 ? (
-                  reviews.map((review) => (
-                    <ReviewCard key={review._id} review={review} />
-                  ))
-                ) : (
-                  <div className='py-10 text-center bg-slate-50 rounded-2xl border border-dashed border-gray-200'>
-                    <p className='text-[#64748B] font-medium'>No reviews yet. Be the first to review this product!</p>
-                  </div>
-                )}
-              </div>
+              {!showReviewForm && canReview && purchaseCount > 1 && (
+                <p className='text-xs font-bold text-[#0F52FF] mt-2 text-right'>
+                  You have {purchaseCount - reviewCount} pending review{purchaseCount - reviewCount > 1 ? 's' : ''}
+                </p>
+              )}
             </div>
-          </section>
+
+            {showReviewForm && (
+              <div className='mb-10'>
+                <ReviewForm productId={product?._id} onCancel={() => setShowReviewForm(false)} />
+              </div>
+            )}
+
+            <div className='space-y-2'>
+              {reviews.length > 0 ? (
+                reviews.map((review) => (
+                  <ReviewCard key={review._id} review={review} />
+                ))
+              ) : (
+                <div className='py-10 text-center bg-slate-50 rounded-2xl border border-dashed border-gray-200'>
+                  <p className='text-[#64748B] font-medium'>No reviews yet. Be the first to review this product!</p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Similar Products */}
