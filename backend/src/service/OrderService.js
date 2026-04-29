@@ -20,10 +20,6 @@ class OrderService {
 
       // Create address if it doesn't exist
       if (!existingAddress) {
-        console.log(
-          "Address not found. Creating new shipping address:",
-          shippingAddress,
-        );
         existingAddress = await Address.create(shippingAddress, { session });
         existingAddress = existingAddress[0]; // create returns an array
       }
