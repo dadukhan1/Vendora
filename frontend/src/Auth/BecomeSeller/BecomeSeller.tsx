@@ -13,7 +13,6 @@ import {
   Star,
   TrendingUp,
   Storefront,
-  CheckCircle,
   LocalShipping,
   Insights,
   SupportAgent,
