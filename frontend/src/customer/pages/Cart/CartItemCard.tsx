@@ -1,7 +1,7 @@
 /** @format */
 
 import { Add, Close, Remove } from "@mui/icons-material";
-import { Box, Card, CardContent, Divider, IconButton, Typography } from "@mui/material";
+import { Box, Card, CardContent, IconButton } from "@mui/material";
 import { useAppDispatch } from "../../../Redux Toolkit/store";
 import {
   deleteCartItem,

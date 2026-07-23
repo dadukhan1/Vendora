@@ -133,7 +133,7 @@ const CouponForm = () => {
         <Box component="form" onSubmit={formik.handleSubmit} sx={{ p: 4 }}>
           <Grid container spacing={3}>
             {/* Coupon Code */}
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
                 <Typography sx={{ fontFamily: "Outfit", fontWeight: 700, color: "#0a0a0a", mb: 0.5 }}>
                   Coupon Code
@@ -161,7 +161,7 @@ const CouponForm = () => {
             </Grid>
 
             {/* Discount Percentage */}
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Typography sx={{ fontFamily: "Outfit", fontWeight: 700, color: "#0a0a0a", mb: 0.5 }}>
                 Discount (%)
               </Typography>
@@ -176,7 +176,7 @@ const CouponForm = () => {
             </Grid>
 
             {/* Minimum Order Value */}
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Typography sx={{ fontFamily: "Outfit", fontWeight: 700, color: "#0a0a0a", mb: 0.5 }}>
                 Minimum Order ($)
               </Typography>
@@ -191,7 +191,7 @@ const CouponForm = () => {
             </Grid>
 
             {/* Validity Dates */}
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Typography sx={{ fontFamily: "Outfit", fontWeight: 700, color: "#0a0a0a", mb: 0.5 }}>
                 Start Date
               </Typography>
@@ -203,7 +203,7 @@ const CouponForm = () => {
                 />
               </LocalizationProvider>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Typography sx={{ fontFamily: "Outfit", fontWeight: 700, color: "#0a0a0a", mb: 0.5 }}>
                 End Date
               </Typography>
@@ -258,8 +258,6 @@ const CouponForm = () => {
               boxShadow: "none",
               "&:hover": { bgcolor: "#c9993a", boxShadow: "none" },
             }}
-            variant="contained"
-            type="submit"
             onClick={() => formik.handleSubmit()}
           >
             Create Coupon

@@ -129,8 +129,8 @@ export default function SellerTable() {
     dispatch(fetchSellers(status));
   }, [status, dispatch]);
 
-  const getStatusConfig = (s: string) => {
-    const found = accountStatus.find((a) => a.status === s);
+  const getStatusConfig = (s: string | undefined) => {
+    const found = accountStatus.find((a) => a.status === (s ?? ""));
     return found || accountStatus[0];
   };
 

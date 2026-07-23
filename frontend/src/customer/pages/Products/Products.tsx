@@ -5,7 +5,6 @@ import FilterSection from "./FilterSection";
 import {
   CircularProgress,
   Chip,
-  Divider,
   FormControl,
   InputLabel,
   MenuItem,

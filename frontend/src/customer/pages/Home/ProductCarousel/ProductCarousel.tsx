@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import ProductCard from "../../Products/ProductCard";
-import { Box, Skeleton } from "@mui/material";
+import { Skeleton } from "@mui/material";
 import { useAppDispatch } from "../../../../Redux Toolkit/store.ts";
 import { getAllProducts } from "../../../../Redux Toolkit/features/customer/productSlice.ts";
 import { useNavigate } from "react-router";
