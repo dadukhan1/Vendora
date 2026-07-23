@@ -119,6 +119,7 @@ const SellerProfile = () => {
     dispatch(fetchSellerProfile()).then((result) => {
       if (result.type.endsWith("/fulfilled") && result.payload) {
         const fetchedProfile = result.payload;
+        if (typeof fetchedProfile === "string") return;
         const newForm = Object.fromEntries([
           ["businessName", fetchedProfile.businessDetails?.businessName || ""],
           [
@@ -429,9 +430,10 @@ const SellerProfile = () => {
                       <Grid container spacing={3}>
                         {sectionFields.map((field) => (
                           <Grid
-                            item
-                            xs={12}
-                            sm={field.name === "businessAddress" ? 12 : 6}
+                            size={{
+                              xs: 12,
+                              sm: field.name === "businessAddress" ? 12 : 6,
+                            }}
                             key={field.key}
                           >
                             <Box
