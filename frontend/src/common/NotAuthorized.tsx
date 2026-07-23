@@ -1,129 +1,188 @@
 /** @format */
 
-import { GppBad, Home, ArrowBack } from "@mui/icons-material";
-import { Button, Container, Typography, Box, Paper } from "@mui/material";
 import { useNavigate } from "react-router";
 
 const NotAuthorized = () => {
   const navigate = useNavigate();
 
   return (
-    <Container maxWidth="sm">
-      <Box
-        sx={{
-          minHeight: "100vh",
+    <div style={{
+      height: "100vh",
+      background: "#fafaf8",
+      fontFamily: "Outfit, sans-serif",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "16px",
+    }}>
+      <div style={{
+        maxWidth: 480,
+        width: "100%",
+        textAlign: "center",
+      }}>
+
+        {/* Lock icon illustration */}
+        <div style={{
+          width: 80,
+          height: 80,
+          borderRadius: "50%",
+          background: "#fff",
+          border: "1px solid #f0ece6",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.06)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          px: 2
-        }}
-      >
-        <Paper
-          elevation={0}
-          sx={{
-            p: { xs: 4, md: 8 },
-            textAlign: "center",
-            borderRadius: "32px",
-            border: "1px solid",
-            borderColor: "divider",
-            bgcolor: "white",
-            boxShadow: "0 20px 50px rgba(0,0,0,0.05)"
-          }}
-        >
-          {/* Animated Icon Container */}
-          <Box
-            sx={{
-              width: 100,
-              height: 100,
-              borderRadius: "50%",
-              bgcolor: "#fff1f2",
+          margin: "0 auto 20px",
+          position: "relative",
+        }}>
+          <svg width="36" height="36" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="8" y="22" width="32" height="22" rx="5" fill="#f0ece6" stroke="#c9993a" strokeWidth="2"/>
+            <path d="M16 22V16a8 8 0 1 1 16 0v6" stroke="#c9993a" strokeWidth="2.5" strokeLinecap="round"/>
+            <circle cx="24" cy="32" r="4" fill="#c9993a"/>
+            <rect x="22" y="34" width="4" height="5" rx="2" fill="#c9993a"/>
+          </svg>
+          <div style={{
+            position: "absolute",
+            inset: -6,
+            borderRadius: "50%",
+            border: "1px dashed rgba(201,153,58,0.25)",
+          }} />
+        </div>
+
+        <p style={{
+          fontSize: 10,
+          fontWeight: 700,
+          letterSpacing: "0.18em",
+          textTransform: "uppercase",
+          color: "#c9993a",
+          marginBottom: 8,
+        }}>
+          Access Restricted
+        </p>
+
+        <h1 style={{
+          fontFamily: "'Playfair Display', serif",
+          fontSize: 28,
+          fontWeight: 700,
+          color: "#0a0a0a",
+          lineHeight: 1.2,
+          margin: "0 0 10px",
+        }}>
+          You're Not Authorized
+        </h1>
+
+        <p style={{
+          fontSize: 13,
+          color: "#9ca3af",
+          lineHeight: 1.6,
+          marginBottom: 20,
+          fontWeight: 400,
+        }}>
+          You don't have permission to view this page.
+          Check your account role or contact the administrator for access.
+        </p>
+
+        <div style={{
+          width: 36,
+          height: 2,
+          background: "linear-gradient(to right, #c9993a, rgba(201,153,58,0.2))",
+          borderRadius: 999,
+          margin: "0 auto 20px",
+        }} />
+
+        {/* Buttons */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <button
+            onClick={() => navigate("/signin")}
+            style={{
+              width: "100%",
+              padding: "11px 20px",
+              borderRadius: 999,
+              border: "none",
+              background: "#0a0a0a",
+              color: "#fff",
+              fontFamily: "Outfit, sans-serif",
+              fontWeight: 700,
+              fontSize: 15,
+              cursor: "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              mx: "auto",
-              mb: 4,
-              border: "4px solid #fff",
-              boxShadow: "0 10px 20px rgba(244, 63, 94, 0.1)"
+              gap: 8,
+              transition: "all 0.25s ease",
+              boxShadow: "0 6px 24px rgba(10,10,10,0.15)",
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = "#c9993a";
+              e.currentTarget.style.boxShadow = "0 8px 28px rgba(201,153,58,0.3)";
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = "#0a0a0a";
+              e.currentTarget.style.boxShadow = "0 6px 24px rgba(10,10,10,0.15)";
             }}
           >
-            <GppBad sx={{ fontSize: 50, color: "#e11d48" }} />
-          </Box>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+              <polyline points="10 17 15 12 10 7"/>
+              <line x1="15" y1="12" x2="3" y2="12"/>
+            </svg>
+            Sign In
+          </button>
 
-          <Typography
-            variant="h4"
-            sx={{
-              fontWeight: 900,
-              color: "#1F2937",
-              mb: 2,
-              letterSpacing: "-0.02em"
+          <button
+            onClick={() => navigate("/")}
+            style={{
+              width: "100%",
+              padding: "11px 20px",
+              borderRadius: 999,
+              border: "1.5px solid #e5e7eb",
+              background: "#fff",
+              color: "#5d5d5d",
+              fontFamily: "Outfit, sans-serif",
+              fontWeight: 600,
+              fontSize: 15,
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+              transition: "all 0.2s ease",
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.borderColor = "#c9993a";
+              e.currentTarget.style.color = "#c9993a";
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.borderColor = "#e5e7eb";
+              e.currentTarget.style.color = "#5d5d5d";
             }}
           >
-            Access Denied
-          </Typography>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            Back to Home
+          </button>
+        </div>
 
-          <Typography
-            variant="body1"
-            sx={{
-              color: "text.secondary",
-              mb: 6,
-              lineHeight: 1.6,
-              fontSize: "1.1rem"
-            }}
+        {/* Footer note */}
+        <p style={{
+          marginTop: 16,
+          fontSize: 12,
+          color: "#d1d5db",
+          fontWeight: 500,
+        }}>
+          Need access?{" "}
+          <span
+            style={{ color: "#c9993a", cursor: "pointer", fontWeight: 700 }}
+            onClick={() => navigate("/contact")}
           >
-            Oops! You don't have the required permissions to access this page. 
-            Please check your account role or contact the administrator.
-          </Typography>
+            Contact support
+          </span>
+        </p>
 
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <Button
-              variant="contained"
-              fullWidth
-              size="large"
-              onClick={() => navigate("/")}
-              startIcon={<Home />}
-              sx={{
-                bgcolor: "#F59E0B",
-                boxShadow: "0 10px 20px rgba(15, 82, 255, 0.2)",
-                borderRadius: "14px",
-                py: 1.8,
-                textTransform: "none",
-                fontSize: "1rem",
-                fontWeight: 700,
-                "&:hover": {
-                  bgcolor: "#0644e1",
-                  boxShadow: "0 12px 25px rgba(15, 82, 255, 0.3)"
-                }
-              }}
-            >
-              Back to Home
-            </Button>
-            
-            <Button
-              variant="outlined"
-              fullWidth
-              size="large"
-              onClick={() => navigate(-1)}
-              startIcon={<ArrowBack />}
-              sx={{
-                borderRadius: "14px",
-                py: 1.8,
-                textTransform: "none",
-                fontSize: "1rem",
-                fontWeight: 700,
-                color: "#1e293b",
-                borderColor: "#e2e8f0",
-                "&:hover": {
-                  borderColor: "#cbd5e1",
-                  bgcolor: "#FAFAF9"
-                }
-              }}
-            >
-              Previous Page
-            </Button>
-          </Box>
-        </Paper>
-      </Box>
-    </Container>
+      </div>
+    </div>
   );
 };
 
