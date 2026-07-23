@@ -53,7 +53,7 @@ const PaymentCancel = () => {
             variant="h3"
             sx={{
               fontWeight: 900,
-              color: "#0F172A",
+              color: "#1F2937",
               mb: 2,
               letterSpacing: "-0.03em"
             }}
@@ -84,7 +84,7 @@ const PaymentCancel = () => {
               onClick={() => navigate("/cart")}
               startIcon={<ShoppingCart />}
               sx={{
-                bgcolor: "#0F52FF",
+                bgcolor: "#F59E0B",
                 py: 2,
                 borderRadius: "16px",
                 textTransform: "none",
@@ -115,7 +115,7 @@ const PaymentCancel = () => {
                 borderColor: "#e2e8f0",
                 "&:hover": { 
                   borderColor: "#cbd5e1",
-                  bgcolor: "#f8fafc"
+                  bgcolor: "#FAFAF9"
                 }
               }}
             >

@@ -11,7 +11,7 @@ interface ProfileFieldCardProps {
 
 const ProfileFieldCard = ({ keys, value, isEditing, onChange, name }: ProfileFieldCardProps) => {
   return (
-    <div className='p-5 flex items-center rounded-lg bg-[#F8FAFC] border border-slate-100'>
+    <div className='p-5 flex items-center rounded-lg bg-[#FAFAF9] border border-slate-100'>
       <p className='w-20 lg:w-36 text-slate-500 text-sm font-medium'>{keys}</p>
       
       {isEditing ? (

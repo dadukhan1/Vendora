@@ -67,7 +67,7 @@ const ReviewForm = ({ productId, onCancel }: any) => {
           variant="contained"
           disabled={!rating || !reviewText.trim()}
           sx={{
-            bgcolor: '#0F52FF',
+            bgcolor: '#F59E0B',
             borderRadius: '12px',
             px: 4,
             py: 1.5,

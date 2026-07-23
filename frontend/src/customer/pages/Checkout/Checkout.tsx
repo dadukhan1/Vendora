@@ -102,15 +102,15 @@ const Checkout = () => {
           {/* Header row */}
           <div className='flex justify-between items-center'>
             <div className='flex items-center gap-3'>
-              <span className='inline-block w-1 h-5 rounded bg-gradient-to-b from-[#0F52FF] to-[#FF4F00]' />
-              <h2 className='font-bold text-[#0F172A]'>
+              <span className='inline-block w-1 h-5 rounded bg-gradient-to-b from-[#F59E0B] to-[#FF4F00]' />
+              <h2 className='font-bold text-[#1F2937]'>
                 Select Delivery Address
               </h2>
             </div>
             <button
               onClick={() => setOpen(true)}
-              className='flex items-center gap-1.5 text-sm font-semibold text-[#0F52FF]
-                border border-[#0F52FF] px-3 py-1.5 rounded-xl hover:bg-[#0F52FF]/10
+              className='flex items-center gap-1.5 text-sm font-semibold text-[#F59E0B]
+                border border-[#F59E0B] px-3 py-1.5 rounded-xl hover:bg-[#F59E0B]/10
                 transition-colors'
             >
               <Add fontSize='small' />
@@ -138,8 +138,8 @@ const Checkout = () => {
             onClick={() => setOpen(true)}
             className='w-full flex items-center justify-center gap-2 py-3.5
               border border-dashed border-[#E2E8F0] rounded-2xl text-sm
-              text-[#64748B] hover:border-[#0F52FF] hover:text-[#0F52FF]
-              transition-colors bg-[#F8FAFC]'
+              text-[#64748B] hover:border-[#F59E0B] hover:text-[#F59E0B]
+              transition-colors bg-[#FAFAF9]'
           >
             <Add fontSize='small' />
             Add New Address
@@ -149,7 +149,7 @@ const Checkout = () => {
         {/* ── Right: Payment + Pricing ── */}
         <div className='lg:col-span-1 space-y-4'>
           {/* ✅ Payment Method Selection */}
-          <div className='bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl px-5 py-4'>
+          <div className='bg-[#FAFAF9] border border-[#E2E8F0] rounded-2xl px-5 py-4'>
             <p className='text-xs font-bold uppercase tracking-widest text-[#64748B] mb-3'>
               Payment Method
             </p>
@@ -165,12 +165,12 @@ const Checkout = () => {
                     size='small'
                     sx={{
                       color: "#94A3B8",
-                      "&.Mui-checked": { color: "#0F52FF" },
+                      "&.Mui-checked": { color: "#F59E0B" },
                     }}
                   />
                 }
                 label={
-                  <span className='text-sm font-medium text-[#0F172A]'>
+                  <span className='text-sm font-medium text-[#1F2937]'>
                     Pay on Delivery
                   </span>
                 }
@@ -182,12 +182,12 @@ const Checkout = () => {
                     size='small'
                     sx={{
                       color: "#94A3B8",
-                      "&.Mui-checked": { color: "#0F52FF" },
+                      "&.Mui-checked": { color: "#F59E0B" },
                     }}
                   />
                 }
                 label={
-                  <span className='text-sm font-medium text-[#0F172A]'>
+                  <span className='text-sm font-medium text-[#1F2937]'>
                     Card (Stripe)
                   </span>
                 }
@@ -196,15 +196,15 @@ const Checkout = () => {
           </div>
 
           {/* Pricing + Checkout */}
-          <div className='bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl overflow-hidden'>
+          <div className='bg-[#FAFAF9] border border-[#E2E8F0] rounded-2xl overflow-hidden'>
             <PricingCard />
             <div className='px-5 pb-5'>
               <button
                 onClick={handlePayment}
                 disabled={!selectedAddress}
-                className='w-full py-3.5 bg-[#0F52FF] text-white text-sm font-bold
-    rounded-xl tracking-wide shadow-[0_4px_20px_rgba(15,82,255,0.28)]
-    hover:opacity-90 active:scale-[.98] transition-all duration-150
+                className='w-full py-4 bg-[#1F2937] text-white text-[15px] font-bold
+    rounded-xl tracking-wide shadow-xl
+    hover:bg-[#F59E0B] hover:shadow-[0_8px_20px_rgba(245,158,11,0.2)] active:scale-[.98] transition-all duration-300
     disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none
     disabled:active:scale-100'
               >

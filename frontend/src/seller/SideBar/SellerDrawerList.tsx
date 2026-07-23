@@ -19,46 +19,55 @@ import { useAppSelector } from "../../Redux Toolkit/store";
 
 const menu = [
   {
-    name: "DashBoard",
+    name: "Dashboard",
     path: "/seller",
-    icon: <Dashboard sx={{ fontSize: 22 }} />,
+    icon: <Dashboard sx={{ fontSize: 20 }} />,
   },
   {
     name: "Orders",
     path: "/seller/orders",
-    icon: <ShoppingBag sx={{ fontSize: 22 }} />,
+    icon: <ShoppingBag sx={{ fontSize: 20 }} />,
   },
   {
     name: "Products",
     path: "/seller/products",
-    icon: <Inventory sx={{ fontSize: 22 }} />,
+    icon: <Inventory sx={{ fontSize: 20 }} />,
   },
   {
     name: "Add Product",
     path: "/seller/add-product",
-    icon: <Add sx={{ fontSize: 22 }} />,
+    icon: <Add sx={{ fontSize: 20 }} />,
   },
   {
     name: "Payment",
     path: "/seller/payment",
-    icon: <AccountBalanceWallet sx={{ fontSize: 22 }} />,
+    icon: <AccountBalanceWallet sx={{ fontSize: 20 }} />,
   },
   {
     name: "Transaction",
     path: "/seller/transaction",
-    icon: <Receipt sx={{ fontSize: 22 }} />,
+    icon: <Receipt sx={{ fontSize: 20 }} />,
   },
 ];
 
 const menu2 = [
   {
-    name: "Account",
+    name: "Account Settings",
     path: "/seller/account",
-    icon: <AccountBox sx={{ fontSize: 22 }} />,
+    icon: <AccountBox sx={{ fontSize: 20 }} />,
   },
 ];
 
-const SellerDrawerList = ({ toggleDrawwer }: any) => {
+type SellerDrawerListProps = {
+  toggleDrawwer?: (open: boolean) => void;
+};
+
+type MenuItem = {
+  name: string;
+  path?: string;
+};
+
+const SellerDrawerList = ({ toggleDrawwer }: SellerDrawerListProps) => {
   const { user } = useAppSelector((store) => store.user);
   const location = useLocation();
   const navigate = useNavigate();
@@ -71,103 +80,113 @@ const SellerDrawerList = ({ toggleDrawwer }: any) => {
     window.location.reload();
   };
 
-  const handleClick = (item: any) => {
-    if (item.name === "Logout") handleLogout();
+  const handleClick = (item: MenuItem) => {
+    if (item.name === "Logout") {
+      handleLogout();
+      return;
+    }
+    if (!item.path) return;
     navigate(item.path);
-    toggleDrawwer(false);
+    if (toggleDrawwer) toggleDrawwer(false);
   };
 
   return (
-    <div className='flex flex-col justify-between h-full w-68 bg-white border-r border-gray-200'>
-      {/* Top: Menu */}
-      <div className='px-3 pt-5 space-y-1'>
+    <div className='flex flex-col justify-between h-full w-full bg-white border-r border-[#f0ece6] py-6 px-4'>
+      {/* Top: Menu List */}
+      <div className='space-y-1'>
+        <p className='label-overline text-[#9ca3af] px-4 mb-3'>Seller Hub</p>
         {menu.map((item) => {
           const isActive = location.pathname === item.path;
           return (
             <div
               key={item.name}
               onClick={() => handleClick(item)}
-              className={`flex items-center gap-3 px-5 py-3.5 rounded-lg cursor-pointer transition-all duration-150 group
+              className={`flex items-center gap-3.5 px-4 py-3 rounded-xl cursor-pointer transition-all duration-200 group font-[Outfit] font-[600] text-[13px]
                 ${
                   isActive
-                    ? "bg-[#0F52FF] text-white"
-                    : "text-gray-500 hover:bg-gray-100 hover:text-gray-900"
+                    ? "bg-[#0a0a0a] text-white"
+                    : "text-[#5d5d5d] hover:bg-[#f5f3ef] hover:text-[#0a0a0a]"
                 }`}
             >
               <span
-                className={
+                className={`transition-colors duration-200 ${
                   isActive
-                    ? "text-white"
-                    : "text-gray-400 group-hover:text-gray-600"
-                }
+                    ? "text-[#c9993a]"
+                    : "text-[#9ca3af] group-hover:text-[#0a0a0a]"
+                }`}
               >
                 {item.icon}
               </span>
-              <span className='text-[0.925rem] font-medium'>{item.name}</span>
+              <span>{item.name}</span>
             </div>
           );
         })}
       </div>
 
-      {/* Bottom: Account + User + Logout */}
-      <div className='px-3 pb-5'>
-        <Divider sx={{ mb: 2 }} />
-
-        {/* Account */}
-        {menu2.map((item) => {
-          const isActive = location.pathname === item.path;
-          return (
-            <div
-              key={item.name}
-              onClick={() => handleClick(item)}
-              className={`flex items-center gap-3 px-5 py-3.5 rounded-lg cursor-pointer transition-all duration-150 group mb-1
-                ${
-                  isActive
-                    ? "bg-[#0F52FF] text-white"
-                    : "text-gray-500 hover:bg-gray-100 hover:text-gray-900"
-                }`}
-            >
-              <span
-                className={
-                  isActive
-                    ? "text-white"
-                    : "text-gray-400 group-hover:text-gray-600"
-                }
+      {/* Bottom: Settings + Profile + Logout */}
+      <div className='space-y-4'>
+        <div>
+          {menu2.map((item) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <div
+                key={item.name}
+                onClick={() => handleClick(item)}
+                className={`flex items-center gap-3.5 px-4 py-3 rounded-xl cursor-pointer transition-all duration-200 group font-[Outfit] font-[600] text-[13px]
+                  ${
+                    isActive
+                      ? "bg-[#0a0a0a] text-white"
+                      : "text-[#5d5d5d] hover:bg-[#f5f3ef] hover:text-[#0a0a0a]"
+                  }`}
               >
-                {item.icon}
-              </span>
-              <span className='text-[0.925rem] font-medium'>{item.name}</span>
-            </div>
-          );
-        })}
+                <span
+                  className={`transition-colors duration-200 ${
+                    isActive
+                      ? "text-[#c9993a]"
+                      : "text-[#9ca3af] group-hover:text-[#0a0a0a]"
+                  }`}
+                >
+                  {item.icon}
+                </span>
+                <span>{item.name}</span>
+              </div>
+            );
+          })}
+        </div>
 
-        {/* User Info */}
-        <div className='flex items-center gap-3 px-3 py-2.5 mb-1'>
+        <Divider sx={{ borderColor: "#f0ece6" }} />
+
+        {/* User Card */}
+        <div className='flex items-center gap-3 px-3 py-2 rounded-2xl bg-[#f5f3ef] border border-[#ede9e2]'>
           <Avatar
             sx={{
-              width: 34,
-              height: 34,
-              backgroundColor: "#0F52FF",
-              fontSize: "0.875rem",
+              width: 32,
+              height: 32,
+              backgroundColor: "#0a0a0a",
+              color: "#c9993a",
+              fontWeight: 700,
+              fontSize: "0.75rem",
             }}
           >
             {user?.fullName?.charAt(0) || "S"}
           </Avatar>
           <div className='overflow-hidden'>
-            <p className='text-sm font-semibold text-gray-900 truncate'>
+            <p className='text-[12px] font-[700] font-[Outfit] text-[#0a0a0a] truncate leading-tight'>
               {user?.fullName}
             </p>
-            <p className='text-[11px] text-gray-400'>Seller</p>
+            <span className='text-[10px] text-[#9ca3af] font-[Outfit] uppercase tracking-wider font-semibold'>
+              Partner Seller
+            </span>
           </div>
         </div>
 
         {/* Logout */}
         <div
-          onClick={() => handleClick({ name: "Logout", path: "/" })}
-          className='flex items-center gap-3 px-5 py-3.5 rounded-lg cursor-pointer text-gray-500 hover:bg-red-50 hover:text-red-500 transition-all duration-150'
+          onClick={() => handleClick({ name: "Logout" })}
+          className='flex items-center gap-3.5 px-4 py-3 rounded-xl cursor-pointer font-[Outfit] font-[600] text-[13px] text-[#9ca3af] hover:bg-[#fff5f7] hover:text-[#e03c54] transition-all duration-200'
         >
-          <Logout sx={{ fontSize: 22 }} />
-          <span className='text-[0.925rem] font-medium'>Logout</span>
+          <Logout sx={{ fontSize: 20 }} />
+          <span>Logout</span>
         </div>
       </div>
     </div>

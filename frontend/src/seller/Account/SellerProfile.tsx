@@ -10,14 +10,14 @@ import {
   Divider,
   Stack,
   Avatar,
+  Typography,
+  Grid,
 } from "@mui/material";
 import {
   Store,
   Email,
   Phone,
   Edit,
-  Check,
-  Close,
   LocationOn,
   CreditCard,
   CheckCircle,
@@ -25,18 +25,21 @@ import {
 } from "@mui/icons-material";
 import { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../Redux Toolkit/store";
-import { updateSellerProfile, fetchSellerProfile } from "../../Redux Toolkit/features/seller/sellerSlice";
+import {
+  updateSellerProfile,
+  fetchSellerProfile,
+} from "../../Redux Toolkit/features/seller/sellerSlice";
 
 const keyIconMap: Record<string, React.ReactNode> = {
-  "Business Name": <Store sx={{ fontSize: 20, color: "#1976d2" }} />,
-  "Business Email": <Email sx={{ fontSize: 20, color: "#1976d2" }} />,
-  "Business Mobile": <Phone sx={{ fontSize: 20, color: "#1976d2" }} />,
-  "Business Address": <LocationOn sx={{ fontSize: 20, color: "#1976d2" }} />,
-  "Seller Name": <VerifiedUser sx={{ fontSize: 20, color: "#1976d2" }} />,
-  "Personal Email": <Email sx={{ fontSize: 20, color: "#1976d2" }} />,
-  "Mobile Number": <Phone sx={{ fontSize: 20, color: "#1976d2" }} />,
-  GSTIN: <CheckCircle sx={{ fontSize: 20, color: "#1976d2" }} />,
-  "Account Number": <CreditCard sx={{ fontSize: 20, color: "#1976d2" }} />,
+  "Business Name": <Store sx={{ fontSize: 20, color: "#c9993a" }} />,
+  "Business Email": <Email sx={{ fontSize: 20, color: "#c9993a" }} />,
+  "Business Mobile": <Phone sx={{ fontSize: 20, color: "#c9993a" }} />,
+  "Business Address": <LocationOn sx={{ fontSize: 20, color: "#c9993a" }} />,
+  "Seller Name": <VerifiedUser sx={{ fontSize: 20, color: "#c9993a" }} />,
+  "Personal Email": <Email sx={{ fontSize: 20, color: "#c9993a" }} />,
+  "Mobile Number": <Phone sx={{ fontSize: 20, color: "#c9993a" }} />,
+  "GSTIN": <CheckCircle sx={{ fontSize: 20, color: "#c9993a" }} />,
+  "Account Number": <CreditCard sx={{ fontSize: 20, color: "#c9993a" }} />,
 };
 
 interface Field {
@@ -49,7 +52,6 @@ interface Field {
 const SellerProfile = () => {
   const dispatch = useAppDispatch();
   const { profile } = useAppSelector((store) => store.seller);
-  console.log(profile)
 
   const fields: Field[] = [
     {
@@ -114,16 +116,34 @@ const SellerProfile = () => {
   const [saved, setSaved] = useState(initialForm);
 
   useEffect(() => {
-    dispatch(fetchSellerProfile());
+    dispatch(fetchSellerProfile()).then((result) => {
+      if (result.type.endsWith("/fulfilled") && result.payload) {
+        const fetchedProfile = result.payload;
+        const newForm = Object.fromEntries([
+          ["businessName", fetchedProfile.businessDetails?.businessName || ""],
+          [
+            "businessEmail",
+            fetchedProfile.businessDetails?.businessEmail || "",
+          ],
+          [
+            "businessPhone",
+            fetchedProfile.businessDetails?.businessPhone || "",
+          ],
+          [
+            "businessAddress",
+            fetchedProfile.businessDetails?.businessAddress || "",
+          ],
+          ["sellerName", fetchedProfile.sellerName || ""],
+          ["email", fetchedProfile.email || ""],
+          ["mobile", fetchedProfile.mobile || ""],
+          ["GSTIN", fetchedProfile.GSTIN || ""],
+          ["accountNumber", fetchedProfile.bankDetails?.accountNumber || ""],
+        ]);
+        setForm(newForm);
+        setSaved(newForm);
+      }
+    });
   }, [dispatch]);
-
-  useEffect(() => {
-    if (profile) {
-      const newForm = Object.fromEntries(fields.map((f) => [f.name, f.value]));
-      setForm(newForm);
-      setSaved(newForm);
-    }
-  }, [profile]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -145,9 +165,7 @@ const SellerProfile = () => {
         accountNumber: form.accountNumber,
       },
     };
-
     const result = await dispatch(updateSellerProfile(updatePayload));
-
     if (result.type.endsWith("/fulfilled")) {
       setSaved(form);
       setIsEditing(false);
@@ -161,35 +179,53 @@ const SellerProfile = () => {
 
   const groupedFields = fields.reduce(
     (acc, field) => {
-      if (!acc[field.section]) {
-        acc[field.section] = [];
-      }
+      if (!acc[field.section]) acc[field.section] = [];
       acc[field.section].push(field);
       return acc;
     },
     {} as Record<string, Field[]>,
   );
 
+  const inputSx = {
+    "& .MuiOutlinedInput-root": {
+      borderRadius: "14px",
+      fontSize: "0.85rem",
+      "& fieldset": { borderColor: "#f0ece6" },
+      "&:hover fieldset": { borderColor: "#d4c4a8" },
+      "&.Mui-focused fieldset": { borderColor: "#c9993a" },
+    },
+    "& .MuiInputLabel-root": {
+      fontSize: "0.85rem",
+      color: "#9ca3af",
+      fontFamily: "Outfit",
+    },
+    "& .MuiInputLabel-root.Mui-focused": { color: "#c9993a" },
+    "& .MuiInputBase-input": { fontFamily: "Outfit" },
+  };
+
   return (
     <Box sx={{ maxWidth: 900, margin: "0 auto", py: 4, px: 2 }}>
       <Card
-        elevation={2}
+        elevation={0}
         sx={{
-          borderRadius: 3,
-          background: "linear-gradient(135deg, #ffffff 0%, #f5f7ff 100%)",
-          border: "1px solid #e8eef7",
+          borderRadius: "32px",
+          border: "1px solid #f0ece6",
+          bgcolor: "#fff",
+          overflow: "hidden",
         }}
       >
-        {/* Header Section */}
         <CardHeader
+          sx={{ p: 4, pb: 3 }}
           avatar={
             <Avatar
               sx={{
-                width: 60,
-                height: 60,
-                background: "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
-                fontSize: "1.5rem",
-                fontWeight: "bold",
+                width: 64,
+                height: 64,
+                bgcolor: "#0a0a0a",
+                color: "#c9993a",
+                fontFamily: "Playfair Display",
+                fontSize: "1.75rem",
+                fontWeight: 700,
               }}
             >
               {saved.businessName
@@ -202,16 +238,24 @@ const SellerProfile = () => {
           }
           title={
             <Box>
-              <Box
-                sx={{ fontSize: "1.5rem", fontWeight: 700, color: "#0f172a" }}
+              <Typography
+                variant='h5'
+                sx={{
+                  fontFamily: "Playfair Display",
+                  fontWeight: 800,
+                  color: "#0a0a0a",
+                }}
               >
-                Seller Information
-              </Box>
-              <Box sx={{ fontSize: "0.875rem", color: "#64748b", mt: 0.5 }}>
+                Seller Profile
+              </Typography>
+              <Typography
+                variant='body2'
+                sx={{ fontFamily: "Outfit", color: "#9ca3af", mt: 0.5 }}
+              >
                 {isEditing
-                  ? "Make changes and save your profile"
-                  : "Your complete seller profile"}
-              </Box>
+                  ? "Update your account details and business information."
+                  : "Your complete store and business identity."}
+              </Typography>
             </Box>
           }
           action={
@@ -221,43 +265,39 @@ const SellerProfile = () => {
                 startIcon={<Edit />}
                 onClick={() => setIsEditing(true)}
                 sx={{
+                  borderRadius: "9999px",
+                  bgcolor: "#0a0a0a",
                   textTransform: "none",
-                  borderRadius: 2,
-                  background:
-                    "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
-                  boxShadow: "0 4px 12px rgba(25, 118, 210, 0.3)",
-                  "&:hover": {
-                    boxShadow: "0 6px 16px rgba(25, 118, 210, 0.4)",
-                  },
-                  marginBottom: 8,
+                  fontWeight: 700,
+                  fontFamily: "Outfit",
+                  boxShadow: "none",
+                  mt: 2,
+                  "&:hover": { bgcolor: "#c9993a", boxShadow: "none" },
                 }}
               >
                 Edit Profile
               </Button>
             )
           }
-          sx={{ pb: 0 }}
         />
 
-        <Divider sx={{ opacity: 0.5 }} />
+        <Divider sx={{ borderColor: "#f0ece6" }} />
 
         <CardContent sx={{ p: 0 }}>
-          {/* View Mode */}
           {!isEditing && (
             <Box>
               {Object.entries(groupedFields).map((entry, sectionIndex) => {
                 const [section, sectionFields] = entry;
                 return (
                   <Box key={section}>
-                    {/* Section Header */}
                     <Box
                       sx={{
-                        px: 3,
+                        px: 4,
                         py: 2.5,
-                        background: "#f1f5ff",
+                        bgcolor: "#fafaf8",
                         display: "flex",
                         alignItems: "center",
-                        gap: 1.5,
+                        gap: 2,
                       }}
                     >
                       <Box
@@ -265,51 +305,46 @@ const SellerProfile = () => {
                           width: 4,
                           height: 24,
                           borderRadius: 1,
-                          background:
-                            "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
+                          bgcolor: "#c9993a",
                         }}
                       />
-                      <Box
+                      <Typography
                         sx={{
-                          fontSize: "0.75rem",
-                          fontWeight: 700,
-                          color: "#475569",
-                          letterSpacing: 1.2,
+                          fontSize: "0.85rem",
+                          fontWeight: 800,
+                          fontFamily: "Outfit",
+                          color: "#0a0a0a",
+                          textTransform: "uppercase",
+                          letterSpacing: 1,
                         }}
                       >
                         {section}
-                      </Box>
+                      </Typography>
                     </Box>
 
-                    {/* Section Fields */}
                     {sectionFields.map((field, fieldIndex) => (
                       <Box
                         key={field.key}
                         sx={{
-                          px: 3,
-                          py: 2.5,
+                          px: 4,
+                          py: 3,
                           borderBottom:
                             fieldIndex < sectionFields.length - 1
-                              ? "1px solid #e2e8f0"
+                              ? "1px solid #f0ece6"
                               : "none",
                           display: "flex",
-                          gap: 2.5,
-                          alignItems: "flex-start",
+                          gap: 3,
+                          alignItems: "center",
                           transition: "background 0.2s",
-                          background: "#fff",
-                          "&:hover": {
-                            background: "#fafbff",
-                          },
+                          "&:hover": { bgcolor: "#fafaf8" },
                         }}
                       >
-                        {/* Icon */}
                         <Box
                           sx={{
-                            width: 44,
-                            height: 44,
-                            borderRadius: 2,
-                            background:
-                              "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)",
+                            width: 48,
+                            height: 48,
+                            borderRadius: "12px",
+                            bgcolor: "rgba(201, 153, 58, 0.08)",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
@@ -318,36 +353,35 @@ const SellerProfile = () => {
                         >
                           {keyIconMap[field.key]}
                         </Box>
-
-                        {/* Content */}
                         <Box sx={{ flex: 1 }}>
-                          <Box
+                          <Typography
                             sx={{
-                              fontSize: "0.7rem",
+                              fontSize: "0.75rem",
                               fontWeight: 700,
-                              color: "#94a3b8",
-                              letterSpacing: 0.8,
-                              mb: 0.75,
+                              fontFamily: "Outfit",
+                              color: "#9ca3af",
+                              mb: 0.5,
                             }}
                           >
                             {field.key}
-                          </Box>
-                          <Box
+                          </Typography>
+                          <Typography
                             sx={{
-                              fontSize: "0.95rem",
+                              fontSize: "1rem",
                               fontWeight: 600,
-                              color: saved[field.name] ? "#0f172a" : "#cbd5e1",
+                              fontFamily: "Outfit",
+                              color: saved[field.name] ? "#0a0a0a" : "#d1d5db",
                             }}
                           >
-                            {saved[field.name] || "Not set"}
-                          </Box>
+                            {saved[field.name] || "Not configured"}
+                          </Typography>
                         </Box>
                       </Box>
                     ))}
 
                     {sectionIndex <
                       Object.entries(groupedFields).length - 1 && (
-                      <Divider sx={{ opacity: 0.3 }} />
+                      <Divider sx={{ borderColor: "#f0ece6" }} />
                     )}
                   </Box>
                 );
@@ -355,167 +389,130 @@ const SellerProfile = () => {
             </Box>
           )}
 
-          {/* Edit Mode */}
           {isEditing && (
-            <Box sx={{ p: 3 }}>
-              <Stack spacing={4}>
+            <Box sx={{ p: 4 }}>
+              <Stack spacing={5}>
                 {Object.entries(groupedFields).map((entry) => {
                   const [section, sectionFields] = entry;
                   return (
                     <Box key={section}>
-                      {/* Section Title */}
                       <Box
                         sx={{
                           display: "flex",
                           alignItems: "center",
                           gap: 1.5,
-                          mb: 2.5,
+                          mb: 3,
                           pb: 1.5,
-                          borderBottom: "2px solid #e8eef7",
+                          borderBottom: "1px solid #f0ece6",
                         }}
                       >
                         <Box
                           sx={{
-                            width: 3,
+                            width: 4,
                             height: 20,
                             borderRadius: 1,
-                            background:
-                              "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
+                            bgcolor: "#c9993a",
                           }}
                         />
-                        <Box
+                        <Typography
                           sx={{
-                            fontSize: "0.95rem",
-                            fontWeight: 700,
-                            color: "#1976d2",
+                            fontSize: "1rem",
+                            fontWeight: 800,
+                            fontFamily: "Outfit",
+                            color: "#0a0a0a",
                           }}
                         >
                           {section}
-                        </Box>
+                        </Typography>
                       </Box>
 
-                      {/* Section Fields */}
-                      <Stack spacing={2.5}>
+                      <Grid container spacing={3}>
                         {sectionFields.map((field) => (
-                          <Box key={field.key}>
+                          <Grid
+                            item
+                            xs={12}
+                            sm={field.name === "businessAddress" ? 12 : 6}
+                            key={field.key}
+                          >
                             <Box
                               sx={{
                                 display: "flex",
                                 alignItems: "center",
                                 gap: 1,
-                                mb: 1.2,
-                                color: "#1976d2",
+                                mb: 1,
+                                color: "#0a0a0a",
                               }}
                             >
-                              {keyIconMap[field.key]}
-                              <Box
+                              <Box sx={{ color: "#c9993a", display: "flex" }}>
+                                {keyIconMap[field.key]}
+                              </Box>
+                              <Typography
                                 sx={{
-                                  fontSize: "0.75rem",
+                                  fontSize: "0.85rem",
                                   fontWeight: 700,
-                                  letterSpacing: 0.8,
+                                  fontFamily: "Outfit",
                                 }}
                               >
                                 {field.key}
-                              </Box>
+                              </Typography>
                             </Box>
                             <TextField
                               fullWidth
-                              size='small'
                               name={field.name}
                               value={form[field.name]}
                               onChange={handleChange}
                               placeholder={`Enter ${field.key.toLowerCase()}`}
-                              variant='outlined'
-                              multiline={
-                                field.name === "businessAddress" ||
-                                field.name === "accountNumber"
-                              }
-                              rows={
-                                field.name === "businessAddress" ||
-                                field.name === "accountNumber"
-                                  ? 3
-                                  : 1
-                              }
-                              sx={{
-                                "& .MuiOutlinedInput-root": {
-                                  borderRadius: "8px",
-                                  fontSize: "0.95rem",
-                                  fontWeight: 500,
-                                  color: "#0f172a",
-                                  background: "#f8fafc",
-                                  transition: "all 0.3s ease",
-                                  "& fieldset": {
-                                    borderColor: "#e2e8f0",
-                                  },
-                                  "&:hover fieldset": {
-                                    borderColor: "#cbd5e1",
-                                  },
-                                  "&.Mui-focused fieldset": {
-                                    borderColor: "#1976d2",
-                                    borderWidth: "2px",
-                                  },
-                                  "&.Mui-focused": {
-                                    background: "#f0f4ff",
-                                  },
-                                },
-                                "& .MuiInputBase-input": {
-                                  padding: "11px 13px",
-                                  fontWeight: 500,
-                                },
-                              }}
+                              multiline={field.name === "businessAddress"}
+                              rows={field.name === "businessAddress" ? 3 : 1}
+                              sx={inputSx}
                             />
-                          </Box>
+                          </Grid>
                         ))}
-                      </Stack>
+                      </Grid>
                     </Box>
                   );
                 })}
               </Stack>
 
-              {/* Action Buttons */}
               <Box
                 sx={{
                   display: "flex",
                   gap: 2,
                   justifyContent: "flex-end",
-                  mt: 4,
-                  pt: 3,
-                  borderTop: "1px solid #e2e8f0",
+                  mt: 6,
+                  pt: 4,
+                  borderTop: "1px solid #f0ece6",
                 }}
               >
                 <Button
-                  variant='outlined'
-                  startIcon={<Close />}
                   onClick={handleCancel}
                   sx={{
+                    borderRadius: "9999px",
+                    color: "#9ca3af",
+                    fontFamily: "Outfit",
+                    fontWeight: 700,
                     textTransform: "none",
-                    borderRadius: 2,
-                    borderColor: "#e2e8f0",
-                    color: "#64748b",
-                    "&:hover": {
-                      borderColor: "#cbd5e1",
-                      background: "#f8fafc",
-                    },
+                    px: 3,
+                    "&:hover": { bgcolor: "#f5f3ef" },
                   }}
                 >
                   Cancel
                 </Button>
                 <Button
                   variant='contained'
-                  startIcon={<Check />}
                   onClick={handleSave}
                   sx={{
+                    borderRadius: "9999px",
+                    bgcolor: "#0a0a0a",
                     textTransform: "none",
-                    borderRadius: 2,
-                    background:
-                      "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
-                    boxShadow: "0 4px 12px rgba(25, 118, 210, 0.3)",
-                    "&:hover": {
-                      boxShadow: "0 6px 16px rgba(25, 118, 210, 0.4)",
-                    },
+                    fontWeight: 700,
+                    fontFamily: "Outfit",
+                    px: 4,
+                    boxShadow: "none",
+                    "&:hover": { bgcolor: "#c9993a", boxShadow: "none" },
                   }}
                 >
-                  Save Changes
+                  Save Profile
                 </Button>
               </Box>
             </Box>

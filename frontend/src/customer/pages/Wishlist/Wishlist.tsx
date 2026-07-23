@@ -10,7 +10,7 @@ const Wishlist = () => {
   if (loading && !wishlist) {
     return (
       <div className='min-h-[60vh] flex items-center justify-center'>
-        <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-[#0F52FF]'></div>
+        <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-[#F59E0B]'></div>
       </div>
     );
   }
@@ -24,7 +24,7 @@ const Wishlist = () => {
           <Favorite sx={{ color: '#FF4F00', fontSize: 28 }} />
         </div>
         <div>
-          <h1 className='text-3xl lg:text-4xl font-black text-[#0F172A] tracking-tighter'>
+          <h1 className='text-3xl lg:text-4xl font-black text-[#1F2937] tracking-tighter'>
             My Wishlist
           </h1>
           <p className='text-[#64748B] font-medium'>
@@ -52,7 +52,7 @@ const Wishlist = () => {
           </div>
           <button 
             onClick={() => window.location.href = '/'}
-            className='px-8 py-4 bg-[#0F52FF] text-white font-black rounded-full shadow-lg hover:bg-[#0D3ABF] transition-all'
+            className='px-8 py-4 bg-[#F59E0B] text-white font-black rounded-full shadow-lg hover:bg-[#0D3ABF] transition-all'
           >
             Start Shopping
           </button>

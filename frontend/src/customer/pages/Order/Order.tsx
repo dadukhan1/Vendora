@@ -28,7 +28,7 @@ const Order = () => {
           style={{
             fontSize: 18,
             fontWeight: 700,
-            color: "#0F172A",
+            color: "#1F2937",
             marginBottom: 4,
           }}
         >

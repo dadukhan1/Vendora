@@ -14,14 +14,14 @@ const inputSx = {
   "& .MuiOutlinedInput-root": {
     borderRadius: "10px",
     fontSize: "0.9rem",
-    color: "#0F172A",
-    background: "#F8FAFC",
+    color: "#1F2937",
+    background: "#FAFAF9",
     "& fieldset": { borderColor: "#E2E8F0" },
     "&:hover fieldset": { borderColor: "#94A3B8" },
-    "&.Mui-focused fieldset": { borderColor: "#0F52FF", borderWidth: "1.5px" },
+    "&.Mui-focused fieldset": { borderColor: "#F59E0B", borderWidth: "1.5px" },
   },
   "& .MuiInputLabel-root": { color: "#94A3B8", fontSize: "0.88rem" },
-  "& .MuiInputLabel-root.Mui-focused": { color: "#0F52FF" },
+  "& .MuiInputLabel-root.Mui-focused": { color: "#F59E0B" },
   "& input::placeholder": { color: "#94A3B8", opacity: 1 },
 };
 
@@ -60,7 +60,7 @@ const SellerSignin = () => {
             background: "#eff6ff",
             border: "1px solid #bfdbfe",
             color: "#1d4ed8",
-            "& .MuiAlert-icon": { color: "#0F52FF" },
+            "& .MuiAlert-icon": { color: "#F59E0B" },
           }}
         >
           OTP sent to <strong>{formik.values.email}</strong>. Check your inbox.
@@ -134,7 +134,7 @@ const SellerSignin = () => {
             py: "12px",
             textTransform: "none",
             borderRadius: "10px",
-            background: "#0F52FF",
+            background: "#F59E0B",
             fontWeight: 600,
             fontSize: "0.9rem",
             boxShadow: "none",

@@ -5,10 +5,10 @@ import { Avatar } from "@mui/material";
 import { useNavigate } from "react-router";
 
 const statusColors: Record<string, { color: string; bg: string }> = {
-  PENDING: { color: "#0F52FF", bg: "rgba(15,82,255,0.08)" },
-  PLACED: { color: "#0F52FF", bg: "rgba(15,82,255,0.08)" },
-  CONFIRMED: { color: "#0F52FF", bg: "rgba(15,82,255,0.08)" },
-  PROCESSING: { color: "#0F52FF", bg: "rgba(15,82,255,0.08)" },
+  PENDING: { color: "#F59E0B", bg: "rgba(15,82,255,0.08)" },
+  PLACED: { color: "#F59E0B", bg: "rgba(15,82,255,0.08)" },
+  CONFIRMED: { color: "#F59E0B", bg: "rgba(15,82,255,0.08)" },
+  PROCESSING: { color: "#F59E0B", bg: "rgba(15,82,255,0.08)" },
   SHIPPED: { color: "#FF4F00", bg: "rgba(255,79,0,0.08)" },
   ARRIVING: { color: "#FF4F00", bg: "rgba(255,79,0,0.08)" },
   DELIVERED: { color: "#16a34a", bg: "rgba(22,163,74,0.08)" },
@@ -117,7 +117,7 @@ const OrderItemCard = ({ orderItem, order }: OrderItemCardProps) => {
             overflow: "hidden",
             border: "1px solid #E2E8F0",
             flexShrink: 0,
-            background: "#F8FAFC",
+            background: "#FAFAF9",
           }}
         >
           <img
@@ -152,7 +152,7 @@ const OrderItemCard = ({ orderItem, order }: OrderItemCardProps) => {
             style={{
               fontSize: 14,
               fontWeight: 600,
-              color: "#0F172A",
+              color: "#1F2937",
               lineHeight: 1.4,
               overflow: "hidden",
               display: "-webkit-box",
@@ -184,7 +184,7 @@ const OrderItemCard = ({ orderItem, order }: OrderItemCardProps) => {
             </span>
             {orderItem?.sellingPrice && (
               <>
-                <span style={{ fontSize: 14, fontWeight: 600, color: "#0F172A" }}>
+                <span style={{ fontSize: 14, fontWeight: 600, color: "#1F2937" }}>
                   ${paidItemTotalIncludingShipping}{" "}
                   {quantity > 1 ? `(x${quantity})` : ""}
                 </span>

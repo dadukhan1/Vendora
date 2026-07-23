@@ -8,7 +8,7 @@ const DealCard = ({ deal }: any) => {
   return (
     <div
       onClick={() => navigate("/products")}
-      className='group bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden cursor-pointer hover:border-[#0F52FF] transition-all duration-200'
+      className='group bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden cursor-pointer hover:border-[#F59E0B] transition-all duration-200'
       style={{ transition: "border-color 0.2s, box-shadow 0.2s" }}
       onMouseEnter={(e) => {
         (e.currentTarget as HTMLDivElement).style.boxShadow =
@@ -19,7 +19,7 @@ const DealCard = ({ deal }: any) => {
       }}
     >
       {/* Image */}
-      <div className='relative overflow-hidden aspect-square bg-[#F8FAFC]'>
+      <div className='relative overflow-hidden aspect-square bg-[#FAFAF9]'>
         <img
           src={deal.image}
           alt='deal'
@@ -34,14 +34,14 @@ const DealCard = ({ deal }: any) => {
       {/* Info */}
       <div className='p-3 space-y-1'>
         <p
-          className='text-xs text-[#0F172A] font-semibold truncate'
+          className='text-xs text-[#1F2937] font-semibold truncate'
           style={{ fontWeight: 600 }}
         >
           {deal.name}
         </p>
         <div className='flex items-center gap-2'>
-          <span className='text-sm font-bold text-[#0F52FF]'>₹899</span>
-          <span className='text-xs text-[#94A3B8] line-through'>₹999</span>
+          <span className='text-sm font-bold text-[#F59E0B]'>$899</span>
+          <span className='text-xs text-[#94A3B8] line-through'>$999</span>
         </div>
         {/* Progress bar */}
         <div className='pt-1'>

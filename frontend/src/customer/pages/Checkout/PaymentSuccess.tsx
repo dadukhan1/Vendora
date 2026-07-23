@@ -77,7 +77,7 @@ const PaymentSuccess = () => {
               variant="h3"
               sx={{
                 fontWeight: 900,
-                color: "#0F172A",
+                color: "#1F2937",
                 mb: 2,
                 letterSpacing: "-0.03em"
               }}
@@ -107,7 +107,7 @@ const PaymentSuccess = () => {
                 onClick={() => navigate("/account/orders")}
                 startIcon={<ShoppingBag />}
                 sx={{
-                  bgcolor: "#0F172A",
+                  bgcolor: "#1F2937",
                   py: 2,
                   borderRadius: "16px",
                   textTransform: "none",
@@ -131,7 +131,7 @@ const PaymentSuccess = () => {
                   textTransform: "none",
                   fontSize: "1rem",
                   fontWeight: 700,
-                  color: "#0F52FF"
+                  color: "#F59E0B"
                 }}
               >
                 Continue Shopping

@@ -2,10 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { Favorite, FavoriteBorder, Star } from "@mui/icons-material";
+import { Favorite, FavoriteBorder, ShoppingBag } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/store";
-import { toggleWishlist, toggleWishlistOptimistic } from "../../../Redux Toolkit/features/customer/wishlistSlice";
+import {
+  toggleWishlist,
+  toggleWishlistOptimistic,
+} from "../../../Redux Toolkit/features/customer/wishlistSlice";
 
 const ProductCard = ({ item }: any) => {
   const [currentImage, setCurrentImage] = useState(0);
@@ -24,131 +27,135 @@ const ProductCard = ({ item }: any) => {
       return;
     }
     if (!item?._id) return;
-    // Optimistic update
     dispatch(toggleWishlistOptimistic(item));
-    // Backend update
     dispatch(toggleWishlist(item._id));
   };
 
   useEffect(() => {
     let interval: any;
-    if (isHovered) {
+    if (isHovered && item.images.length > 1) {
       interval = setInterval(
         () => setCurrentImage((prev) => (prev + 1) % item.images.length),
-        900,
+        800,
       );
     }
     return () => clearInterval(interval);
   }, [isHovered, item.images.length]);
 
+  const discountPercent = item.discount > 0 ? item.discount : null;
+  const hasDiscount = item.mrpPrice > item.sellingPrice;
+
   return (
     <div
-      className='group cursor-pointer bg-white rounded-2xl transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] hover:-translate-y-1.5'
+      className="group cursor-pointer"
       onClick={() =>
         navigate(`/product-details/${item.category}/${item.title}/${item._id}`)
       }
     >
-      {/* Image Container */}
+      {/* ── Image Container ── */}
       <div
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => {
           setIsHovered(false);
           setCurrentImage(0);
         }}
-        className='relative w-full h-[320px] lg:h-[400px] overflow-hidden rounded-2xl bg-slate-50'
+        className="relative w-full h-[280px] lg:h-[380px] overflow-hidden rounded-2xl lg:rounded-3xl bg-[#f5f3ef]"
       >
+        {/* Images */}
         {item.images.map((image: string, index: number) => (
           <img
             src={image}
             alt={`product-${index}`}
             key={index}
-            className='absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-in-out'
-            style={{
-              opacity: index === currentImage ? 1 : 0,
-              transform: `scale(${index === currentImage ? 1 : 1.1})`,
-            }}
+            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out"
+            style={{ opacity: index === currentImage ? 1 : 0 }}
           />
         ))}
 
-        {/* Hover overlay gradient */}
-        <div className='absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500' />
+        {/* Hover Overlay */}
+        <div className="absolute inset-0 bg-[#0a0a0a]/0 group-hover:bg-[#0a0a0a]/10 transition-all duration-500" />
 
-        {/* Discount badge - Premium Glassmorphism */}
-        {item.discount > 0 && (
-          <div className='absolute top-4 left-4 backdrop-blur-md bg-[#FF4F00]/90 text-white text-[10px] font-black px-2.5 py-1 rounded-full shadow-lg border border-white/20 uppercase tracking-wider'>
-            {item.discount}% OFF
+        {/* Discount Badge */}
+        {discountPercent && (
+          <div className="absolute top-3 left-3 z-10">
+            <span className="badge-pill badge-rose">-{discountPercent}%</span>
           </div>
         )}
 
         {/* Wishlist Button */}
-        <div className='absolute top-4 right-4 z-20'>
+        <div className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-1 group-hover:translate-y-0">
           <IconButton
             onClick={handleToggleWishlist}
             sx={{
               bgcolor: "white",
-              "&:hover": { bgcolor: "#F8FAFC", transform: "scale(1.1)" },
-              transition: "all 0.3s",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+              width: 36,
+              height: 36,
+              "&:hover": { bgcolor: "#fff5f7", transform: "scale(1.1)" },
+              boxShadow: "0 4px 14px rgba(0,0,0,0.1)",
+              transition: "all 0.2s",
             }}
-            size='small'
+            size="small"
           >
             {isWishlisted ? (
-              <Favorite sx={{ fontSize: 20, color: "#FF4F00" }} />
+              <Favorite sx={{ fontSize: 16, color: "#e03c54" }} />
             ) : (
-              <FavoriteBorder sx={{ fontSize: 20, color: "#64748B" }} />
+              <FavoriteBorder sx={{ fontSize: 16, color: "#1a1a1a" }} />
             )}
           </IconButton>
         </div>
 
-        {/* Dot indicators - Minimalist */}
+        {/* Quick Add Bar */}
+        <div className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition-transform duration-350 ease-out z-10">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/product-details/${item.category}/${item.title}/${item._id}`);
+            }}
+            className="w-full py-3 bg-[#0a0a0a] hover:bg-[#c9993a] text-white text-[12px] font-[700] font-[Outfit] tracking-[0.06em] uppercase transition-colors duration-250 flex items-center justify-center gap-2"
+          >
+            <ShoppingBag sx={{ fontSize: 15 }} />
+            Quick View
+          </button>
+        </div>
+
+        {/* Image Dots */}
         {item.images.length > 1 && (
-          <div className='absolute bottom-4 left-0 right-0 flex justify-center gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0'>
+          <div className="absolute bottom-12 left-0 right-0 flex justify-center gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300">
             {item.images.map((_: any, index: number) => (
               <span
                 key={index}
-                className={`h-1 rounded-full transition-all duration-500 ${index === currentImage ? "w-6 bg-white" : "w-1 bg-white/40"
-                  }`}
+                className={`h-1 rounded-full transition-all duration-400 ${
+                  index === currentImage
+                    ? "w-5 bg-white"
+                    : "w-1 bg-white/50"
+                }`}
               />
             ))}
           </div>
         )}
       </div>
 
-      {/* Details Section */}
-      <div className='pt-4 pb-2 px-1 space-y-1.5'>
-        <div className='flex justify-between items-start gap-2'>
-           <h2 className='text-[0.925rem] font-bold text-[#1E293B] truncate leading-tight group-hover:text-[#0F52FF] transition-colors'>
-            {item.title}
-          </h2>
-        </div>
-        
-        <p className='text-[0.75rem] text-[#64748B] font-medium uppercase tracking-widest'>
+      {/* ── Details ── */}
+      <div className="pt-4 pb-1 px-0.5 space-y-1.5">
+        {/* Category */}
+        <p className="label-overline text-[#9ca3af]" style={{ fontSize: "9px", letterSpacing: "0.2em" }}>
           {item.category?.name || item.category}
         </p>
 
-        {/* Rating Display */}
-        <div className='flex items-center gap-2'>
-           <div className='flex items-center gap-0.5 px-1.5 py-0.5 bg-green-50 rounded text-[0.75rem] font-bold text-green-700'>
-              {item.avgRating || 0} <Star sx={{ fontSize: 12 }} />
-           </div>
-           <span className='text-[0.75rem] text-[#94A3B8] font-medium'>
-             ({item.numReviews || 0})
-           </span>
-        </div>
+        {/* Title */}
+        <h3 className="text-[14px] lg:text-[15px] font-[600] font-[Outfit] text-[#1a1a1a] truncate leading-snug group-hover:text-[#c9993a] transition-colors duration-300 tracking-[-0.01em]">
+          {item.title}
+        </h3>
 
-        <div className='flex items-baseline gap-2 pt-1'>
-          <span className='text-[1.1rem] font-black text-[#0F172A]'>
+        {/* Pricing */}
+        <div className="flex items-center gap-2.5 pt-0.5">
+          <span className="text-[14px] lg:text-[15px] font-[800] font-[Outfit] text-[#0a0a0a]">
             ${item.sellingPrice}
           </span>
-          {item.mrpPrice > item.sellingPrice && (
-            <>
-              <span className='text-[0.8rem] line-through text-[#94A3B8] font-medium'>
-                ${item.mrpPrice}
-              </span>
-              <span className='text-[0.75rem] font-bold text-[#FF4F00] bg-[#FF4F00]/5 px-2 py-0.5 rounded'>
-                -{item.discount}%
-              </span>
-            </>
+          {hasDiscount && (
+            <span className="text-[12px] line-through text-[#bdbdbd] font-[400]">
+              ${item.mrpPrice}
+            </span>
           )}
         </div>
       </div>

@@ -3,11 +3,10 @@
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import {
   Button,
   IconButton,
@@ -20,8 +19,10 @@ import {
   Select,
   InputLabel,
   FormControl,
+  Box,
+  Typography,
 } from "@mui/material";
-import { Delete, Edit } from "@mui/icons-material";
+import { Delete, Edit, Close } from "@mui/icons-material";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../Redux Toolkit/store";
 import {
@@ -29,7 +30,6 @@ import {
   fetchSellerProducts,
   updateProduct,
 } from "../../Redux Toolkit/features/seller/sellerProductsSlice";
-// import { updateSellerProduct } from "../../Redux Toolkit/features/seller/sellerProductSlice"; // ← wire up when ready
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -50,22 +50,18 @@ interface Product {
 
 // ─── Styled Components ────────────────────────────────────────────────────────
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
+const StyledTableCell = styled(TableCell)(() => ({
+  fontFamily: "Outfit, sans-serif",
+  fontWeight: 700,
+  fontSize: 13,
+  color: "#0a0a0a",
+  borderBottom: "1px solid #f0ece6",
+  padding: "16px 24px",
 }));
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  "&:nth-of-type(odd)": {
-    backgroundColor: theme.palette.action.hover,
-  },
-  "&:last-child td, &:last-child th": {
-    border: 0,
+const StyledTableRow = styled(TableRow)(() => ({
+  "&:hover": {
+    backgroundColor: "#fafaf8 !important",
   },
 }));
 
@@ -111,7 +107,6 @@ export default function ProductTable() {
 
   const handleSubmit = () => {
     if (!selectedProduct) return;
-    console.log("Updated product:", formData);
     dispatch(
       updateProduct({ productId: selectedProduct._id, productData: formData }),
     );
@@ -119,78 +114,205 @@ export default function ProductTable() {
   };
 
   const handleDelete = (productId: string) => {
-    dispatch(deleteProduct(productId));
-    dispatch(fetchSellerProducts());
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      dispatch(deleteProduct(productId));
+      dispatch(fetchSellerProducts());
+    }
+  };
+
+  const inputSx = {
+    "& .MuiOutlinedInput-root": {
+      borderRadius: "14px",
+      fontSize: "0.85rem",
+      "& fieldset": { borderColor: "#f0ece6" },
+      "&:hover fieldset": { borderColor: "#d4c4a8" },
+      "&.Mui-focused fieldset": { borderColor: "#c9993a" },
+    },
+    "& .MuiInputLabel-root": {
+      fontSize: "0.85rem",
+      color: "#9ca3af",
+      fontFamily: "Outfit",
+    },
+    "& .MuiInputLabel-root.Mui-focused": { color: "#c9993a" },
+    "& .MuiInputBase-input": { fontFamily: "Outfit" },
   };
 
   return (
     <>
-      {/* ── Table ── */}
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 700 }} aria-label='customized table'>
+      <TableContainer sx={{ overflowX: "auto" }}>
+        <Table sx={{ minWidth: 700 }} aria-label='product table'>
           <TableHead>
-            <TableRow>
-              <StyledTableCell>Images</StyledTableCell>
-              <StyledTableCell align='right'>Title</StyledTableCell>
-              <StyledTableCell align='right'>MRP</StyledTableCell>
-              <StyledTableCell align='right'>Selling Price</StyledTableCell>
+            <TableRow sx={{ bgcolor: "#fafaf8" }}>
+              <StyledTableCell>Product</StyledTableCell>
+              <StyledTableCell align='right'>Pricing</StyledTableCell>
               <StyledTableCell align='right'>Stock</StyledTableCell>
-              <StyledTableCell align='right'>Update</StyledTableCell>
-              <StyledTableCell align='right'>Delete</StyledTableCell>
+              <StyledTableCell align='center'>Edit</StyledTableCell>
+              <StyledTableCell align='center'>Delete</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {sellerProduct?.products?.length > 0 ? (
               sellerProduct.products.map((item) => (
                 <StyledTableRow key={item._id}>
-                  <StyledTableCell component='th' scope='row'>
-                    <div className='flex gap-1 flex-wrap'>
-                      {item?.images?.map((image: string, index: number) => (
-                        <img
-                          key={index}
-                          className='w-20 rounded-md'
-                          src={image}
-                          alt=''
-                        />
-                      ))}
-                    </div>
-                  </StyledTableCell>
-                  <StyledTableCell align='right'>{item.title}</StyledTableCell>
-                  <StyledTableCell align='right'>
-                    {item.mrpPrice}
-                  </StyledTableCell>
-                  <StyledTableCell align='right'>
-                    {item.sellingPrice}
-                  </StyledTableCell>
-                  <StyledTableCell align='right'>
-                    <Button
-                      size='small'
-                      color={item.quantity > 0 ? "success" : "error"}
+                  {/* Product Details Cell */}
+                  <TableCell
+                    sx={{ borderBottom: "1px solid #f0ece6", px: 3, py: 2 }}
+                  >
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                      <Box
+                        sx={{
+                          width: 50,
+                          height: 50,
+                          borderRadius: "10px",
+                          bgcolor: "#f5f3ef",
+                          border: "1px solid #f0ece6",
+                          overflow: "hidden",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          flexShrink: 0,
+                        }}
+                      >
+                        {item?.images && item.images.length > 0 ? (
+                          <img
+                            src={item.images[0]}
+                            alt={item.title}
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover",
+                            }}
+                          />
+                        ) : (
+                          <Typography
+                            variant='caption'
+                            fontWeight='800'
+                            color='#c9993a'
+                            sx={{ fontFamily: "Outfit" }}
+                          >
+                            Img
+                          </Typography>
+                        )}
+                      </Box>
+                      <Box>
+                        <Typography
+                          variant='subtitle2'
+                          sx={{
+                            fontWeight: 700,
+                            fontFamily: "Outfit",
+                            color: "#0a0a0a",
+                          }}
+                        >
+                          {item.title}
+                        </Typography>
+                        <Typography
+                          variant='caption'
+                          sx={{ color: "#9ca3af", fontFamily: "Outfit" }}
+                        >
+                          {item.color} • {item.size}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </TableCell>
+
+                  {/* Pricing Cell */}
+                  <TableCell
+                    align='right'
+                    sx={{ borderBottom: "1px solid #f0ece6", px: 3, py: 2 }}
+                  >
+                    <Typography
+                      sx={{
+                        fontWeight: 700,
+                        fontFamily: "Outfit",
+                        color: "#0a0a0a",
+                        fontSize: 13,
+                      }}
                     >
-                      {item.quantity > 0 ? "In Stock" : "Out of Stock"}
-                    </Button>
-                  </StyledTableCell>
-                  <StyledTableCell align='right'>
+                      ${item.sellingPrice}
+                    </Typography>
+                    {item.mrpPrice > item.sellingPrice && (
+                      <Typography
+                        sx={{
+                          textDecoration: "line-through",
+                          color: "#9ca3af",
+                          fontFamily: "Outfit",
+                          fontSize: 12,
+                        }}
+                      >
+                        ${item.mrpPrice}
+                      </Typography>
+                    )}
+                  </TableCell>
+
+                  {/* Stock Status Cell */}
+                  <TableCell
+                    align='right'
+                    sx={{ borderBottom: "1px solid #f0ece6", px: 3, py: 2 }}
+                  >
+                    <Box
+                      sx={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        px: 2,
+                        py: 0.5,
+                        borderRadius: "999px",
+                        bgcolor:
+                          item.quantity > 0
+                            ? "rgba(45, 106, 79, 0.08)"
+                            : "rgba(224, 60, 84, 0.08)",
+                        color: item.quantity > 0 ? "#2d6a4f" : "#e03c54",
+                        fontFamily: "Outfit",
+                        fontSize: "0.75rem",
+                        fontWeight: 700,
+                      }}
+                    >
+                      {item.quantity > 0
+                        ? `${item.quantity} in stock`
+                        : "Out of Stock"}
+                    </Box>
+                  </TableCell>
+
+                  {/* Actions */}
+                  <TableCell
+                    align='center'
+                    sx={{ borderBottom: "1px solid #f0ece6" }}
+                  >
                     <IconButton
-                      color='primary'
                       onClick={() => handleOpenModal(item as Product)}
+                      size='small'
+                      sx={{
+                        color: "#c9993a",
+                        "&:hover": { bgcolor: "rgba(201,153,58,0.08)" },
+                      }}
                     >
-                      <Edit />
+                      <Edit sx={{ fontSize: 18 }} />
                     </IconButton>
-                  </StyledTableCell>
-                  <StyledTableCell align='right'>
+                  </TableCell>
+                  <TableCell
+                    align='center'
+                    sx={{ borderBottom: "1px solid #f0ece6" }}
+                  >
                     <IconButton
-                      color='error'
                       onClick={() => handleDelete(item?._id)}
+                      size='small'
+                      sx={{
+                        color: "#e03c54",
+                        "&:hover": { bgcolor: "rgba(224,60,84,0.05)" },
+                      }}
                     >
-                      <Delete />
+                      <Delete sx={{ fontSize: 18 }} />
                     </IconButton>
-                  </StyledTableCell>
+                  </TableCell>
                 </StyledTableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={6} align='center'>
+                <TableCell
+                  colSpan={5}
+                  align='center'
+                  sx={{ py: 6, color: "#9ca3af", fontFamily: "Outfit" }}
+                >
                   No Products Found
                 </TableCell>
               </TableRow>
@@ -201,27 +323,61 @@ export default function ProductTable() {
 
       {/* ── Edit Modal ── */}
       <Dialog
-        style={{ borderRadius: 400 }}
         open={open}
         onClose={handleCloseModal}
         maxWidth='sm'
         fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: "24px",
+            p: 1,
+            boxShadow: "0 24px 60px rgba(0,0,0,0.08)",
+          },
+        }}
       >
-        <DialogTitle sx={{ fontWeight: 600 }}>Edit Product</DialogTitle>
+        <DialogTitle
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            pb: 2,
+          }}
+        >
+          <Box>
+            <Typography
+              variant='h6'
+              sx={{ fontWeight: 800, fontFamily: "Outfit", color: "#0a0a0a" }}
+            >
+              Edit Product
+            </Typography>
+            <Typography
+              variant='caption'
+              sx={{ color: "#9ca3af", fontFamily: "Outfit" }}
+            >
+              Update pricing, inventory, and details.
+            </Typography>
+          </Box>
+          <IconButton onClick={handleCloseModal} sx={{ color: "#9ca3af" }}>
+            <Close />
+          </IconButton>
+        </DialogTitle>
 
         <DialogContent
-          dividers
-          sx={{ display: "flex", flexDirection: "column", gap: 2.5, pt: 2 }}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 3,
+            pt: "16px !important",
+          }}
         >
-          {/* Title */}
           <TextField
             label='Title'
             fullWidth
             value={formData.title ?? ""}
             onChange={(e) => handleChange("title", e.target.value)}
+            sx={inputSx}
           />
 
-          {/* Description */}
           <TextField
             label='Description'
             fullWidth
@@ -229,36 +385,38 @@ export default function ProductTable() {
             rows={3}
             value={formData.description ?? ""}
             onChange={(e) => handleChange("description", e.target.value)}
+            sx={inputSx}
           />
 
-          {/* MRP + Selling Price */}
-          <div style={{ display: "flex", gap: 12 }}>
+          <Box sx={{ display: "flex", gap: 2 }}>
             <TextField
-              label='MRP Price'
+              label='MRP Price ($)'
               type='number'
               fullWidth
               value={formData.mrpPrice ?? ""}
               onChange={(e) => handleChange("mrpPrice", Number(e.target.value))}
+              sx={inputSx}
             />
             <TextField
-              label='Selling Price'
+              label='Selling Price ($)'
               type='number'
               fullWidth
               value={formData.sellingPrice ?? ""}
               onChange={(e) =>
                 handleChange("sellingPrice", Number(e.target.value))
               }
+              sx={inputSx}
             />
-          </div>
+          </Box>
 
-          {/* Quantity + Discount */}
-          <div style={{ display: "flex", gap: 12 }}>
+          <Box sx={{ display: "flex", gap: 2 }}>
             <TextField
-              label='Quantity'
+              label='Quantity (Stock)'
               type='number'
               fullWidth
               value={formData.quantity ?? ""}
               onChange={(e) => handleChange("quantity", Number(e.target.value))}
+              sx={inputSx}
             />
             <TextField
               label='Discount (%)'
@@ -266,12 +424,12 @@ export default function ProductTable() {
               fullWidth
               value={formData.discount ?? ""}
               onChange={(e) => handleChange("discount", Number(e.target.value))}
+              sx={inputSx}
             />
-          </div>
+          </Box>
 
-          {/* Color + Size */}
-          <div style={{ display: "flex", gap: 12 }}>
-            <FormControl fullWidth>
+          <Box sx={{ display: "flex", gap: 2 }}>
+            <FormControl fullWidth sx={inputSx}>
               <InputLabel>Color</InputLabel>
               <Select
                 label='Color'
@@ -279,14 +437,18 @@ export default function ProductTable() {
                 onChange={(e) => handleChange("color", e.target.value)}
               >
                 {COLORS.map((c) => (
-                  <MenuItem key={c} value={c}>
+                  <MenuItem
+                    key={c}
+                    value={c}
+                    sx={{ fontFamily: "Outfit", fontSize: 14 }}
+                  >
                     {c}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
 
-            <FormControl fullWidth>
+            <FormControl fullWidth sx={inputSx}>
               <InputLabel>Size</InputLabel>
               <Select
                 label='Size'
@@ -294,20 +456,45 @@ export default function ProductTable() {
                 onChange={(e) => handleChange("size", e.target.value)}
               >
                 {SIZES.map((s) => (
-                  <MenuItem key={s} value={s}>
+                  <MenuItem
+                    key={s}
+                    value={s}
+                    sx={{ fontFamily: "Outfit", fontSize: 14 }}
+                  >
                     {s}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
-          </div>
+          </Box>
         </DialogContent>
 
-        <DialogActions sx={{ px: 3, py: 2 }}>
-          <Button onClick={handleCloseModal} color='inherit'>
+        <DialogActions sx={{ px: 3, py: 3 }}>
+          <Button
+            onClick={handleCloseModal}
+            sx={{
+              color: "#9ca3af",
+              fontFamily: "Outfit",
+              fontWeight: 700,
+              textTransform: "none",
+            }}
+          >
             Cancel
           </Button>
-          <Button onClick={handleSubmit} variant='contained'>
+          <Button
+            onClick={handleSubmit}
+            variant='contained'
+            sx={{
+              borderRadius: "9999px",
+              bgcolor: "#0a0a0a",
+              textTransform: "none",
+              fontWeight: 700,
+              fontFamily: "Outfit",
+              px: 4,
+              boxShadow: "none",
+              "&:hover": { bgcolor: "#c9993a", boxShadow: "none" },
+            }}
+          >
             Save Changes
           </Button>
         </DialogActions>

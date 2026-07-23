@@ -80,9 +80,21 @@ const CreateCategoryForm: React.FC<CreateCategoryFormProps> = ({ categories, onS
     return cat.parentCategory === editCategory?._id;
   });
 
+  const textFieldSx = {
+    "& .MuiOutlinedInput-root": {
+      borderRadius: "14px",
+      fontSize: "0.85rem",
+      "& fieldset": { borderColor: "#f0ece6" },
+      "&:hover fieldset": { borderColor: "#d4c4a8" },
+      "&.Mui-focused fieldset": { borderColor: "#c9993a" },
+    },
+    "& .MuiInputLabel-root": { fontSize: "0.85rem", color: "#9ca3af" },
+    "& .MuiInputLabel-root.Mui-focused": { color: "#c9993a" },
+  };
+
   return (
-    <Box sx={{ p: { xs: 2, sm: 4 }, borderRadius: '24px', border: editCategory ? 'none' : '1px solid #edf2f7', bgcolor: '#ffffff' }}>
-      <Typography variant="h6" sx={{ fontWeight: 800, mb: 4, color: '#2d3748' }}>
+    <Box sx={{ p: { xs: 2, sm: 4 }, borderRadius: '24px', border: editCategory ? 'none' : '1px solid #f0ece6', bgcolor: '#ffffff' }}>
+      <Typography variant="h6" sx={{ fontWeight: 800, mb: 4, color: '#0a0a0a', fontFamily: 'Outfit, sans-serif' }}>
         {editCategory ? "Update Category Node" : "Configure Category Node"}
       </Typography>
 
@@ -98,7 +110,7 @@ const CreateCategoryForm: React.FC<CreateCategoryFormProps> = ({ categories, onS
             variant="outlined"
             placeholder="e.g. Mens Wear"
             slotProps={{ inputLabel: { shrink: true } }}
-            sx={{ '& .MuiOutlinedInput-root': { borderRadius: '12px' } }}
+            sx={textFieldSx}
           />
           <TextField
             fullWidth
@@ -110,7 +122,7 @@ const CreateCategoryForm: React.FC<CreateCategoryFormProps> = ({ categories, onS
             variant="outlined"
             placeholder="e.g. mens_clothing"
             slotProps={{ inputLabel: { shrink: true } }}
-            sx={{ '& .MuiOutlinedInput-root': { borderRadius: '12px' } }}
+            sx={textFieldSx}
           />
 
           <TextField
@@ -124,43 +136,49 @@ const CreateCategoryForm: React.FC<CreateCategoryFormProps> = ({ categories, onS
             variant="outlined"
             placeholder="0"
             slotProps={{ inputLabel: { shrink: true } }}
-            sx={{ '& .MuiOutlinedInput-root': { borderRadius: '12px' } }}
+            sx={textFieldSx}
           />
 
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', px: 2, py: 1, border: '1px solid #e2e8f0', borderRadius: '12px', bgcolor: formData.isActive ? 'transparent' : '#fff5f5' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', px: 2, py: 0.5, border: '1px solid #f0ece6', borderRadius: '14px', bgcolor: formData.isActive ? 'transparent' : '#fff5f7' }}>
               <FormControlLabel
                 control={
                   <Switch
                     checked={formData.isActive}
                     onChange={handleChange}
                     name="isActive"
-                    color="primary"
+                    sx={{
+                      "& .MuiSwitch-switchBase.Mui-checked": { color: "#c9993a" },
+                      "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": { backgroundColor: "#c9993a" }
+                    }}
                   />
                 }
                 label={
                   <Box>
-                    <Typography variant="body2" fontWeight="700">Category Active</Typography>
-                    <Typography variant="caption" color="text.secondary">Currently {formData.isActive ? 'Visible' : 'Hidden'}</Typography>
+                    <Typography variant="body2" fontWeight="700" sx={{ fontFamily: "Outfit", color: "#0a0a0a" }}>Category Active</Typography>
+                    <Typography variant="caption" sx={{ color: "#9ca3af", fontFamily: "Outfit" }}>Currently {formData.isActive ? 'Visible' : 'Hidden'}</Typography>
                   </Box>
                 }
               />
             </Box>
 
-            <Box sx={{ display: 'flex', alignItems: 'center', px: 2, py: 1, border: '1px solid #e2e8f0', borderRadius: '12px', bgcolor: formData.showOnHomepage ? 'rgba(15, 82, 255, 0.04)' : 'transparent' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', px: 2, py: 0.5, border: '1px solid #f0ece6', borderRadius: '14px', bgcolor: formData.showOnHomepage ? 'rgba(201, 153, 58, 0.04)' : 'transparent' }}>
               <FormControlLabel
                 control={
                   <Switch
                     checked={formData.showOnHomepage}
                     onChange={handleChange}
                     name="showOnHomepage"
-                    color="primary"
+                    sx={{
+                      "& .MuiSwitch-switchBase.Mui-checked": { color: "#c9993a" },
+                      "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": { backgroundColor: "#c9993a" }
+                    }}
                   />
                 }
                 label={
                   <Box>
-                    <Typography variant="body2" fontWeight="700">Promote to Home</Typography>
-                    <Typography variant="caption" color="text.secondary">{formData.showOnHomepage ? 'Featured on Landing' : 'Standard Category'}</Typography>
+                    <Typography variant="body2" fontWeight="700" sx={{ fontFamily: "Outfit", color: "#0a0a0a" }}>Promote to Home</Typography>
+                    <Typography variant="caption" sx={{ color: "#9ca3af", fontFamily: "Outfit" }}>{formData.showOnHomepage ? 'Featured on Landing' : 'Standard Category'}</Typography>
                   </Box>
                 }
               />
@@ -178,15 +196,15 @@ const CreateCategoryForm: React.FC<CreateCategoryFormProps> = ({ categories, onS
             disabled={hasChildren}
             helperText={hasChildren ? "Cannot change parent because this category already has sub-categories." : ""}
             slotProps={{ inputLabel: { shrink: true } }}
-            sx={{ '& .MuiOutlinedInput-root': { borderRadius: '12px' } }}
+            sx={textFieldSx}
           >
-            <MenuItem value="">
+            <MenuItem value="" sx={{ fontFamily: "Outfit", fontSize: 13 }}>
               <em>Root Level (No Parent)</em>
             </MenuItem>
             {categories
               .filter((cat) => (cat.level || 1) < 3 && cat._id !== editCategory?._id)
               .map((cat) => (
-                <MenuItem key={cat._id} value={cat._id} sx={{ py: 1.5 }}>
+                <MenuItem key={cat._id} value={cat._id} sx={{ py: 1.5, fontFamily: "Outfit", fontSize: 13 }}>
                   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                     <Typography variant="body2" fontWeight="700">{cat.name}</Typography>
                     <Typography variant="caption" color="text.secondary">ID: {cat.categoryId} • Level {cat.level || 1}</Typography>
@@ -204,7 +222,7 @@ const CreateCategoryForm: React.FC<CreateCategoryFormProps> = ({ categories, onS
             variant="outlined"
             placeholder="https://..."
             slotProps={{ inputLabel: { shrink: true } }}
-            sx={{ '& .MuiOutlinedInput-root': { borderRadius: '12px' } }}
+            sx={textFieldSx}
           />
         </Box>
 
@@ -215,13 +233,14 @@ const CreateCategoryForm: React.FC<CreateCategoryFormProps> = ({ categories, onS
           sx={{
             mt: 5,
             py: 1.8,
-            borderRadius: '16px',
-            backgroundColor: '#0F52FF',
+            borderRadius: '9999px',
+            backgroundColor: '#0a0a0a',
             fontWeight: 800,
-            fontSize: '1rem',
+            fontFamily: 'Outfit',
+            fontSize: '0.85rem',
             textTransform: 'none',
-            boxShadow: '0 10px 15px -3px rgba(15, 82, 255, 0.2)',
-            '&:hover': { backgroundColor: '#0042E0' }
+            boxShadow: 'none',
+            '&:hover': { backgroundColor: '#c9993a', boxShadow: 'none' }
           }}
         >
           {editCategory ? "Apply Transformations" : "Initialize Category"}

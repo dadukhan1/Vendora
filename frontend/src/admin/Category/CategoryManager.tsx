@@ -37,40 +37,39 @@ const CategoryManager = () => {
   };
 
   return (
-    <Box sx={{ p: { xs: 1.5, sm: 2, md: 4 }, maxWidth: 1200, mx: 'auto' }}>
+    <Box sx={{ p: { xs: 0, md: 2 }, maxWidth: 1200, mx: "auto" }}>
       {/* Header Section */}
       <Box sx={{ 
-        mb: { xs: 3, md: 5 }, 
-        display: 'flex', 
-        flexDirection: { xs: 'column', sm: 'row' },
-        alignItems: { xs: 'flex-start', sm: 'center' }, 
-        justifyContent: 'space-between',
+        mb: 4, 
+        display: "flex", 
+        flexDirection: { xs: "column", sm: "row" },
+        alignItems: { xs: "flex-start", sm: "center" }, 
+        justifyContent: "between",
         gap: 2
       }}>
-        <Box>
+        <Box sx={{ flex: 1 }}>
+          <p className="label-overline text-[#c9993a] mb-1">Structure</p>
           <Typography variant="h4" sx={{ 
-            fontWeight: 900, 
-            color: '#1a202c', 
-            letterSpacing: '-0.02em',
-            fontSize: { xs: '1.75rem', md: '2.125rem' } 
+            fontWeight: 800, 
+            color: "#0a0a0a", 
+            fontFamily: "Playfair Display",
+            fontSize: { xs: "1.75rem", md: "2.125rem" } 
           }}>
             Category Hub
           </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
-            Organize and manage your store's hierarchical structure
-          </Typography>
         </Box>
         
-        <Box sx={{ display: 'flex', gap: 1.5, width: { xs: '100%', sm: 'auto' } }}>
+        <Box sx={{ display: "flex", gap: 1.5, width: { xs: "100%", sm: "auto" } }}>
           <IconButton
             onClick={() => dispatch(fetchAllCategories())}
             sx={{ 
-              bgcolor: 'white', 
-              border: '1px solid #e2e8f0',
-              '&:hover': { bgcolor: '#f7fafc' }
+              bgcolor: "white", 
+              border: "1px solid #f0ece6",
+              borderRadius: "12px",
+              "&:hover": { bgcolor: "#f5f3ef" }
             }}
           >
-            <Refresh className={loading ? "animate-spin" : ""} sx={{ fontSize: 20 }} />
+            <Refresh className={loading ? "animate-spin" : ""} sx={{ fontSize: 18, color: "#0a0a0a" }} />
           </IconButton>
           
           <Button
@@ -79,13 +78,15 @@ const CategoryManager = () => {
             onClick={() => setShowForm(!showForm)}
             startIcon={showForm ? undefined : <AddCircleOutline />}
             sx={{ 
-              flex: { xs: 1, sm: 'none' },
-              borderRadius: '12px',
-              textTransform: 'none',
+              flex: { xs: 1, sm: "none" },
+              borderRadius: "9999px",
+              textTransform: "none",
               fontWeight: 700,
+              fontFamily: "Outfit",
+              fontSize: "0.85rem",
               px: 3,
-              bgcolor: showForm ? '#4a5568' : '#0F52FF',
-              '&:hover': { bgcolor: showForm ? '#2d3748' : '#0042E0' }
+              bgcolor: "#0a0a0a",
+              "&:hover": { bgcolor: "#c9993a" }
             }}
           >
             {showForm ? "View Hierarchy" : "New Category"}
@@ -96,7 +97,7 @@ const CategoryManager = () => {
       {error && (
         <Alert 
           severity="error" 
-          sx={{ mb: 4, borderRadius: '12px', border: '1px solid #fed7d7' }}
+          sx={{ mb: 4, borderRadius: "14px", border: "1px solid #f0ece6", bgcolor: "#fff5f7", color: "#e03c54" }}
         >
           {error}
         </Alert>
@@ -106,19 +107,18 @@ const CategoryManager = () => {
       <Paper 
         elevation={0}
         sx={{ 
-          p: { xs: 2, md: 5 }, 
-          borderRadius: '24px', 
-          border: '1px solid #edf2f7',
-          bgcolor: '#ffffff',
-          minHeight: 600,
-          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)'
+          p: { xs: 2, md: 4 }, 
+          borderRadius: "24px", 
+          border: "1px solid #f0ece6",
+          bgcolor: "#ffffff",
+          minHeight: 500,
         }}
       >
         {showForm ? (
-          <Box sx={{ maxWidth: 700, mx: 'auto' }}>
-            <Box sx={{ mb: 4, textAlign: 'center' }}>
-              <Typography variant="h5" fontWeight="800">Assign New Branch</Typography>
-              <Typography variant="body2" color="text.secondary">Fill in the details to expand your category tree</Typography>
+          <Box sx={{ maxWidth: 700, mx: "auto" }}>
+            <Box sx={{ mb: 4, textAlign: "center" }}>
+              <Typography variant="h5" fontWeight="800" sx={{ fontFamily: "Outfit", color: "#0a0a0a" }}>Assign New Branch</Typography>
+              <Typography variant="body2" sx={{ color: "#9ca3af", mt: 0.5, fontFamily: "Outfit" }}>Fill in the details to expand your category tree</Typography>
             </Box>
             <CreateCategoryForm 
               categories={categories} 
@@ -127,24 +127,24 @@ const CategoryManager = () => {
           </Box>
         ) : (
           <Box>
-            <Box sx={{ mb: 4, display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Box sx={{ p: 1, bgcolor: '#ebf4ff', borderRadius: '10px', color: '#0F52FF' }}>
-                <CategoryIcon sx={{ fontSize: 20 }} />
+            <Box sx={{ mb: 4, display: "flex", alignItems: "center", gap: 2 }}>
+              <Box sx={{ p: 1, bgcolor: "rgba(201,153,58,0.08)", borderRadius: "10px", color: "#c9993a" }}>
+                <CategoryIcon sx={{ fontSize: 18 }} />
               </Box>
               <Box>
-                <Typography variant="subtitle1" fontWeight="800">Store Hierarchy</Typography>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="subtitle1" fontWeight="700" sx={{ fontFamily: "Outfit", color: "#0a0a0a" }}>Store Hierarchy</Typography>
+                <Typography variant="caption" sx={{ color: "#9ca3af", fontFamily: "Outfit" }}>
                   Showing {categories.length} organized elements across all nesting levels
                 </Typography>
               </Box>
             </Box>
             
             {loading && categories.length === 0 ? (
-              <Box sx={{ display: 'flex', justifyContent: 'center', py: 10 }}>
-                <CircularProgress size={30} thickness={5} sx={{ color: '#0F52FF' }} />
+              <Box sx={{ display: "flex", justifyContent: "center", py: 10 }}>
+                <CircularProgress size={30} thickness={5} sx={{ color: "#c9993a" }} />
               </Box>
             ) : (
-              <Box sx={{ bgcolor: '#f8fafc', p: { xs: 2, md: 4 }, borderRadius: '20px', border: '1px solid #f1f5f9' }}>
+              <Box sx={{ bgcolor: "#fafaf8", p: { xs: 1.5, md: 3 }, borderRadius: "20px", border: "1px solid #f0ece6" }}>
                 <CategoryTree 
                   categories={categories} 
                   onEdit={handleEdit}
@@ -154,8 +154,8 @@ const CategoryManager = () => {
             )}
 
             {!loading && categories.length === 0 && (
-              <Box sx={{ textAlign: 'center', py: 12 }}>
-                <Typography variant="body1" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+              <Box sx={{ textAlign: "center", py: 12 }}>
+                <Typography variant="body1" sx={{ fontStyle: "italic", color: "#9ca3af", fontFamily: "Outfit" }}>
                   No categories defined yet.
                 </Typography>
               </Box>
@@ -163,15 +163,16 @@ const CategoryManager = () => {
           </Box>
         )}
       </Paper>
+
       {/* Update Dialog */}
       <Dialog 
         open={isEditDialogOpen} 
         onClose={() => setIsEditDialogOpen(false)}
         maxWidth="md"
         fullWidth
-        PaperProps={{ sx: { borderRadius: '28px' } }}
+        PaperProps={{ sx: { borderRadius: "24px", border: "1px solid #f0ece6" } }}
       >
-        <DialogTitle sx={{ fontWeight: 900, px: 4, pt: 4 }}>Refine Category Node</DialogTitle>
+        <DialogTitle sx={{ fontWeight: 800, fontFamily: "Outfit", px: 4, pt: 4, color: "#0a0a0a" }}>Refine Category Node</DialogTitle>
         <DialogContent sx={{ px: 0 }}>
           <CreateCategoryForm 
             categories={categories} 
@@ -180,7 +181,7 @@ const CategoryManager = () => {
           />
         </DialogContent>
         <DialogActions sx={{ p: 4, pt: 1 }}>
-          <Button onClick={() => setIsEditDialogOpen(false)} sx={{ fontWeight: 700, color: 'text.secondary' }}>
+          <Button onClick={() => setIsEditDialogOpen(false)} sx={{ fontWeight: 700, fontFamily: "Outfit", color: "#9ca3af", textTransform: "none" }}>
             Cancel
           </Button>
         </DialogActions>

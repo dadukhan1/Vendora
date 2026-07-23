@@ -28,31 +28,31 @@ const SignupForm = () => {
 
   const inputSx = {
     "& .MuiOutlinedInput-root": {
-      borderRadius: "12px",
-      fontSize: "0.9rem",
-      "&.Mui-focused fieldset": { borderColor: "#0F52FF" },
+      borderRadius: "14px",
+      fontSize: "0.85rem",
+      "& fieldset": { borderColor: "#f0ece6" },
+      "&:hover fieldset": { borderColor: "#d4c4a8" },
+      "&.Mui-focused fieldset": { borderColor: "#c9993a" },
     },
-    "& .MuiInputLabel-root.Mui-focused": { color: "#0F52FF" },
+    "& .MuiInputLabel-root": { fontSize: "0.85rem", color: "#9ca3af" },
+    "& .MuiInputLabel-root.Mui-focused": { color: "#c9993a" },
   };
 
   return (
     <div>
-      {/* Heading */}
-      <p className='text-xs font-semibold uppercase tracking-[0.15em] text-[#94A3B8] mb-1'>
-        New here?
-      </p>
-      <h2 className='text-xl font-bold text-[#0F172A] mb-6'>
+      <p className="section-eyebrow text-[#9ca3af] mb-1">Join Vendora</p>
+      <h2 className="text-[20px] font-[800] font-[Outfit] text-[#0a0a0a] mb-6">
         Create your account
       </h2>
 
-      <form onSubmit={formik.handleSubmit} className='flex flex-col gap-4'>
-        {/* Email — always visible, locks after OTP sent */}
+      <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4">
+        {/* Email */}
         <TextField
           fullWidth
-          label='Email address'
-          id='email'
-          name='email'
-          type='email'
+          label="Email address"
+          id="email"
+          name="email"
+          type="email"
           value={formik.values.email}
           onChange={formik.handleChange}
           disabled={auth.otpSent}
@@ -65,20 +65,19 @@ const SignupForm = () => {
           sx={inputSx}
         />
 
-        {/* Full Name + OTP — animate in after OTP sent */}
+        {/* Full Name + OTP */}
         {auth.otpSent && (
-          <div className='flex flex-col gap-4 animate-[fadeSlideIn_0.25s_ease_forwards]'>
+          <div className="flex flex-col gap-4 animate-fade-up">
             <TextField
               fullWidth
-              label='Full Name'
-              id='fullName'
-              name='fullName'
+              label="Full Name"
+              id="fullName"
+              name="fullName"
               value={formik.values.fullName}
               onChange={formik.handleChange}
               error={formik.touched.fullName && Boolean(formik.errors.fullName)}
               helperText={
-                formik.touched.fullName &&
-                typeof formik.errors.fullName === "string"
+                formik.touched.fullName && typeof formik.errors.fullName === "string"
                   ? formik.errors.fullName
                   : ""
               }
@@ -87,9 +86,9 @@ const SignupForm = () => {
 
             <TextField
               fullWidth
-              label='Enter OTP'
-              id='otp'
-              name='otp'
+              label="Enter OTP"
+              id="otp"
+              name="otp"
               value={formik.values.otp}
               onChange={formik.handleChange}
               inputProps={{ maxLength: 6 }}
@@ -112,53 +111,38 @@ const SignupForm = () => {
 
         {/* Submit */}
         <button
-          type='submit'
+          type="submit"
           disabled={auth.loading}
-          className='w-full py-3 mt-1 rounded-xl bg-[#0F52FF] text-white text-sm font-bold
-            tracking-wide shadow-[0_4px_20px_rgba(15,82,255,0.28)]
-            hover:opacity-90 active:scale-[.98] transition-all duration-150
-            disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none
-            flex items-center justify-center gap-2'
+          className="w-full py-3.5 mt-2 rounded-xl bg-[#0a0a0a] text-white text-[13px] font-[700] font-[Outfit] tracking-wider uppercase shadow-md hover:bg-[#c9993a] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-250 flex items-center justify-center gap-2"
         >
           {auth.loading ? (
             <>
-              <CircularProgress
-                size={16}
-                thickness={5}
-                sx={{ color: "#fff" }}
-              />
-              <span>Please wait...</span>
+              <CircularProgress size={14} thickness={5} sx={{ color: "#fff" }} />
+              <span>Verifying...</span>
             </>
           ) : auth.otpSent ? (
-            "Create Account →"
+            "Create Account"
           ) : (
-            "Send OTP"
+            "Send verification code"
           )}
         </button>
 
         {/* Resend hint */}
         {auth.otpSent && (
-          <p className='text-center text-xs text-[#94A3B8]'>
+          <p className="text-center text-[12px] text-[#9ca3af] font-[500] font-[Outfit]">
             Didn't receive it?{" "}
             <button
-              type='button'
+              type="button"
               onClick={() =>
                 dispatch(sendSigninSignupOTP({ email: formik.values.email }))
               }
-              className='text-[#0F52FF] font-semibold hover:underline underline-offset-2'
+              className="text-[#c9993a] font-[700] hover:underline"
             >
               Resend OTP
             </button>
           </p>
         )}
       </form>
-
-      <style>{`
-        @keyframes fadeSlideIn {
-          from { opacity: 0; transform: translateY(-8px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </div>
   );
 };

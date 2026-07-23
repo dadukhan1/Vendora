@@ -38,32 +38,33 @@ const Footer = () => {
   const navigate = useNavigate();
 
   return (
-    <footer className='bg-[#0F172A]'>
+    <footer className="bg-[#0a0a0a] rounded-t-[32px] lg:rounded-t-[50px] mt-16 lg:mt-28 text-white">
       {/* Main body */}
-      <div className='max-w-6xl mx-auto px-8 pt-16 pb-12 grid grid-cols-1 lg:grid-cols-[1.5fr_repeat(3,1fr)] gap-12'>
+      <div className="max-w-[1440px] mx-auto px-6 lg:px-12 pt-16 pb-12 grid grid-cols-1 lg:grid-cols-[2fr_repeat(3,1fr)] gap-10 lg:gap-16">
         {/* Brand column */}
-        <div className='flex flex-col gap-5'>
+        <div className="flex flex-col gap-6">
           <div
-            className='flex items-center gap-2 cursor-pointer w-fit'
+            className="flex items-center gap-2.5 cursor-pointer w-fit select-none"
             onClick={() => navigate("/")}
           >
-            <Storefront sx={{ fontSize: 22, color: "#0F52FF" }} />
-            <span className='text-[#F8FAFC] text-xl font-bold tracking-tight'>
+            <div className="w-7 h-7 bg-white rounded-lg flex items-center justify-center">
+              <span className="text-[#0a0a0a] font-bold text-xs font-[Outfit]">V</span>
+            </div>
+            <span className="text-white text-lg font-[800] tracking-tight font-[Outfit]">
               Vendora
             </span>
           </div>
 
-          <p className='text-[#94A3B8] text-sm leading-relaxed max-w-[210px]'>
-            Your one-stop destination for premium fashion. Quality styles,
-            delivered fast.
+          <p className="text-[#9ca3af] text-[13px] leading-relaxed max-w-xs font-light">
+            Elevating your shopping experience with curated luxury fashion and premium customer support.
           </p>
 
           {/* Social bubbles */}
-          <div className='flex gap-2 mt-1'>
+          <div className="flex gap-2.5 mt-2">
             {["X", "IG", "FB", "YT"].map((s) => (
               <div
                 key={s}
-                className='w-9 h-9 rounded-full border border-[#E2E8F0]/20 flex items-center justify-center text-[11px] font-bold text-[#94A3B8] cursor-pointer hover:border-[#0F52FF] hover:text-[#F8FAFC] hover:bg-[#0F52FF]/15 transition-all duration-150'
+                className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-[10px] font-[700] text-[#9ca3af] cursor-pointer hover:border-[#c9993a] hover:text-white hover:bg-white/5 transition-all duration-200"
               >
                 {s}
               </div>
@@ -73,15 +74,15 @@ const Footer = () => {
 
         {/* Link columns */}
         {Object.entries(footerLinks).map(([heading, links]) => (
-          <div key={heading} className='flex flex-col gap-4'>
-            <p className='text-[#F8FAFC] text-[11px] font-bold uppercase tracking-widest mb-1'>
+          <div key={heading} className="flex flex-col gap-4">
+            <p className="label-overline text-[#c9993a] text-[10px] tracking-widest mb-1">
               {heading}
             </p>
             {links.map((link) => (
               <span
                 key={link.name}
                 onClick={() => navigate(link.path)}
-                className='text-[#94A3B8] text-sm cursor-pointer hover:text-[#F8FAFC] transition-colors duration-150'
+                className="text-[#9ca3af] text-[13px] font-[500] font-[Outfit] cursor-pointer hover:text-white transition-colors duration-150"
               >
                 {link.name}
               </span>
@@ -91,27 +92,25 @@ const Footer = () => {
       </div>
 
       {/* Divider */}
-      <div className='border-t border-[#E2E8F0]/10 mx-8' />
+      <div className="border-t border-white/10 mx-6 lg:mx-12" />
 
       {/* Bottom bar */}
-      <div className='max-w-6xl mx-auto px-8 py-5 flex flex-wrap items-center justify-between gap-4'>
-        <p className='text-[#64748B] text-xs'>
+      <div className="max-w-[1440px] mx-auto px-6 lg:px-12 py-6 flex flex-wrap items-center justify-between gap-4">
+        <p className="text-[#555] text-[11px] font-[500] font-[Outfit]">
           © {new Date().getFullYear()} Vendora. All rights reserved.
         </p>
 
         {/* Legal links */}
-        <div className='flex items-center gap-2'>
+        <div className="flex items-center gap-2">
           {legalLinks.map((item, i, arr) => (
             <React.Fragment key={item.name}>
               <span
                 onClick={() => navigate(item.path)}
-                className='text-[#64748B] text-xs cursor-pointer hover:text-[#F8FAFC] transition-colors duration-150'
+                className="text-[#555] text-[11px] font-[500] font-[Outfit] cursor-pointer hover:text-[#9ca3af] transition-colors duration-150"
               >
                 {item.name}
               </span>
-              {i < arr.length - 1 && (
-                <span className='text-[#64748B]/40 text-xs'>·</span>
-              )}
+              {i < arr.length - 1 && <span className="text-white/10 text-[11px] select-none">·</span>}
             </React.Fragment>
           ))}
         </div>
@@ -119,10 +118,10 @@ const Footer = () => {
         {/* Become a Seller CTA */}
         <div
           onClick={() => navigate("/become-seller")}
-          className='flex items-center gap-2 px-4 py-2 rounded-full bg-[#0F52FF]/10 border border-[#0F52FF]/30 cursor-pointer hover:bg-[#0F52FF]/20 transition-all duration-150'
+          className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 cursor-pointer hover:bg-[#c9993a] hover:border-transparent transition-all duration-200 group"
         >
-          <Storefront sx={{ fontSize: 15, color: "#0F52FF" }} />
-          <span className='text-[#0F52FF] text-xs font-semibold'>
+          <Storefront sx={{ fontSize: 13 }} className="text-[#c9993a] group-hover:text-white" />
+          <span className="text-[11px] font-[700] font-[Outfit] text-[#c9993a] group-hover:text-white">
             Become a Seller
           </span>
         </div>

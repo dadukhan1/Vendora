@@ -9,7 +9,7 @@ const ReviewCard = ({ review }: any) => {
         <div className='flex items-center gap-3'>
           <Avatar 
             src={review.user?.profilePicture} 
-            sx={{ width: 44, height: 44, bgcolor: '#0F52FF' }}
+            sx={{ width: 44, height: 44, bgcolor: '#F59E0B' }}
           >
             {review.user?.fullName?.[0]}
           </Avatar>

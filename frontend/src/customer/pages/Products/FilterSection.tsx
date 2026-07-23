@@ -57,7 +57,7 @@ const FilterSection = ({
           sx={{
             textTransform: "none",
             fontWeight: 600,
-            color: "#0F52FF",
+            color: "#F59E0B",
           }}
         >
           Clear all
@@ -71,7 +71,7 @@ const FilterSection = ({
               sx={{
                 fontSize: "16px",
                 fontWeight: "bold",
-                color: "#0F52FF",
+                color: "#F59E0B",
               }}
             >
               Colors
@@ -108,7 +108,7 @@ const FilterSection = ({
               sx={{
                 fontSize: "16px",
                 fontWeight: "bold",
-                color: "#0F52FF",
+                color: "#F59E0B",
               }}
             >
               Price
@@ -138,7 +138,7 @@ const FilterSection = ({
               sx={{
                 fontSize: "16px",
                 fontWeight: "bold",
-                color: "#0F52FF",
+                color: "#F59E0B",
               }}
             >
               Discount

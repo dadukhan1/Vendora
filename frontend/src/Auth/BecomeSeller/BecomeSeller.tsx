@@ -24,13 +24,13 @@ const BecomeSeller = () => {
   const navigate = useNavigate();
 
   return (
-    <div className='grid grid-cols-3 min-h-screen bg-[#F8FAFC]'>
+    <div className='grid grid-cols-3 min-h-screen bg-[#FAFAF9]'>
       {/* ── Left: Form Panel ── */}
       <section className='lg:col-span-1 md:col-span-2 col-span-3 flex flex-col px-8 md:px-10 py-10 bg-white border-r border-[#E2E8F0] overflow-y-auto'>
         {/* ── Back to Home ── */}
         <button
           onClick={() => navigate("/")}
-          className='flex items-center gap-1.5 text-xs text-[#64748B] hover:text-[#0F172A] w-fit transition-colors duration-150 mb-6 cursor-pointer'
+          className='flex items-center gap-1.5 text-xs text-[#64748B] hover:text-[#1F2937] w-fit transition-colors duration-150 mb-6 cursor-pointer'
         >
           <ArrowBack sx={{ fontSize: 14 }} />
           <span>Back to Home</span>
@@ -38,15 +38,15 @@ const BecomeSeller = () => {
 
         {/* Logo / Brand */}
         <div className='flex items-center gap-2 mb-8'>
-          <Storefront sx={{ color: "#0F52FF", fontSize: 26 }} />
-          <span className='text-lg font-bold text-[#0F172A] tracking-tight'>
-            Vendora <span className='text-[#0F52FF]'>Seller</span>
+          <Storefront sx={{ color: "#F59E0B", fontSize: 26 }} />
+          <span className='text-lg font-bold text-[#1F2937] tracking-tight'>
+            Vendora <span className='text-[#F59E0B]'>Seller</span>
           </span>
         </div>
 
         {/* Heading */}
         <div className='mb-6'>
-          <h1 className='text-2xl font-bold text-[#0F172A] leading-tight mb-1'>
+          <h1 className='text-2xl font-bold text-[#1F2937] leading-tight mb-1'>
             {isSignin ? "Welcome back" : "Start selling today"}
           </h1>
           <p className='text-sm text-[#64748B]'>
@@ -78,12 +78,12 @@ const BecomeSeller = () => {
             textTransform: "none",
             borderRadius: "10px",
             borderColor: "#E2E8F0",
-            color: "#0F172A",
+            color: "#1F2937",
             fontWeight: 600,
             fontSize: "0.875rem",
             "&:hover": {
-              borderColor: "#0F52FF",
-              color: "#0F52FF",
+              borderColor: "#F59E0B",
+              color: "#F59E0B",
               background: "transparent",
             },
           }}
@@ -101,7 +101,7 @@ const BecomeSeller = () => {
         />
 
         {/* Dark overlay */}
-        <div className='absolute inset-0 bg-gradient-to-t from-[#0F172A]/70 via-[#0F172A]/20 to-transparent' />
+        <div className='absolute inset-0 bg-gradient-to-t from-[#1F2937]/70 via-[#1F2937]/20 to-transparent' />
 
         {/* Bottom overlay content */}
         <div className='absolute bottom-10 left-10 right-10'>

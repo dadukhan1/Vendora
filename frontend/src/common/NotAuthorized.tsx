@@ -53,7 +53,7 @@ const NotAuthorized = () => {
             variant="h4"
             sx={{
               fontWeight: 900,
-              color: "#0F172A",
+              color: "#1F2937",
               mb: 2,
               letterSpacing: "-0.02em"
             }}
@@ -82,7 +82,7 @@ const NotAuthorized = () => {
               onClick={() => navigate("/")}
               startIcon={<Home />}
               sx={{
-                bgcolor: "#0F52FF",
+                bgcolor: "#F59E0B",
                 boxShadow: "0 10px 20px rgba(15, 82, 255, 0.2)",
                 borderRadius: "14px",
                 py: 1.8,
@@ -114,7 +114,7 @@ const NotAuthorized = () => {
                 borderColor: "#e2e8f0",
                 "&:hover": {
                   borderColor: "#cbd5e1",
-                  bgcolor: "#f8fafc"
+                  bgcolor: "#FAFAF9"
                 }
               }}
             >

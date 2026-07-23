@@ -40,166 +40,89 @@ const CartItemCard = ({ item }: CartItemCardProps) => {
 
   return (
     <Card
+      elevation={0}
       sx={{
         position: "relative",
         overflow: "hidden",
-        borderRadius: 3,
-        border: "1px solid #e8eef7",
-        background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
-        boxShadow: "0 4px 16px rgba(0, 0, 0, 0.04)",
+        borderRadius: "20px",
+        border: "1px solid #f0ece6",
+        background: "#ffffff",
+        transition: "all 0.3s ease",
+        "&:hover": {
+          boxShadow: "0 6px 20px rgba(0,0,0,0.02)",
+          borderColor: "#d4c4a8",
+        },
       }}
     >
       {/* Delete button */}
-      <Box sx={{ position: "absolute", top: 8, right: 8, zIndex: 1 }}>
+      <Box sx={{ position: "absolute", top: 12, right: 12, zIndex: 1 }}>
         <IconButton
           onClick={handleDeleteCartItem}
-          size='small'
+          size="small"
           sx={{
-            color: "#94a3b8",
+            color: "#9ca3af",
             transition: "all 0.2s",
             "&:hover": {
-              color: "#ea580c",
-              background: "rgba(234, 88, 12, 0.08)",
+              color: "#e03c54",
+              background: "rgba(224, 60, 84, 0.05)",
             },
           }}
         >
-          <Close fontSize='small' />
+          <Close sx={{ fontSize: 16 }} />
         </IconButton>
       </Box>
 
       {/* Main content */}
-      <CardContent sx={{ p: 2, pr: 5 }}>
-        <Box sx={{ display: "flex", gap: 2 }}>
-          <Box
-            component='img'
+      <CardContent sx={{ p: 2.5, "&:last-child": { pb: 2.5 } }}>
+        <div className="flex gap-4">
+          <img
             src={item?.product?.images?.[0]}
-            alt={item?.product?.title || "Cart item image"}
-            sx={{
-              width: 84,
-              height: 84,
-              borderRadius: 2.5,
-              objectFit: "cover",
-              flexShrink: 0,
-              border: "1px solid #e2e8f0",
-              backgroundColor: "#f8fafc",
-            }}
+            alt={item?.product?.title || "Cart item"}
+            className="w-20 h-20 lg:w-24 lg:h-24 rounded-2xl object-cover bg-[#f5f3ef] border border-[#f0ece6]"
           />
-          <Box sx={{ minWidth: 0, flex: 1 }}>
-            <Typography
-              sx={{
-                fontSize: "0.7rem",
-                fontWeight: 700,
-                color: "#1976d2",
-                textTransform: "uppercase",
-                letterSpacing: "0.06em",
-                mb: 0.5,
-              }}
-            >
-              {item?.product?.seller?.businessDetails?.businessName || "Vendor"}
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: "0.92rem",
-                fontWeight: 700,
-                color: "#0f172a",
-                lineHeight: 1.35,
-                mb: 0.5,
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              {item?.product?.title}
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: "0.76rem",
-                color: "#94a3b8",
-                mb: 0.5,
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              Sold by: {item?.product?.seller?.businessDetails?.businessName || "Vendora Partner"}
-            </Typography>
-            <Typography sx={{ fontSize: "0.76rem", color: "#64748b" }}>
-              <Box component='span' sx={{ color: "#0f172a", fontWeight: 700 }}>
-                7 days
-              </Box>{" "}
-              replacement available
-            </Typography>
-          </Box>
-        </Box>
+          <div className="min-w-0 flex-1 flex flex-col justify-between">
+            <div>
+              <p className="label-overline text-[#c9993a] mb-1" style={{ fontSize: "8px", letterSpacing: "0.15em" }}>
+                {item?.product?.seller?.businessDetails?.businessName || "Vendor"}
+              </p>
+              <h4 className="text-[14px] lg:text-[15px] font-[700] font-[Outfit] text-[#0a0a0a] truncate tracking-[-0.01em] mb-1">
+                {item?.product?.title}
+              </h4>
+              <p className="text-[11px] text-[#9ca3af] font-[500] font-[Outfit]">
+                Sold by: <span className="text-[#0a0a0a]">{item?.product?.seller?.businessDetails?.businessName || "Vendora Partner"}</span>
+              </p>
+            </div>
+
+            {/* Stepper + Price row */}
+            <div className="flex items-end justify-between mt-3">
+              {/* Stepper */}
+              <div className="flex items-center bg-[#f5f3ef] rounded-xl overflow-hidden border border-[#ede9e2]">
+                <button
+                  disabled={item?.quantity === 1}
+                  onClick={() => handleUpdateCartItem(item?.quantity - 1)}
+                  className="w-8 h-8 flex items-center justify-center text-[#0a0a0a] hover:bg-[#ede9e2] disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
+                >
+                  <Remove sx={{ fontSize: 14 }} />
+                </button>
+                <span className="w-8 text-center text-[12px] font-[700] font-[Outfit] text-[#0a0a0a]">
+                  {item?.quantity}
+                </span>
+                <button
+                  onClick={() => handleUpdateCartItem(item?.quantity + 1)}
+                  className="w-8 h-8 flex items-center justify-center text-[#0a0a0a] hover:bg-[#ede9e2] transition-colors"
+                >
+                  <Add sx={{ fontSize: 14 }} />
+                </button>
+              </div>
+
+              {/* Price */}
+              <span className="text-[15px] font-[800] font-[Outfit] text-[#0a0a0a]">
+                ${item?.product?.sellingPrice}
+              </span>
+            </div>
+          </div>
+        </div>
       </CardContent>
-
-      <Divider sx={{ borderColor: "#e8eef7" }} />
-
-      {/* Footer: qty + price */}
-      <Box
-        sx={{
-          px: 2,
-          py: 1.5,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        {/* Stepper */}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            border: "1px solid #e2e8f0",
-            borderRadius: 2,
-            overflow: "hidden",
-            backgroundColor: "#fff",
-          }}
-        >
-          <IconButton
-            disabled={item?.quantity === 1}
-            onClick={() => handleUpdateCartItem(item?.quantity - 1)}
-            size='small'
-            sx={{
-              borderRadius: 0,
-              color: "#1976d2",
-              px: 1.25,
-              "&:hover": { backgroundColor: "#f8fafc" },
-              "&.Mui-disabled": { color: "#cbd5e1" },
-            }}
-          >
-            <Remove fontSize='small' />
-          </IconButton>
-          <Typography
-            sx={{
-              minWidth: 34,
-              textAlign: "center",
-              fontSize: "0.92rem",
-              fontWeight: 700,
-              color: "#0f172a",
-            }}
-          >
-            {item?.quantity}
-          </Typography>
-          <IconButton
-            onClick={() => handleUpdateCartItem(item?.quantity + 1)}
-            size='small'
-            sx={{
-              borderRadius: 0,
-              color: "#1976d2",
-              px: 1.25,
-              "&:hover": { backgroundColor: "#f8fafc" },
-            }}
-          >
-            <Add fontSize='small' />
-          </IconButton>
-        </Box>
-
-        {/* Price */}
-        <Typography sx={{ fontSize: "1.05rem", fontWeight: 700, color: "#0f172a" }}>
-          ${item?.product?.sellingPrice}
-        </Typography>
-      </Box>
     </Card>
   );
 };

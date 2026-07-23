@@ -29,7 +29,7 @@ const CategorySheet = ({ categories, selectedCategory }: any) => {
           >
             <Typography 
                variant="subtitle2" 
-               sx={{ color: '#0F52FF', fontWeight: 900, mb: 2, textTransform: 'uppercase', letterSpacing: 1 }}
+               sx={{ color: '#F59E0B', fontWeight: 900, mb: 2, textTransform: 'uppercase', letterSpacing: 1 }}
             >
               {lvl2.name}
             </Typography>
@@ -39,9 +39,9 @@ const CategorySheet = ({ categories, selectedCategory }: any) => {
                 <li
                   onClick={() => navigate(`/products/${lvl3.categoryId}`)}
                   key={lvl3._id}
-                  className='cursor-pointer text-[#475569] hover:text-[#0F52FF] transition-colors flex items-center gap-2 group'
+                  className='cursor-pointer text-[#475569] hover:text-[#F59E0B] transition-colors flex items-center gap-2 group'
                 >
-                  <div className='w-1 h-1 bg-gray-300 rounded-full group-hover:bg-[#0F52FF] transition-colors' />
+                  <div className='w-1 h-1 bg-gray-300 rounded-full group-hover:bg-[#F59E0B] transition-colors' />
                   {lvl3.name}
                 </li>
               ))}

@@ -75,20 +75,18 @@ export const fetchSellerProfile = createAsyncThunk<
   }
 });
 
-export const fetchSellers = createAsyncThunk<
-  Seller[],
-  string | undefined,
-  { rejectValue: string }
->("sellers/fetchSellers", async (status, { rejectWithValue }) => {
-  try {
-    const res = await api.get("/seller", {
-      params: { status },
-    });
-    return res.data;
-  } catch (error: any) {
-    return rejectWithValue("Failed to fetch sellers");
+export const fetchSellers = createAsyncThunk<Seller[], string | undefined, { rejectValue: string }>(
+  "sellers/fetchSellers",
+  async (status, { rejectWithValue }) => {
+    try {
+      const params = status && status !== "ALL" ? { status } : undefined;
+      const res = await api.get("/seller", { params });
+      return res.data;
+    } catch (error: any) {
+      return rejectWithValue("Failed to fetch sellers");
+    }
   }
-});
+);
 
 export const fetchSellerReport = createAsyncThunk<
   any,

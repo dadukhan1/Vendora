@@ -94,7 +94,7 @@ const Profile = () => {
         >
           <Box sx={{ fontSize: "0.875rem", color: "#94a3b8", cursor: "pointer" }}>Home</Box>
           <Box sx={{ fontSize: "0.875rem", color: "#cbd5e1" }}>/</Box>
-          <Box sx={{ fontSize: "0.875rem", fontWeight: 600, color: "#0F52FF" }}>My Account</Box>
+          <Box sx={{ fontSize: "0.875rem", fontWeight: 600, color: "#F59E0B" }}>My Account</Box>
         </Box>
 
         {/* Mobile Header: Avatar + User Info */}
@@ -114,16 +114,16 @@ const Profile = () => {
             sx={{
               width: 60,
               height: 60,
-              background: "#0F52FF",
+              background: "#F59E0B",
               fontSize: "1.5rem",
               fontWeight: 700,
-              boxShadow: "0 4px 12px rgba(15, 82, 255, 0.25)",
+              boxShadow: "0 4px 12px rgba(245, 158, 11, 0.25)",
             }}
           >
             {initials}
           </Avatar>
           <Box sx={{ flex: 1 }}>
-            <Box sx={{ fontSize: "1.1rem", fontWeight: 800, color: "#0f172a" }}>{user?.fullName}</Box>
+            <Box sx={{ fontSize: "1.1rem", fontWeight: 800, color: "#1F2937" }}>{user?.fullName}</Box>
             <Box sx={{ fontSize: "0.8rem", color: "#64748b", fontWeight: 500 }}>{user?.email}</Box>
           </Box>
           
@@ -175,15 +175,15 @@ const Profile = () => {
                   fontSize: "0.9rem",
                   transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
                   ...(isActive ? {
-                    background: "#0F52FF",
+                    background: "#F59E0B",
                     color: "white",
-                    boxShadow: "0 4px 12px rgba(25, 118, 210, 0.25)",
-                    "&:hover": { background: "#0F52FF" }
+                    boxShadow: "0 4px 12px rgba(245, 158, 11, 0.25)",
+                    "&:hover": { background: "#F59E0B" }
                   } : {
                     border: "1.5px solid #e2e8f0",
                     color: item.isLogout ? "#ea580c" : "#64748b",
                     background: "white",
-                    "&:hover": { borderColor: item.isLogout ? "#ea580c" : "#0F52FF", color: item.isLogout ? "#ea580c" : "#0F52FF" }
+                    "&:hover": { borderColor: item.isLogout ? "#ea580c" : "#F59E0B", color: item.isLogout ? "#ea580c" : "#F59E0B" }
                   })
                 }}
               >
@@ -230,17 +230,17 @@ const Profile = () => {
                     width: 90,
                     height: 90,
                     mx: "auto",
-                    background: "#0F52FF",
+                    background: "#F59E0B",
                     fontSize: "2.5rem",
                     fontWeight: 700,
-                    boxShadow: "0 10px 25px rgba(15, 82, 255, 0.2)",
+                    boxShadow: "0 10px 25px rgba(245, 158, 11, 0.2)",
                   }}
                 >
                   {initials}
                 </Avatar>
               </Box>
 
-              <Box sx={{ fontSize: "1.25rem", fontWeight: 800, color: "#0f172a", mb: 0.5 }}>
+              <Box sx={{ fontSize: "1.25rem", fontWeight: 800, color: "#1F2937", mb: 0.5 }}>
                 {user?.fullName}
               </Box>
               <Box sx={{ fontSize: "0.875rem", color: "#64748b", fontWeight: 500 }}>
@@ -272,8 +272,8 @@ const Profile = () => {
                         mb: 0.5,
                         ...(isActive
                           ? {
-                            background: "#eff6ff",
-                            color: "#0F52FF",
+                            background: "#fffbeb",
+                            color: "#F59E0B",
                             "& .item-label": { fontWeight: 800 }
                           }
                           : isLogout
@@ -283,7 +283,7 @@ const Profile = () => {
                             }
                             : {
                               color: "#475569",
-                              "&:hover": { background: "#f8fafc", color: "#1e293b" }
+                              "&:hover": { background: "#FAFAF9", color: "#1e293b" }
                             }),
                       }}
                     >
@@ -292,7 +292,7 @@ const Profile = () => {
                         {item.name}
                       </Box>
                       {isActive && (
-                        <Box sx={{ width: 6, height: 6, borderRadius: "50%", background: "#0F52FF" }} />
+                        <Box sx={{ width: 6, height: 6, borderRadius: "50%", background: "#F59E0B" }} />
                       )}
                     </Box>
                   </Box>

@@ -23,6 +23,22 @@ import { useAppSelector, useAppDispatch } from "../../Redux Toolkit/store";
 import { fetchAllCategories } from "../../Redux Toolkit/features/category/categorySlice";
 import api from "../../config/api";
 import toast from "react-hot-toast";
+import { styled } from "@mui/material/styles";
+
+const StyledTableCell = styled(TableCell)(() => ({
+  fontFamily: "Outfit, sans-serif",
+  fontWeight: 700,
+  fontSize: 13,
+  color: "#0a0a0a",
+  borderBottom: "1px solid #f0ece6",
+  padding: "16px 20px",
+}));
+
+const StyledTableRow = styled(TableRow)(() => ({
+  "&:hover": {
+    backgroundColor: "#fafaf8 !important",
+  },
+}));
 
 const HomeManager = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -32,7 +48,7 @@ const HomeManager = () => {
   // Categories from Redux
   const { categories, loading: categoriesLoading } = useAppSelector((state) => state.category);
 
-  // Products Local State (Admin specific fetch)
+  // Products Local State
   const [products, setProducts] = useState<any[]>([]);
   const [productsLoading, setProductsLoading] = useState(false);
 
@@ -95,24 +111,33 @@ const HomeManager = () => {
   );
 
   return (
-    <Box sx={{ p: 4, bgcolor: '#f8fafc', minHeight: '100vh' }}>
-      <Box sx={{ mb: 6 }}>
-        <Typography variant="h4" sx={{ fontWeight: 900, color: '#0F172A', mb: 1, tracking: '-0.02em' }}>
+    <Box sx={{ p: { xs: 0, md: 2 } }}>
+      <Box sx={{ mb: 4 }}>
+        <p className="label-overline text-[#c9993a] mb-1">Layout Settings</p>
+        <Typography variant="h4" sx={{ fontWeight: 800, color: "#0a0a0a", fontFamily: "Playfair Display", mb: 1 }}>
           Storefront Manager
         </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Promote products and categories to the homepage sections.
+        <Typography variant="body2" sx={{ color: "#9ca3af", fontFamily: "Outfit" }}>
+          Promote products and categories directly to the homepage carousel and grids.
         </Typography>
       </Box>
 
-      <Paper sx={{ borderRadius: '24px', overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider', px: 3, pt: 2, bgcolor: '#fff' }}>
+      <Paper elevation={0} sx={{ border: "1px solid #f0ece6", borderRadius: "24px", overflow: "hidden", bgcolor: "#fff" }}>
+        <Box sx={{ borderBottom: 1, borderColor: "#f0ece6", px: 3, pt: 2, bgcolor: "#fff" }}>
           <Tabs
             value={activeTab}
             onChange={handleTabChange}
             sx={{
-              '& .MuiTabs-indicator': { height: 3, borderRadius: '3px 3px 0 0' },
-              '& .MuiTab-root': { fontWeight: 700, textTransform: 'none', minWidth: 160 }
+              "& .MuiTabs-indicator": { height: 2, bgcolor: "#c9993a", borderRadius: "2px" },
+              "& .MuiTab-root": {
+                fontWeight: 700,
+                fontFamily: "Outfit",
+                textTransform: "none",
+                fontSize: "13px",
+                minWidth: 160,
+                color: "#9ca3af",
+                "&.Mui-selected": { color: "#0a0a0a" }
+              }
             }}
           >
             <Tab label="Product Banners" />
@@ -120,7 +145,7 @@ const HomeManager = () => {
           </Tabs>
         </Box>
 
-        <Box sx={{ p: 3, bgcolor: '#fff' }}>
+        <Box sx={{ p: 3, bgcolor: "#fff" }}>
           <TextField
             fullWidth
             placeholder={activeTab === 0 ? "Search products by name or seller..." : "Search categories..."}
@@ -129,10 +154,17 @@ const HomeManager = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Search sx={{ color: 'text.secondary' }} />
+                  <Search sx={{ color: "#9ca3af", fontSize: 18 }} />
                 </InputAdornment>
               ),
-              sx: { borderRadius: '16px', bgcolor: '#f1f5f9', border: 'none', '& fieldset': { border: 'none' } }
+              sx: {
+                borderRadius: "14px",
+                bgcolor: "#f5f3ef",
+                fontSize: "13px",
+                fontFamily: "Outfit",
+                border: "none",
+                "& fieldset": { border: "none" }
+              }
             }}
             sx={{ mb: 4 }}
           />
@@ -141,46 +173,64 @@ const HomeManager = () => {
             <TableContainer>
               <Table sx={{ minWidth: 650 }}>
                 <TableHead>
-                  <TableRow sx={{ bgcolor: '#f8fafc' }}>
-                    <TableCell sx={{ fontWeight: 800 }}>Product</TableCell>
-                    <TableCell sx={{ fontWeight: 800 }}>Seller</TableCell>
-                    <TableCell sx={{ fontWeight: 800 }}>Price</TableCell>
-                    <TableCell align="center" sx={{ fontWeight: 800 }}>Hero Banner</TableCell>
-                    <TableCell align="center" sx={{ fontWeight: 800 }}>Staff Pick</TableCell>
+                  <TableRow sx={{ bgcolor: "#fafaf8" }}>
+                    <StyledTableCell>Product</StyledTableCell>
+                    <StyledTableCell>Seller</StyledTableCell>
+                    <StyledTableCell>Price</StyledTableCell>
+                    <StyledTableCell align="center">Hero Banner</StyledTableCell>
+                    <StyledTableCell align="center">Staff Pick</StyledTableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {productsLoading ? (
-                    <TableRow><TableCell colSpan={5} align="center" sx={{ py: 8 }}><CircularProgress /></TableCell></TableRow>
-                  ) : filteredProducts.map((p) => (
-                    <TableRow key={p._id} hover>
-                      <TableCell>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                          <img src={p.images[0]} style={{ width: 48, height: 48, borderRadius: 12, objectFit: 'cover' }} />
-                          <Box>
-                            <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>{p.title}</Typography>
-                            <Typography variant="caption" color="text.secondary">{p.category?.name}</Typography>
-                          </Box>
-                        </Box>
-                      </TableCell>
-                      <TableCell sx={{ fontWeight: 500 }}>{p.seller?.sellerName}</TableCell>
-                      <TableCell sx={{ fontWeight: 700 }}>₹{p.sellingPrice}</TableCell>
-                      <TableCell align="center">
-                        <Switch
-                          checked={p.isBanner}
-                          onChange={() => toggleProductBanner(p._id, "isBanner")}
-                          color="primary"
-                        />
-                      </TableCell>
-                      <TableCell align="center">
-                        <Switch
-                          checked={p.isFeatured}
-                          onChange={() => toggleProductBanner(p._id, "isFeatured")}
-                          color="error"
-                        />
+                    <TableRow>
+                      <TableCell colSpan={5} align="center" sx={{ py: 8 }}>
+                        <CircularProgress size={24} sx={{ color: "#c9993a" }} />
                       </TableCell>
                     </TableRow>
-                  ))}
+                  ) : filteredProducts.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={5} align="center" sx={{ py: 6, color: "#9ca3af", fontFamily: "Outfit" }}>
+                        No products found.
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    filteredProducts.map((p) => (
+                      <StyledTableRow key={p._id}>
+                        <TableCell sx={{ borderBottom: "1px solid #f0ece6" }}>
+                          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                            <img src={p.images[0]} style={{ width: 44, height: 44, borderRadius: 10, objectFit: "cover", border: "1px solid #f0ece6" }} />
+                            <Box>
+                              <Typography variant="subtitle2" sx={{ fontWeight: 700, fontFamily: "Outfit", color: "#0a0a0a" }}>{p.title}</Typography>
+                              <Typography variant="caption" sx={{ color: "#9ca3af", fontFamily: "Outfit" }}>{p.category?.name}</Typography>
+                            </Box>
+                          </Box>
+                        </TableCell>
+                        <TableCell sx={{ fontWeight: 600, fontFamily: "Outfit", color: "#1a1a1a", borderBottom: "1px solid #f0ece6" }}>{p.seller?.sellerName}</TableCell>
+                        <TableCell sx={{ fontWeight: 750, fontFamily: "Outfit", color: "#0a0a0a", borderBottom: "1px solid #f0ece6" }}>${p.sellingPrice}</TableCell>
+                        <TableCell align="center" sx={{ borderBottom: "1px solid #f0ece6" }}>
+                          <Switch
+                            checked={p.isBanner}
+                            onChange={() => toggleProductBanner(p._id, "isBanner")}
+                            sx={{
+                              "& .MuiSwitch-switchBase.Mui-checked": { color: "#c9993a" },
+                              "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": { backgroundColor: "#c9993a" }
+                            }}
+                          />
+                        </TableCell>
+                        <TableCell align="center" sx={{ borderBottom: "1px solid #f0ece6" }}>
+                          <Switch
+                            checked={p.isFeatured}
+                            onChange={() => toggleProductBanner(p._id, "isFeatured")}
+                            sx={{
+                              "& .MuiSwitch-switchBase.Mui-checked": { color: "#e03c54" },
+                              "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": { backgroundColor: "#e03c54" }
+                            }}
+                          />
+                        </TableCell>
+                      </StyledTableRow>
+                    ))
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -188,41 +238,56 @@ const HomeManager = () => {
             <TableContainer>
               <Table sx={{ minWidth: 650 }}>
                 <TableHead>
-                  <TableRow sx={{ bgcolor: '#f8fafc' }}>
-                    <TableCell sx={{ fontWeight: 800 }}>Category Name</TableCell>
-                    <TableCell sx={{ fontWeight: 800 }}>Reference ID</TableCell>
-                    <TableCell sx={{ fontWeight: 800 }}>Level</TableCell>
-                    <TableCell align="center" sx={{ fontWeight: 800 }}>Show on Home</TableCell>
+                  <TableRow sx={{ bgcolor: "#fafaf8" }}>
+                    <StyledTableCell>Category Name</StyledTableCell>
+                    <StyledTableCell>Reference ID</StyledTableCell>
+                    <StyledTableCell>Level</StyledTableCell>
+                    <StyledTableCell align="center">Show on Home</StyledTableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {categoriesLoading ? (
-                    <TableRow><TableCell colSpan={4} align="center" sx={{ py: 8 }}><CircularProgress /></TableCell></TableRow>
-                  ) : filteredCategories.map((c) => (
-                    <TableRow key={c._id} hover>
-                      <TableCell>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                          <Box sx={{ width: 40, height: 40, bgcolor: '#f1f5f9', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <Typography variant="caption" fontWeight="900" color="primary">{c.name.charAt(0)}</Typography>
-                          </Box>
-                          <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>{c.name}</Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell sx={{ fontFamily: 'monospace', color: 'text.secondary' }}>{c.categoryId}</TableCell>
-                      <TableCell>
-                        <Box sx={{ px: 1.5, py: 0.5, bgcolor: '#e0e7ff', color: '#4338ca', borderRadius: '8px', width: 'fit-content', fontSize: '0.75rem', fontWeight: 800 }}>
-                          Level {c.level}
-                        </Box>
-                      </TableCell>
-                      <TableCell align="center">
-                        <Switch
-                          checked={c.showOnHomepage}
-                          onChange={() => toggleCategoryHome(c._id)}
-                          color="error"
-                        />
+                    <TableRow>
+                      <TableCell colSpan={4} align="center" sx={{ py: 8 }}>
+                        <CircularProgress size={24} sx={{ color: "#c9993a" }} />
                       </TableCell>
                     </TableRow>
-                  ))}
+                  ) : filteredCategories.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={4} align="center" sx={{ py: 6, color: "#9ca3af", fontFamily: "Outfit" }}>
+                        No categories found.
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    filteredCategories.map((c) => (
+                      <StyledTableRow key={c._id}>
+                        <TableCell sx={{ borderBottom: "1px solid #f0ece6" }}>
+                          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                            <Box sx={{ width: 36, height: 36, bgcolor: "#f5f3ef", border: "1px solid #f0ece6", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                              <Typography variant="caption" fontWeight="800" color="#c9993a" sx={{ fontFamily: "Outfit" }}>{c.name.charAt(0)}</Typography>
+                            </Box>
+                            <Typography variant="subtitle2" sx={{ fontWeight: 700, fontFamily: "Outfit", color: "#0a0a0a" }}>{c.name}</Typography>
+                          </Box>
+                        </TableCell>
+                        <TableCell sx={{ fontFamily: "monospace", color: "#9ca3af", fontSize: "11px", borderBottom: "1px solid #f0ece6" }}>{c.categoryId}</TableCell>
+                        <TableCell sx={{ borderBottom: "1px solid #f0ece6" }}>
+                          <Box sx={{ px: 1.5, py: 0.5, bgcolor: "rgba(201,153,58,0.08)", color: "#c9993a", borderRadius: "8px", width: "fit-content", fontSize: "0.75rem", fontWeight: 800, fontFamily: "Outfit" }}>
+                            Level {c.level}
+                          </Box>
+                        </TableCell>
+                        <TableCell align="center" sx={{ borderBottom: "1px solid #f0ece6" }}>
+                          <Switch
+                            checked={c.showOnHomepage}
+                            onChange={() => toggleCategoryHome(c._id)}
+                            sx={{
+                              "& .MuiSwitch-switchBase.Mui-checked": { color: "#e03c54" },
+                              "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": { backgroundColor: "#e03c54" }
+                            }}
+                          />
+                        </TableCell>
+                      </StyledTableRow>
+                    ))
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>

@@ -89,7 +89,7 @@ const handleConfirmDelete = async () => {
               sx={{
                 fontSize: "1.75rem",
                 fontWeight: 800,
-                color: "#0f172a",
+                color: "#1F2937",
                 mb: 1,
                 letterSpacing: "-0.5px",
               }}
@@ -105,7 +105,7 @@ const handleConfirmDelete = async () => {
           <LocationOn
             sx={{
               fontSize: 32,
-              color: "#0F52FF",
+              color: "#F59E0B",
               opacity: 0.15,
             }}
           />
@@ -118,7 +118,7 @@ const handleConfirmDelete = async () => {
             startIcon={<Add />}
             onClick={handleOpenDialog}
             sx={{
-              background: "#0F52FF",
+              background: "#F59E0B",
               color: "white",
               textTransform: "none",
               fontSize: "0.95rem",
@@ -126,10 +126,10 @@ const handleConfirmDelete = async () => {
               borderRadius: 2,
               px: 3,
               py: 1.25,
-              boxShadow: "0 4px 20px rgba(15, 82, 255, 0.28)",
+              boxShadow: "0 4px 20px rgba(245, 158, 11, 0.28)",
               "&:hover": {
-                background: "#0040cc",
-                boxShadow: "0 6px 24px rgba(15, 82, 255, 0.35)",
+                background: "#D97706",
+                boxShadow: "0 6px 24px rgba(245, 158, 11, 0.35)",
               },
               transition: "all 0.3s ease",
             }}
@@ -151,7 +151,7 @@ const handleConfirmDelete = async () => {
               gap: 2,
             }}
           >
-            <CircularProgress size={40} sx={{ color: "#0F52FF" }} />
+            <CircularProgress size={40} sx={{ color: "#F59E0B" }} />
             <Box sx={{ color: "#64748b", fontWeight: 500 }}>
               Loading addresses...
             </Box>
@@ -171,7 +171,7 @@ const handleConfirmDelete = async () => {
                   borderRadius: 2.5,
                   border: "1px solid #e8eef7",
                   background:
-                    "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
+                    "linear-gradient(135deg, #ffffff 0%, #FAFAF9 100%)",
                   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.04)",
                   overflow: "hidden",
                   transition: "all 0.3s ease",
@@ -196,7 +196,7 @@ const handleConfirmDelete = async () => {
                         sx={{
                           fontSize: "1rem",
                           fontWeight: 700,
-                          color: "#0f172a",
+                          color: "#1F2937",
                           mb: 0.5,
                         }}
                       >
@@ -234,7 +234,7 @@ const handleConfirmDelete = async () => {
                       <LocationOn
                         sx={{
                           fontSize: 18,
-                          color: "#0F52FF",
+                          color: "#F59E0B",
                           mt: 0.5,
                           flexShrink: 0,
                         }}
@@ -271,7 +271,7 @@ const handleConfirmDelete = async () => {
                       <Phone
                         sx={{
                           fontSize: 18,
-                          color: "#0F52FF",
+                          color: "#F59E0B",
                           flexShrink: 0,
                         }}
                       />
@@ -316,7 +316,7 @@ const handleConfirmDelete = async () => {
             sx={{
               borderRadius: 3,
               border: "1px solid #e8eef7",
-              background: "linear-gradient(135deg, #f8fafc 0%, #f1f5ff 100%)",
+              background: "linear-gradient(135deg, #FAFAF9 0%, #f1f5ff 100%)",
               boxShadow: "0 4px 16px rgba(0, 0, 0, 0.04)",
               py: 8,
               px: 4,
@@ -337,7 +337,7 @@ const handleConfirmDelete = async () => {
                   height: 64,
                   borderRadius: 2,
                   background:
-                    "linear-gradient(135deg, #e8eef7 0%, #f1f5ff 100%)",
+                    "linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -395,7 +395,7 @@ const handleConfirmDelete = async () => {
           sx={{
             fontSize: "1.25rem",
             fontWeight: 700,
-            color: "#0f172a",
+            color: "#1F2937",
             pb: 1,
             borderBottom: "1px solid #e8eef7",
           }}
@@ -419,7 +419,7 @@ const handleConfirmDelete = async () => {
           },
         }}
       >
-        <DialogTitle sx={{ fontWeight: 700, color: "#0f172a" }}>
+        <DialogTitle sx={{ fontWeight: 700, color: "#1F2937" }}>
           Delete Address
         </DialogTitle>
         <DialogContent>

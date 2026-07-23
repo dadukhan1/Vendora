@@ -140,12 +140,12 @@ const OrderDetails = () => {
             style={{
               fontSize: 18,
               fontWeight: 800,
-              color: "#0F172A",
+              color: "#1F2937",
               lineHeight: 1.3,
               cursor: 'pointer'
             }}
-            onMouseEnter={(e) => e.currentTarget.style.color = "#0F52FF"}
-            onMouseLeave={(e) => e.currentTarget.style.color = "#0F172A"}
+            onMouseEnter={(e) => e.currentTarget.style.color = "#F59E0B"}
+            onMouseLeave={(e) => e.currentTarget.style.color = "#1F2937"}
           >
             {orderItem?.product?.title}
           </p>
@@ -153,7 +153,7 @@ const OrderDetails = () => {
             style={{
               fontSize: 13,
               fontWeight: 600,
-              color: "#0F172A",
+              color: "#1F2937",
               marginBottom: 4,
             }}
           >
@@ -167,7 +167,7 @@ const OrderDetails = () => {
               display: "inline-block",
               fontSize: 11,
               fontWeight: 600,
-              color: "#0F52FF",
+              color: "#F59E0B",
               background: "rgba(15,82,255,0.08)",
               padding: "2px 10px",
               borderRadius: 99,
@@ -189,7 +189,7 @@ const OrderDetails = () => {
           style={{
             fontSize: 14,
             fontWeight: 700,
-            color: "#0F172A",
+            color: "#1F2937",
             marginBottom: 12,
           }}
         >
@@ -198,7 +198,7 @@ const OrderDetails = () => {
         <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <Divider flexItem orientation='vertical' />
-            <p style={{ fontSize: 13, fontWeight: 500, color: "#0F172A" }}>
+            <p style={{ fontSize: 13, fontWeight: 500, color: "#1F2937" }}>
               {currentOrder?.shippingAddress?.mobile}
             </p>
           </div>
@@ -231,7 +231,7 @@ const OrderDetails = () => {
             background: getOrderStatusColor(currentOrder?.orderStatus).bg,
           }}
         >
-          <p style={{ fontSize: 13, fontWeight: 700, color: "#0F172A" }}>
+          <p style={{ fontSize: 13, fontWeight: 700, color: "#1F2937" }}>
             Order Status
           </p>
           <Chip
@@ -256,7 +256,7 @@ const OrderDetails = () => {
           }}
         >
           <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-            <p style={{ fontSize: 13, fontWeight: 700, color: "#0F172A" }}>
+            <p style={{ fontSize: 13, fontWeight: 700, color: "#1F2937" }}>
               Total Paid (Item + Delivery Share)
             </p>
             <p style={{ fontSize: 12, color: "#64748B" }}>
@@ -273,7 +273,7 @@ const OrderDetails = () => {
               </p>
             )}
           </div>
-          <p style={{ fontSize: 14, fontWeight: 700, color: "#0F172A" }}>
+          <p style={{ fontSize: 14, fontWeight: 700, color: "#1F2937" }}>
             ${itemPaidTotalIncludingShipping}
           </p>
         </div>
@@ -290,11 +290,11 @@ const OrderDetails = () => {
             }}
           >
             <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-              <p style={{ fontSize: 13, fontWeight: 700, color: "#0F172A" }}>
+              <p style={{ fontSize: 13, fontWeight: 700, color: "#1F2937" }}>
                 Delivery Price (Order)
               </p>
             </div>
-            <p style={{ fontSize: 14, fontWeight: 700, color: "#0F172A" }}>
+            <p style={{ fontSize: 14, fontWeight: 700, color: "#1F2937" }}>
               ${orderShippingPrice}
             </p>
           </div>
@@ -354,7 +354,7 @@ const OrderDetails = () => {
           style={{ padding: "12px 18px", borderBottom: "1px solid #E2E8F0" }}
         >
           <p style={{ fontSize: 12, color: "#64748B" }}>
-            <span style={{ fontWeight: 700, color: "#0F172A" }}>Sold by: </span>
+            <span style={{ fontWeight: 700, color: "#1F2937" }}>Sold by: </span>
             {currentOrder?.seller?.sellerName}
           </p>
         </div>

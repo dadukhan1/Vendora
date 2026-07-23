@@ -285,8 +285,8 @@ const SellerAccountForm = () => {
                 <div
                   className='flex items-center justify-center w-7 h-7 rounded-full text-xs transition-all duration-200'
                   style={{
-                    background: isCompleted || isActive ? "#0F52FF" : "#F8FAFC",
-                    border: `2px solid ${isCompleted || isActive ? "#0F52FF" : "#E2E8F0"}`,
+                    background: isCompleted || isActive ? "#F59E0B" : "#FAFAF9",
+                    border: `2px solid ${isCompleted || isActive ? "#F59E0B" : "#E2E8F0"}`,
                     color: isCompleted || isActive ? "#fff" : "#94A3B8",
                     fontWeight: 700,
                   }}
@@ -299,7 +299,7 @@ const SellerAccountForm = () => {
                 </div>
                 <span
                   className='text-[10px] font-semibold whitespace-nowrap tracking-wide'
-                  style={{ color: isActive ? "#0F172A" : "#94A3B8" }}
+                  style={{ color: isActive ? "#1F2937" : "#94A3B8" }}
                 >
                   {step.label}
                 </span>
@@ -310,7 +310,7 @@ const SellerAccountForm = () => {
                 <div
                   className='flex-1 h-px mx-2 mb-5 transition-all duration-300'
                   style={{
-                    background: index < activeStep ? "#0F52FF" : "#E2E8F0",
+                    background: index < activeStep ? "#F59E0B" : "#E2E8F0",
                   }}
                 />
               )}
@@ -330,7 +330,7 @@ const SellerAccountForm = () => {
         </p>
         <span
           className='text-[10px] font-semibold px-2 py-0.5 rounded-full'
-          style={{ background: "#EFF6FF", color: "#0F52FF" }}
+          style={{ background: "#EFF6FF", color: "#F59E0B" }}
         >
           {Math.round(((activeStep + 1) / steps.length) * 100)}%
         </span>
@@ -339,7 +339,7 @@ const SellerAccountForm = () => {
       {/* ── Thin progress bar ── */}
       <div className='w-full bg-[#E2E8F0] rounded-full h-0.5 -mt-3'>
         <div
-          className='bg-[#0F52FF] h-0.5 rounded-full transition-all duration-500'
+          className='bg-[#F59E0B] h-0.5 rounded-full transition-all duration-500'
           style={{ width: `${((activeStep + 1) / steps.length) * 100}%` }}
         />
       </div>
@@ -371,7 +371,7 @@ const SellerAccountForm = () => {
             fontWeight: 500,
             fontSize: "0.9rem",
             px: 2,
-            "&:hover": { background: "#F8FAFC", color: "#0F172A" },
+            "&:hover": { background: "#FAFAF9", color: "#1F2937" },
             "&:disabled": { color: "#E2E8F0" },
           }}
         >
@@ -394,7 +394,7 @@ const SellerAccountForm = () => {
           sx={{
             textTransform: "none",
             borderRadius: "10px",
-            background: "#0F52FF",
+            background: "#F59E0B",
             fontWeight: 600,
             fontSize: "0.9rem",
             px: 3,

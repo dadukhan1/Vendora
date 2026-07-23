@@ -54,7 +54,7 @@ const Grid = () => {
         />
         
         {/* Advanced Overlay */}
-        <div className='absolute inset-0 bg-gradient-to-t from-[#0F172A]/80 via-[#0F172A]/20 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500' />
+        <div className='absolute inset-0 bg-gradient-to-t from-[#1F2937]/80 via-[#1F2937]/20 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500' />
         
         {/* Content Box */}
         <div className='absolute inset-0 p-6 lg:p-8 flex flex-col justify-end transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500 ease-out'>
@@ -65,8 +65,8 @@ const Grid = () => {
             <h3 className='text-white text-xl lg:text-2xl font-black tracking-tight leading-tight'>
               {item.name}
             </h3>
-            <div className='pt-4 flex items-center gap-2 text-white/0 group-hover:text-[#0F52FF] transition-all duration-500 overflow-hidden'>
-               <span className='h-[1px] w-0 group-hover:w-8 bg-[#0F52FF] transition-all duration-500' />
+            <div className='pt-4 flex items-center gap-2 text-white/0 group-hover:text-[#F59E0B] transition-all duration-500 overflow-hidden'>
+               <span className='h-[1px] w-0 group-hover:w-8 bg-[#F59E0B] transition-all duration-500' />
                <span className='text-[11px] font-black uppercase tracking-widest translate-x-[-20px] group-hover:translate-x-0 transition-all duration-700'>
                  Shop Category
                </span>
@@ -82,10 +82,10 @@ const Grid = () => {
       {/* Section header */}
       <div className='flex items-end justify-between'>
         <div className='space-y-1'>
-          <p className='text-[10px] lg:text-xs text-[#0F52FF] font-black uppercase tracking-[0.3em]'>
+          <p className='text-[10px] lg:text-xs text-[#F59E0B] font-black uppercase tracking-[0.3em]'>
             Live Collections
           </p>
-          <h2 className='text-3xl lg:text-4xl font-black text-[#0F172A] tracking-tighter'>
+          <h2 className='text-3xl lg:text-4xl font-black text-[#1F2937] tracking-tighter'>
             Shop by Category
           </h2>
         </div>
@@ -93,8 +93,8 @@ const Grid = () => {
           onClick={() => navigate('/products/all')}
           className='hidden sm:flex items-center gap-3 text-sm font-bold text-[#475569] cursor-pointer group'
         >
-           <span className='group-hover:text-[#0F52FF] transition-colors'>View Hierarchy</span>
-           <div className='w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-[#0F52FF] group-hover:text-white transition-all'>
+           <span className='group-hover:text-[#F59E0B] transition-colors'>View Hierarchy</span>
+           <div className='w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-[#F59E0B] group-hover:text-white transition-all'>
              →
            </div>
         </div>

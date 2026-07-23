@@ -58,7 +58,7 @@ const OrderStepper = ({ orderStatus = "PENDING" }: OrderStepperProps) => {
   }, [orderStatus]);
 
   const isCancelled = orderStatus === "CANCELLED";
-  const activeColor = isCancelled ? "#FF4F00" : "#0F52FF";
+  const activeColor = isCancelled ? "#FF4F00" : "#F59E0B";
   const activeBg = isCancelled ? "rgba(255,79,0,0.08)" : "rgba(15,82,255,0.08)";
 
   return (

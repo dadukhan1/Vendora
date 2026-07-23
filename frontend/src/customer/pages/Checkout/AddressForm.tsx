@@ -13,9 +13,9 @@ const fieldSx = {
     backgroundColor: "#fff",
     "& fieldset": { borderColor: "#E2E8F0" },
     "&:hover fieldset": { borderColor: "#94A3B8" },
-    "&.Mui-focused fieldset": { borderColor: "#0F52FF", borderWidth: "1.5px" },
+    "&.Mui-focused fieldset": { borderColor: "#F59E0B", borderWidth: "1.5px" },
   },
-  "& .MuiInputLabel-root.Mui-focused": { color: "#0F52FF" },
+  "& .MuiInputLabel-root.Mui-focused": { color: "#F59E0B" },
   "& .MuiInputLabel-root": { fontSize: 14, color: "#64748B" },
 };
 
@@ -53,7 +53,7 @@ const AddressForm = ({ onClose }: any) => {
             sx={{
               width: 4,
               height: 24,
-              background: "linear-gradient(180deg, #0F52FF 0%, #FF4F00 100%)",
+              background: "linear-gradient(180deg, #F59E0B 0%, #FF4F00 100%)",
               borderRadius: 0.5,
             }}
           />
@@ -61,7 +61,7 @@ const AddressForm = ({ onClose }: any) => {
             sx={{
               fontSize: "1.125rem",
               fontWeight: 700,
-              color: "#0F172A",
+              color: "#1F2937",
               letterSpacing: "-0.3px",
             }}
           >
@@ -194,7 +194,7 @@ const AddressForm = ({ onClose }: any) => {
               fullWidth
               variant='contained'
               sx={{
-                background: "linear-gradient(135deg, #0F52FF 0%, #0D3ABF 100%)",
+                background: "linear-gradient(135deg, #F59E0B 0%, #0D3ABF 100%)",
                 color: "white",
                 py: 1.75,
                 fontSize: "0.95rem",

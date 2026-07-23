@@ -16,9 +16,9 @@ import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/store";
 import { updateProfile } from "../../../Redux Toolkit/features/customer/userSlice";
 
 const keyIconMap: Record<string, React.ReactNode> = {
-  Name: <Person sx={{ fontSize: 20, color: "#0F52FF" }} />,
-  Email: <Email sx={{ fontSize: 20, color: "#0F52FF" }} />,
-  Mobile: <Phone sx={{ fontSize: 20, color: "#0F52FF" }} />,
+  Name: <Person sx={{ fontSize: 20, color: "#F59E0B" }} />,
+  Email: <Email sx={{ fontSize: 20, color: "#F59E0B" }} />,
+  Mobile: <Phone sx={{ fontSize: 20, color: "#F59E0B" }} />,
 };
 
 interface Field {
@@ -97,11 +97,11 @@ const UserDetails = () => {
             sx={{
               width: 60,
               height: 60,
-              background: "#0F52FF",
+              background: "#F59E0B",
               fontSize: "1.3rem",
               fontWeight: "bold",
               flexShrink: 0,
-              boxShadow: "0 4px 12px rgba(15, 82, 255, 0.2)",
+              boxShadow: "0 4px 12px rgba(245, 158, 11, 0.2)",
             }}
           >
             {initials}
@@ -113,7 +113,7 @@ const UserDetails = () => {
               sx={{
                 fontSize: "1.2rem",
                 fontWeight: 700,
-                color: "#0f172a",
+                color: "#1F2937",
                 mb: 0.25,
               }}
             >
@@ -134,16 +134,16 @@ const UserDetails = () => {
             sx={{
               textTransform: "none",
               borderRadius: 2,
-              background: "#0F52FF",
-              boxShadow: "0 2px 8px rgba(15, 82, 255, 0.2)",
+              background: "#F59E0B",
+              boxShadow: "0 2px 8px rgba(245, 158, 11, 0.2)",
               px: 2,
               py: 1,
               fontSize: "0.875rem",
               fontWeight: 600,
               whiteSpace: "nowrap",
               "&:hover": {
-                background: "#0040cc",
-                boxShadow: "0 4px 12px rgba(15, 82, 255, 0.3)",
+                background: "#D97706",
+                boxShadow: "0 4px 12px rgba(245, 158, 11, 0.3)",
               },
             }}
           >
@@ -185,7 +185,7 @@ const UserDetails = () => {
                     height: 44,
                     borderRadius: 2,
                     background:
-                      "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)",
+                      "linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -213,7 +213,7 @@ const UserDetails = () => {
                     sx={{
                       fontSize: "0.95rem",
                       fontWeight: 600,
-                      color: saved[field.name] ? "#0f172a" : "#cbd5e1",
+                      color: saved[field.name] ? "#1F2937" : "#cbd5e1",
                     }}
                   >
                     {saved[field.name] || "Not set"}
@@ -236,7 +236,7 @@ const UserDetails = () => {
                       alignItems: "center",
                       gap: 1,
                       mb: 1.2,
-                      color: "#0F52FF",
+                      color: "#F59E0B",
                       fontSize: "0.75rem",
                       fontWeight: 700,
                       letterSpacing: 0.8,
@@ -259,8 +259,8 @@ const UserDetails = () => {
                         borderRadius: "8px",
                         fontSize: "0.95rem",
                         fontWeight: 500,
-                        color: "#0f172a",
-                        background: "#f8fafc",
+                        color: "#1F2937",
+                        background: "#FAFAF9",
                         transition: "all 0.3s ease",
                         "& fieldset": {
                           borderColor: "#e2e8f0",
@@ -269,11 +269,11 @@ const UserDetails = () => {
                           borderColor: "#cbd5e1",
                         },
                         "&.Mui-focused fieldset": {
-                          borderColor: "#0F52FF",
+                          borderColor: "#F59E0B",
                           borderWidth: "2px",
                         },
                         "&.Mui-focused": {
-                          background: "#f0f4ff",
+                          background: "#fffbeb",
                         },
                       },
                       "& .MuiInputBase-input": {
@@ -308,7 +308,7 @@ const UserDetails = () => {
                   color: "#64748b",
                   "&:hover": {
                     borderColor: "#cbd5e1",
-                    background: "#f8fafc",
+                    background: "#FAFAF9",
                   },
                 }}
               >
@@ -321,11 +321,11 @@ const UserDetails = () => {
                 sx={{
                   textTransform: "none",
                   borderRadius: 2,
-                  background: "#0F52FF",
-                  boxShadow: "0 4px 12px rgba(15, 82, 255, 0.3)",
+                  background: "#F59E0B",
+                  boxShadow: "0 4px 12px rgba(245, 158, 11, 0.3)",
                   "&:hover": {
-                    background: "#0040cc",
-                    boxShadow: "0 6px 16px rgba(15, 82, 255, 0.4)",
+                    background: "#D97706",
+                    boxShadow: "0 6px 16px rgba(245, 158, 11, 0.4)",
                   },
                 }}
               >

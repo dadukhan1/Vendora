@@ -2,12 +2,7 @@
 
 import { useEffect, useState } from "react";
 import CartItemCard from "./CartItemCard";
-import {
-  Favorite,
-  LocalOffer,
-  ShoppingCartOutlined,
-} from "@mui/icons-material";
-import { TextField } from "@mui/material";
+import { Favorite, LocalOffer, ShoppingBag } from "@mui/icons-material";
 import PricingCard from "./PricingCard";
 import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/store";
 import { fetchCart } from "../../../Redux Toolkit/features/customer/cartSlice";
@@ -55,11 +50,10 @@ const Cart = () => {
     typeof cart?.cartTotal === "number"
       ? cart.cartTotal
       : (cart?.cartItems?.reduce(
-        (sum: number, item: CartItem) =>
-          sum +
-          Number(item?.product?.sellingPrice ?? 0) * Number(item.quantity),
-        0,
-      ) ?? 0);
+          (sum: number, item: CartItem) =>
+            sum + Number(item?.product?.sellingPrice ?? 0) * Number(item.quantity),
+          0,
+        ) ?? 0);
 
   const handleApplyCoupon = async () => {
     if (!couponCode?.trim()) {
@@ -67,141 +61,124 @@ const Cart = () => {
       return;
     }
     try {
-      await dispatch(
-        applyCoupon({
-          couponCode: couponCode.trim(),
-          cartTotal,
-        }),
-      ).unwrap();
+      await dispatch(applyCoupon({ couponCode: couponCode.trim(), cartTotal })).unwrap();
     } catch (e: any) {
       toast.error(e.message || "Failed to apply coupon");
     }
   };
 
   return (
-    <div className="min-h-screen pt-10 px-5 sm:px-10 md:px-20 lg:px-40 pb-20">
-      {/* Page heading */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-[#0F172A]">Your Cart</h1>
+    <div className="min-h-screen bg-[#fafaf8] pt-8 px-4 sm:px-8 lg:px-16 pb-24">
+      {/* Page Heading */}
+      <div className="mb-8 lg:mb-10">
+        <p className="section-eyebrow mb-2">Your Selection</p>
+        <h1 className="section-title text-[28px] lg:text-[38px]">Shopping Cart</h1>
         {itemCount > 0 && (
-          <p className="text-sm text-[#64748B] mt-1">
+          <p className="text-[13px] text-[#9ca3af] mt-1.5 font-[Outfit]">
             {itemCount} item{itemCount > 1 ? "s" : ""} in your cart
           </p>
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* ── Cart items ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+        {/* ── Cart Items ── */}
         <div className="lg:col-span-2 space-y-3">
           {itemCount > 0 ? (
             cart.cartItems.map((item: CartItem, index: number) => (
               <CartItemCard key={index} item={item} />
             ))
           ) : (
-            <div
-              className="flex flex-col items-center justify-center py-24 bg-white
-              border border-[#E2E8F0] rounded-2xl text-center gap-4"
-            >
-              <ShoppingCartOutlined className="!text-[#E2E8F0] !text-[72px]" />
-              <p className="text-lg font-semibold text-[#0F172A]">
-                Your cart is empty
-              </p>
-              <p className="text-sm text-[#64748B]">Add items to get started</p>
+            <div className="flex flex-col items-center justify-center py-28 bg-white border border-[#f0ece6] rounded-3xl text-center gap-5">
+              <div className="w-20 h-20 rounded-full bg-[#f5f3ef] flex items-center justify-center">
+                <ShoppingBag sx={{ fontSize: 36, color: "#d4c4a8" }} />
+              </div>
+              <div>
+                <p className="text-[16px] font-[700] font-[Outfit] text-[#1a1a1a] mb-1">
+                  Your cart is empty
+                </p>
+                <p className="text-[13px] text-[#9ca3af]">
+                  Discover our curated collections and add items to get started
+                </p>
+              </div>
+              <button
+                onClick={() => navigate("/products/all")}
+                className="btn-primary mt-2"
+              >
+                Browse Shop
+              </button>
             </div>
           )}
         </div>
 
-        {/* ── Right sidebar ── */}
+        {/* ── Right Sidebar ── */}
         <div className="col-span-1 space-y-4">
-          {/* Coupon */}
-          <div className="bg-white border border-[#E2E8F0] rounded-2xl px-5 py-4 space-y-3">
-            <div className="flex items-center gap-2 text-[#0F52FF]">
-              <LocalOffer style={{ fontSize: 16 }} />
-              <span className="text-sm font-semibold text-[#0F172A]">
-                Apply Coupon
+          {/* Coupon Card */}
+          <div className="bg-white border border-[#f0ece6] rounded-2xl p-5 space-y-3.5">
+            <div className="flex items-center gap-2">
+              <LocalOffer sx={{ fontSize: 16, color: "#c9993a" }} />
+              <span className="text-[13px] font-[700] font-[Outfit] text-[#1a1a1a]">
+                Have a coupon?
               </span>
             </div>
             <div className="flex gap-2">
-              <TextField
+              <input
+                type="text"
                 value={couponCode}
-                onChange={(e) => setCouponCode(e.target.value)}
-                placeholder="Coupon code"
-                size="small"
-                fullWidth
+                onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                placeholder="Enter code"
                 disabled={itemCount === 0 || couponApplied}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "10px",
-                    fontSize: 13,
-                    "& fieldset": { borderColor: "#E2E8F0" },
-                    "&:hover fieldset": { borderColor: "#94A3B8" },
-                    "&.Mui-focused fieldset": { borderColor: "#0F52FF" },
-                  },
-                }}
+                className="flex-1 px-4 py-2.5 bg-[#f5f3ef] border border-[#f0ece6] rounded-xl text-[13px] font-[600] font-[Outfit] text-[#0a0a0a] placeholder-[#c4bdb4] outline-none focus:border-[#c9993a] disabled:opacity-50 transition-colors"
               />
               <button
                 type="button"
                 onClick={handleApplyCoupon}
-                disabled={
-                  itemCount === 0 ||
-                  couponApplied ||
-                  couponState.loading ||
-                  !couponCode.trim()
-                }
-                className="px-4 text-sm font-semibold text-[#0F52FF] border border-[#0F52FF]
-                rounded-[10px] hover:bg-[#0F52FF]/10 transition-colors whitespace-nowrap
-                disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+                disabled={itemCount === 0 || couponApplied || couponState.loading || !couponCode.trim()}
+                className="px-4 py-2.5 bg-[#0a0a0a] text-white text-[12px] font-[700] font-[Outfit] rounded-xl hover:bg-[#c9993a] disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-250 whitespace-nowrap"
               >
-                {couponState.loading
-                  ? "Applying..."
-                  : couponApplied
-                    ? "Applied"
-                    : "Apply"}
+                {couponState.loading ? "..." : couponApplied ? "✓ Applied" : "Apply"}
               </button>
             </div>
             {couponApplied && (
-              <div className="text-xs text-green-600 pt-1 font-semibold">
+              <p className="text-[12px] text-[#2d6a4f] font-[600] font-[Outfit] flex items-center gap-1.5">
+                <span className="w-4 h-4 rounded-full bg-[#2d6a4f]/10 flex items-center justify-center text-[10px]">✓</span>
                 Coupon applied successfully!
-              </div>
+              </p>
             )}
             {couponState.error && (
-              <div className="text-xs text-red-500 pt-1">
-                {typeof couponState.error === "string"
-                  ? couponState.error
-                  : "There was an error applying your coupon."}
-              </div>
+              <p className="text-[12px] text-[#e03c54]">
+                {typeof couponState.error === "string" ? couponState.error : "Invalid coupon code."}
+              </p>
             )}
           </div>
 
-          {/* Pricing + Buy Now */}
-          <div className="bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden">
-            {/* Pass cart as prop so PricingCard reflects updates immediately */}
-            <PricingCard cart={cart} />
+          {/* Order Summary */}
+          <div className="bg-white border border-[#f0ece6] rounded-2xl overflow-hidden">
+            <div className="px-5 pt-5 pb-1">
+              <p className="text-[11px] font-[800] font-[Outfit] text-[#9ca3af] uppercase tracking-[0.2em] mb-4">
+                Order Summary
+              </p>
+              <PricingCard cart={cart} />
+            </div>
             <div className="px-5 pb-5">
               <button
                 disabled={itemCount === 0}
                 onClick={() => navigate("/checkout/address")}
-                className="w-full py-3.5 bg-[#0F52FF] text-white text-sm font-bold
-                  rounded-xl tracking-wide shadow-[0_4px_20px_rgba(15,82,255,0.30)]
-                  hover:opacity-90 active:scale-[.98] transition-all duration-150
-                  disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none"
+                className="w-full py-4 bg-[#0a0a0a] hover:bg-[#c9993a] text-white text-[14px] font-[700] font-[Outfit] rounded-xl tracking-[0.02em] shadow-lg hover:shadow-[0_8px_24px_rgba(201,153,58,0.3)] active:scale-[.99] transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none"
               >
-                Proceed to Checkout
+                Proceed to Checkout →
               </button>
             </div>
           </div>
 
-          {/* Add from Wishlist */}
+          {/* Wishlist CTA */}
           <div
             onClick={() => navigate("/wishlist")}
-            className="bg-white border border-[#E2E8F0] rounded-2xl px-5 py-4
-            flex justify-between items-center cursor-pointer hover:border-[#FF4F00]/40
-            transition-colors group"
+            className="flex justify-between items-center p-4 bg-white border border-[#f0ece6] rounded-2xl cursor-pointer hover:border-[#e03c54]/30 hover:bg-[#fff5f7] transition-all duration-250 group"
           >
-            <span className="text-sm font-medium text-[#0F172A] group-hover:text-[#FF4F00] transition-colors">
+            <span className="text-[13px] font-[600] font-[Outfit] text-[#1a1a1a] group-hover:text-[#e03c54] transition-colors">
               Add from Wishlist
             </span>
-            <Favorite className="!text-[#FF4F00] !text-[20px]" />
+            <Favorite sx={{ fontSize: 18, color: "#e03c54" }} />
           </div>
         </div>
       </div>

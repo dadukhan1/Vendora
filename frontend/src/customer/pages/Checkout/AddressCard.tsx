@@ -10,8 +10,8 @@ const AddressCard = ({ address, selectedValue, handleChange }: any) => {
       className={`flex gap-3 p-4 rounded-xl border transition-all duration-150 cursor-pointer
         ${
           isSelected
-            ? "border-[#0F52FF] bg-[#0F52FF]/5"
-            : "border-[#E2E8F0] bg-[#F8FAFC] hover:border-[#94A3B8]"
+            ? "border-[#F59E0B] bg-[#F59E0B]/5"
+            : "border-[#E2E8F0] bg-[#FAFAF9] hover:border-[#94A3B8]"
         }`}
       onClick={() => handleChange({ target: { value: address?._id } })}
     >
@@ -23,7 +23,7 @@ const AddressCard = ({ address, selectedValue, handleChange }: any) => {
         size='small'
         sx={{
           color: "#94A3B8",
-          "&.Mui-checked": { color: "#0F52FF" },
+          "&.Mui-checked": { color: "#F59E0B" },
           padding: "2px",
           alignSelf: "flex-start",
           marginTop: "2px",
@@ -31,7 +31,7 @@ const AddressCard = ({ address, selectedValue, handleChange }: any) => {
       />
       <div className='space-y-1'>
         <p
-          className={`font-semibold text-sm ${isSelected ? "text-[#0F52FF]" : "text-[#0F172A]"}`}
+          className={`font-semibold text-sm ${isSelected ? "text-[#F59E0B]" : "text-[#1F2937]"}`}
         >
           {address?.name}
         </p>
@@ -39,7 +39,7 @@ const AddressCard = ({ address, selectedValue, handleChange }: any) => {
           {address?.address}
         </p>
         <p className='text-xs text-[#64748B]'>
-          <span className='font-semibold text-[#0F172A]'>Mobile: </span>
+          <span className='font-semibold text-[#1F2937]'>Mobile: </span>
           {address?.mobile}
         </p>
       </div>

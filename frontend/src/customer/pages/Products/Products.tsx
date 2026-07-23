@@ -149,7 +149,7 @@ const Products = () => {
               : categories.find((c) => c.categoryId === categoryId)?.name ||
                 categoryId}
         </h1>
-        <div className='mt-4 mx-auto w-12 h-1 bg-[#0F52FF] rounded-full' />
+        <div className='mt-4 mx-auto w-12 h-1 bg-[#F59E0B] rounded-full' />
       </div>
 
       {/* Hierarchical Sub-Navigation (Level 2 & Level 3) */}
@@ -199,7 +199,7 @@ const Products = () => {
                 {/* Row 1: Level 2 Categories */}
                 <section>
                    <div className='flex items-center gap-3 mb-5'>
-                      <div className='w-1 h-3 bg-[#0F52FF] rounded-full' />
+                      <div className='w-1 h-3 bg-[#F59E0B] rounded-full' />
                       <h2 className='text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]'>{level1Parent.name} Categories</h2>
                    </div>
                    <div className='flex items-center gap-3 overflow-x-auto no-scrollbar'>
@@ -207,7 +207,7 @@ const Products = () => {
                         onClick={() => navigate(`/products/${level1Parent.categoryId}`)}
                         className={`px-6 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all border shrink-0 
                           ${categoryId === level1Parent.categoryId 
-                            ? 'bg-[#0F172A] border-[#0F172A] text-white shadow-lg' 
+                            ? 'bg-[#1F2937] border-[#1F2937] text-white shadow-lg' 
                             : 'bg-white border-gray-100 text-gray-500 hover:border-gray-200'}`}
                       >
                         All {level1Parent.name}
@@ -221,7 +221,7 @@ const Products = () => {
                             onClick={() => navigate(`/products/${cat.categoryId}`)}
                             className={`px-6 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all border shrink-0 
                               ${isActive 
-                                ? 'bg-[#0F52FF] border-[#0F52FF] text-white shadow-lg shadow-[#0F52FF]/20' 
+                                ? 'bg-[#F59E0B] border-[#F59E0B] text-white shadow-lg shadow-[#F59E0B]/20' 
                                 : 'bg-white border-gray-100 text-gray-500 hover:border-gray-200'}`}
                           >
                             {cat.name}
@@ -245,7 +245,7 @@ const Products = () => {
                             onClick={() => navigate(`/products/${sub.categoryId}`)}
                             className={`px-5 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wide transition-all border shrink-0 
                               ${categoryId === sub.categoryId 
-                                ? 'bg-[#F1F5F9] border-[#0F52FF] text-[#0F52FF]' 
+                                ? 'bg-[#F1F5F9] border-[#F59E0B] text-[#F59E0B]' 
                                 : 'bg-white border-gray-100 text-gray-400 hover:border-gray-200'}`}
                           >
                             {sub.name}
@@ -280,31 +280,29 @@ const Products = () => {
           </section>
 
           {/* Products Section */}
-        <section className='lg:w-[80%] space-y-5'>
+        <section className='lg:w-[80%] space-y-8 pt-4'>
             {/* Sort Bar */}
-          <div className='flex justify-between items-center px-6 py-3 bg-gray-50 rounded-xl mx-5'>
-            <p className='text-sm text-gray-500'>
-              <span className='font-semibold text-gray-800'>
+          <div className='flex justify-between items-center px-6 pb-4 border-b border-[#F1F5F9] mx-5'>
+            <p className='text-sm text-[#4B5563] font-medium'>
+              Showing <span className='font-bold text-[#1F2937]'>
                 {displayedProducts.length}
               </span>{" "}
               products
             </p>
-            <FormControl size='medium' sx={{ minWidth: 200 }}>
-              <InputLabel id='sort-label'>Sort By</InputLabel>
+            <FormControl size='small' sx={{ minWidth: 160 }}>
+              <InputLabel id='sort-label' sx={{ fontSize: '0.8rem', color: '#94A3B8' }}>Sort By</InputLabel>
                   <Select
                     labelId='sort-label'
                     value={sort}
                 label='Sort By'
                     onChange={handleSort}
-                sx={{ borderRadius: "10px", fontSize: "0.875rem" }}
+                sx={{ borderRadius: "100px", fontSize: "0.8rem", fontWeight: 600, '& fieldset': { borderColor: '#E2E8F0' } }}
                   >
                     <MenuItem value='price_low'>Price: Low to High</MenuItem>
                     <MenuItem value='price_high'>Price: High to Low</MenuItem>
                   </Select>
                 </FormControl>
               </div>
-
-          <Divider />
 
             {/* Active Filters */}
             {hasAnyFilter && (

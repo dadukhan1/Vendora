@@ -22,7 +22,7 @@ const PricingCard = ({ cart: cartProp }: PricingCardProps) => {
   const mrp = sumCartItemMrpPrice(cart?.cartItems ?? []);
   const selling = sumCartItemSellingPrice(cart?.cartItems ?? []);
   const productDiscount = mrp - selling;
-  const shipping = 299;
+  const shipping = mrp > 50 ? 0 : 5;
 
   const couponDiscount =
     couponApplied && typeof (couponData as any)?.discount === "number"
@@ -32,54 +32,49 @@ const PricingCard = ({ cart: cartProp }: PricingCardProps) => {
   const total = discountedSelling + shipping;
 
   const rows = [
-    { label: "Subtotal", value: `$${mrp}`, color: "text-[#0F172A]" },
+    { label: "Subtotal", value: `$${mrp}`, color: "text-[#0a0a0a]" },
     {
       label: "Discount",
       value: `-$${productDiscount}`,
-      color: "text-green-600",
+      color: "text-[#2d6a4f]",
     },
     ...(couponDiscount > 0
       ? [
           {
             label: "Coupon Discount",
             value: `-$${couponDiscount}`,
-            color: "text-green-600",
+            color: "text-[#2d6a4f]",
           },
         ]
       : []),
-    { label: "Shipping", value: `$${shipping}`, color: "text-[#0F172A]" },
-    { label: "Platform Fee", value: "Free", color: "text-green-600" },
+    { label: "Shipping", value: shipping === 0 ? "Free" : `$${shipping}`, color: shipping === 0 ? "text-[#2d6a4f]" : "text-[#0a0a0a]" },
+    { label: "Platform Fee", value: "Free", color: "text-[#2d6a4f]" },
   ];
 
   return (
     <div>
-      {/* Header */}
-      <div className="px-5 pt-5 pb-3 border-b border-[#E2E8F0]">
-        <p className="text-xs font-bold uppercase tracking-widest text-[#64748B]">
-          Price Summary
-        </p>
-      </div>
-
       {/* Rows */}
-      <div className="px-5 py-4 space-y-3">
+      <div className="py-2 space-y-3.5">
         {rows.map(({ label, value, color }) => (
           <div
             key={label}
-            className="flex justify-between items-center text-sm"
+            className="flex justify-between items-center text-[13px] font-[500] font-[Outfit]"
           >
-            <span className="text-[#64748B]">{label}</span>
-            <span className={`font-medium ${color}`}>{value}</span>
+            <span className="text-[#9ca3af]">{label}</span>
+            <span className={`font-[700] ${color}`}>{value}</span>
           </div>
         ))}
       </div>
 
+      <div className="my-4 border-t border-[#f0ece6] border-dashed" />
+
       {/* Total */}
-      <div
-        className="mx-5 mb-5 flex justify-between items-center
-        bg-[#0F52FF]/5 border border-[#0F52FF]/20 rounded-xl px-4 py-3"
-      >
-        <span className="text-sm font-bold text-[#0F172A]">Total</span>
-        <span className="text-base font-extrabold text-[#0F52FF]">
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <span className="text-[14px] font-[700] font-[Outfit] text-[#0a0a0a]">Total Amount</span>
+          <p className="text-[10px] text-[#c4bdb4]">Includes all taxes and platform fees</p>
+        </div>
+        <span className="text-[18px] font-[800] font-[Outfit] text-[#0a0a0a]">
           ${total}
         </span>
       </div>
