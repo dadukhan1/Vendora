@@ -149,17 +149,16 @@ const ProductDetails = () => {
         }}>
 
           {/* ── LEFT: Image Gallery ── */}
-          <div style={{ flex: "1 1 480px", display: "flex", gap: 16 }}>
-            {/* Thumbnails */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div style={{ flex: "1 1 460px", display: "flex", gap: 12, maxWidth: 620 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {images.map((src, i) => (
                 <button
                   key={i}
                   onClick={() => setCurrentImage(i)}
                   style={{
-                    width: 72,
-                    height: 88,
-                    borderRadius: 12,
+                    width: 74,
+                    height: 90,
+                    borderRadius: 10,
                     border: i === currentImage ? `2px solid ${GOLD}` : "2px solid #e5e7eb",
                     padding: 2,
                     background: "#fff",
@@ -172,7 +171,7 @@ const ProductDetails = () => {
                   <img
                     src={src}
                     alt=""
-                    style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 8, display: "block" }}
+                    style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 7, display: "block" }}
                   />
                 </button>
               ))}
@@ -182,11 +181,11 @@ const ProductDetails = () => {
             <div style={{
               flex: 1,
               position: "relative",
-              borderRadius: 24,
+              borderRadius: 20,
               overflow: "hidden",
               background: "#fff",
-              boxShadow: "0 4px 40px rgba(0,0,0,0.07)",
-              minHeight: 500,
+              boxShadow: "0 4px 24px rgba(0,0,0,0.06)",
+              height: 540,
             }}>
               <img
                 src={images[currentImage]}
@@ -196,8 +195,7 @@ const ProductDetails = () => {
                   height: "100%",
                   objectFit: "cover",
                   display: "block",
-                  minHeight: 500,
-                  transition: "opacity 0.3s ease",
+                  transition: "opacity 0.25s ease",
                 }}
               />
 
