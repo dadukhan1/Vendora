@@ -6,17 +6,19 @@ import type { SellerFormValues } from "./SellerAccountForm";
 
 const inputSx = {
   "& .MuiOutlinedInput-root": {
-    borderRadius: "10px",
-    fontSize: "0.9rem",
-    color: "#1F2937",
-    background: "#FAFAF9",
-    "& fieldset": { borderColor: "#E2E8F0" },
-    "&:hover fieldset": { borderColor: "#94A3B8" },
-    "&.Mui-focused fieldset": { borderColor: "#F59E0B", borderWidth: "1.5px" },
+    borderRadius: "12px",
+    fontSize: "0.88rem",
+    color: "#f2efe9",
+    background: "rgba(255,255,255,0.04)",
+    fontFamily: "'Outfit', sans-serif",
+    "& fieldset": { borderColor: "rgba(255,255,255,0.1)" },
+    "&:hover fieldset": { borderColor: "rgba(255,255,255,0.2)" },
+    "&.Mui-focused fieldset": { borderColor: "#c9993a", borderWidth: "1.5px" },
   },
-  "& .MuiInputLabel-root": { color: "#94A3B8", fontSize: "0.88rem" },
-  "& .MuiInputLabel-root.Mui-focused": { color: "#F59E0B" },
-  "& input::placeholder": { color: "#94A3B8", opacity: 1 },
+  "& .MuiInputLabel-root": { color: "#6b6b7e", fontSize: "0.87rem", fontFamily: "'Outfit', sans-serif" },
+  "& .MuiInputLabel-root.Mui-focused": { color: "#c9993a" },
+  "& input::placeholder": { color: "#4a4a5a", opacity: 1 },
+  "& .MuiFormHelperText-root": { color: "#e03c54", fontFamily: "'Outfit', sans-serif", fontSize: "0.75rem" },
 };
 
 const BecomeSellerStep3 = ({

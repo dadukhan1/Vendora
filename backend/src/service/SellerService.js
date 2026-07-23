@@ -120,6 +120,9 @@ class SellerService {
   }
 
   async getAllSellers(status) {
+    if (!status) {
+      return await Seller.find({});
+    }
     return await Seller.find({ accountStatus: status });
   }
 

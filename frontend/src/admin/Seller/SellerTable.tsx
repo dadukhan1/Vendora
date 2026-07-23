@@ -55,12 +55,6 @@ const StyledTableRow = styled(TableRow)(() => ({
 
 const accountStatus = [
   {
-    status: "ALL",
-    title: "All Sellers",
-    icon: <Groups sx={{ fontSize: 16 }} />,
-    color: "default",
-  },
-  {
     status: "PENDING_VERIFICATION",
     title: "Pending Verification",
     icon: <HourglassEmpty sx={{ fontSize: 16 }} />,
@@ -189,83 +183,100 @@ export default function SellerTable() {
           </Typography>
         </Box>
 
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2, ml: 2 }}>
-            <FormControl size='small' sx={{ minWidth: 240 }}>
-              <Select
-                value={status}
-                onChange={handleStatusFilterChange}
-                displayEmpty
-                sx={{
-                  borderRadius: "9999px",
-                  fontFamily: "Outfit",
-                  fontSize: 14,
-                  fontWeight: 600,
-                  bgcolor: "#fff",
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#f0ece6",
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#d4c4a8",
-                  },
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#c9993a",
-                    borderWidth: "1px",
-                  },
-                  "& .MuiSelect-select": { py: 1.5, px: 3 },
-                }}
-              >
-                {accountStatus.map((item) => (
-                  <MenuItem
-                    key={item.status}
-                    value={item.status}
-                    sx={{
-                      fontFamily: "Outfit",
-                      fontSize: 14,
-                      fontWeight: 500,
-                      py: 1.5,
-                    }}
-                  >
-                    <Box
-                      sx={{ display: "flex", alignItems: "center", gap: 1.5 }}
-                    >
-                      <Box
-                        sx={{
-                          color:
-                            item.color === "success"
-                              ? "#2d6a4f"
-                              : item.color === "warning"
-                                ? "#c9993a"
-                                : item.color === "error"
-                                  ? "#e03c54"
-                                  : "#9ca3af",
-                          display: "flex",
-                        }}
-                      >
-                        {item.icon}
-                      </Box>
-                      {item.title}
-                    </Box>
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <Button
-              variant='contained'
-              onClick={() => { setStatus("ALL"); dispatch(fetchSellers(undefined)); }}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 2,
+            flexWrap: "wrap",
+          }}
+        >
+          <FormControl size='small' sx={{ minWidth: 240 }}>
+            <Select
+              value={status}
+              onChange={handleStatusFilterChange}
+              displayEmpty
               sx={{
                 borderRadius: "9999px",
-                bgcolor: "#c9993a",
-                color: "#fff",
-                textTransform: "none",
-                fontWeight: 600,
                 fontFamily: "Outfit",
-                "&:hover": { bgcolor: "#e03c54" },
+                fontSize: 14,
+                fontWeight: 600,
+                bgcolor: "#fff",
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#f0ece6",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#d4c4a8",
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#c9993a",
+                  borderWidth: "1px",
+                },
+                "& .MuiSelect-select": { py: 1.5, px: 3 },
               }}
             >
-              View All
-            </Button>
-          </Box>
+              {accountStatus.map((item) => (
+                <MenuItem
+                  key={item.status}
+                  value={item.status}
+                  sx={{
+                    fontFamily: "Outfit",
+                    fontSize: 14,
+                    fontWeight: 500,
+                    py: 1.5,
+                  }}
+                >
+                  <Box
+                    sx={{ display: "flex", alignItems: "center", gap: 1.5 }}
+                  >
+                    <Box
+                      sx={{
+                        color:
+                          item.color === "success"
+                            ? "#2d6a4f"
+                            : item.color === "warning"
+                              ? "#c9993a"
+                              : item.color === "error"
+                                ? "#e03c54"
+                                : "#9ca3af",
+                        display: "flex",
+                      }}
+                    >
+                      {item.icon}
+                    </Box>
+                    {item.title}
+                  </Box>
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Button
+            variant='contained'
+            onClick={() => {
+              setStatus("ALL");
+              dispatch(fetchSellers(undefined));
+            }}
+            startIcon={<Groups sx={{ fontSize: 16 }} />}
+            sx={{
+              borderRadius: "9999px",
+              bgcolor: "#c9993a",
+              color: "#fff",
+              textTransform: "none",
+              fontWeight: 600,
+              fontFamily: "Outfit",
+              fontSize: 14,
+              px: 2.5,
+              py: 1.1,
+              boxShadow: "none",
+              "&:hover": {
+                bgcolor: "#e03c54",
+                boxShadow: "0 4px 16px rgba(224,60,84,0.25)",
+              },
+              transition: "all 0.2s ease",
+            }}
+          >
+            View All
+          </Button>
         </Box>
       </Box>
 

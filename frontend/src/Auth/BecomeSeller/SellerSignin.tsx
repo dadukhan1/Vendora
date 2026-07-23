@@ -1,7 +1,7 @@
 /** @format */
 
-import { Button, TextField, CircularProgress, Alert } from "@mui/material";
-import { ArrowForward } from "@mui/icons-material";
+import { Button, TextField, CircularProgress, Alert, Box, Typography } from "@mui/material";
+import { ArrowForward, MarkEmailRead, LockOpen } from "@mui/icons-material";
 import { useFormik } from "formik";
 import { useAppDispatch, useAppSelector } from "../../Redux Toolkit/store";
 import {
@@ -10,21 +10,58 @@ import {
 } from "../../Redux Toolkit/features/seller/sellerAuth";
 import { useNavigate } from "react-router";
 
+/* ─── Dark glass input theme ─────────────────────────────────────── */
 const inputSx = {
   "& .MuiOutlinedInput-root": {
-    borderRadius: "10px",
-    fontSize: "0.9rem",
-    color: "#1F2937",
-    background: "#FAFAF9",
-    "& fieldset": { borderColor: "#E2E8F0" },
-    "&:hover fieldset": { borderColor: "#94A3B8" },
-    "&.Mui-focused fieldset": { borderColor: "#F59E0B", borderWidth: "1.5px" },
+    borderRadius: "12px",
+    fontSize: "0.88rem",
+    color: "#f2efe9",
+    background: "rgba(255,255,255,0.04)",
+    fontFamily: "'Outfit', sans-serif",
+    "& fieldset": { borderColor: "rgba(255,255,255,0.1)" },
+    "&:hover fieldset": { borderColor: "rgba(255,255,255,0.2)" },
+    "&.Mui-focused fieldset": { borderColor: "#c9993a", borderWidth: "1.5px" },
+    "&.Mui-disabled": {
+      background: "rgba(255,255,255,0.02)",
+      "& fieldset": { borderColor: "rgba(255,255,255,0.05) !important" },
+    },
   },
-  "& .MuiInputLabel-root": { color: "#94A3B8", fontSize: "0.88rem" },
-  "& .MuiInputLabel-root.Mui-focused": { color: "#F59E0B" },
-  "& input::placeholder": { color: "#94A3B8", opacity: 1 },
+  "& .MuiInputBase-input.Mui-disabled": {
+    WebkitTextFillColor: "#4a4a5a",
+  },
+  "& .MuiInputLabel-root": {
+    color: "#6b6b7e",
+    fontSize: "0.87rem",
+    fontFamily: "'Outfit', sans-serif",
+  },
+  "& .MuiInputLabel-root.Mui-focused": { color: "#c9993a" },
+  "& .MuiInputLabel-root.Mui-disabled": { color: "#3a3a4a" },
+  "& input::placeholder": { color: "#4a4a5a", opacity: 1 },
+  "& .MuiFormHelperText-root": {
+    color: "#e03c54",
+    fontFamily: "'Outfit', sans-serif",
+    fontSize: "0.75rem",
+  },
 };
 
+/* ─── Label component ─────────────────────────────────────────────── */
+const FieldLabel = ({ children }: { children: React.ReactNode }) => (
+  <Typography
+    sx={{
+      fontSize: "0.72rem",
+      fontWeight: 700,
+      letterSpacing: 1.5,
+      textTransform: "uppercase",
+      color: "#5a5a6a",
+      mb: 0.75,
+      fontFamily: "'Outfit', sans-serif",
+    }}
+  >
+    {children}
+  </Typography>
+);
+
+/* ─── Component ──────────────────────────────────────────────────── */
 const SellerSignin = () => {
   const { sellerAuth } = useAppSelector((store) => store);
   const navigate = useNavigate();
@@ -48,112 +85,167 @@ const SellerSignin = () => {
   });
 
   return (
-    <div>
+    <Box component="form" onSubmit={formik.handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
+
       {/* OTP sent notice */}
       {sellerAuth.otpSent && (
         <Alert
-          severity='info'
+          icon={<MarkEmailRead sx={{ fontSize: 18, color: "#c9993a" }} />}
+          severity="info"
           sx={{
-            mb: 3,
-            borderRadius: "10px",
-            fontSize: "0.8rem",
-            background: "#eff6ff",
-            border: "1px solid #bfdbfe",
-            color: "#1d4ed8",
-            "& .MuiAlert-icon": { color: "#F59E0B" },
+            borderRadius: "12px",
+            fontSize: "0.82rem",
+            background: "rgba(201,153,58,0.08)",
+            border: "1px solid rgba(201,153,58,0.25)",
+            color: "#c8c4bc",
+            fontFamily: "'Outfit', sans-serif",
+            "& .MuiAlert-icon": { alignItems: "center" },
+            "& strong": { color: "#c9993a" },
           }}
         >
           OTP sent to <strong>{formik.values.email}</strong>. Check your inbox.
         </Alert>
       )}
 
-      <form onSubmit={formik.handleSubmit} className='flex flex-col gap-4'>
-        {/* Email */}
-        <div>
-          <label className='block text-xs font-semibold text-[#64748B] mb-1.5 tracking-wide'>
-            Email Address
-          </label>
+      {/* Email field */}
+      <Box>
+        <FieldLabel>Email Address</FieldLabel>
+        <TextField
+          fullWidth
+          id="email"
+          name="email"
+          placeholder="you@example.com"
+          value={formik.values.email}
+          onChange={formik.handleChange}
+          disabled={sellerAuth.otpSent}
+          error={formik.touched.email && Boolean(formik.errors.email)}
+          helperText={
+            formik.touched.email && typeof formik.errors.email === "string"
+              ? formik.errors.email
+              : ""
+          }
+          sx={inputSx}
+        />
+      </Box>
+
+      {/* OTP field — revealed after email submit */}
+      {sellerAuth.otpSent && (
+        <Box>
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 0.75 }}>
+            <FieldLabel>One-Time Password</FieldLabel>
+            <Typography
+              sx={{
+                fontSize: "0.72rem",
+                color: "#c9993a",
+                fontWeight: 600,
+                fontFamily: "'Outfit', sans-serif",
+                cursor: "pointer",
+                "&:hover": { textDecoration: "underline" },
+              }}
+              onClick={() => dispatch(sendSigninOtp({ email: formik.values.email, otp: "" }))}
+            >
+              Resend OTP
+            </Typography>
+          </Box>
           <TextField
             fullWidth
-            id='email'
-            name='email'
-            placeholder='you@example.com'
-            value={formik.values.email}
+            id="otp"
+            name="otp"
+            placeholder="● ● ● ● ● ●"
+            value={formik.values.otp}
             onChange={formik.handleChange}
-            disabled={sellerAuth.otpSent}
-            error={formik.touched.email && Boolean(formik.errors.email)}
+            inputProps={{ maxLength: 6 }}
+            error={formik.touched.otp && Boolean(formik.errors.otp)}
             helperText={
-              formik.touched.email && typeof formik.errors.email === "string"
-                ? formik.errors.email
+              formik.touched.otp && typeof formik.errors.otp === "string"
+                ? formik.errors.otp
                 : ""
             }
-            sx={inputSx}
+            sx={{
+              ...inputSx,
+              "& input": {
+                letterSpacing: "0.4em",
+                fontWeight: 700,
+                fontSize: "1.1rem",
+                textAlign: "center",
+                fontFamily: "'Outfit', sans-serif",
+              },
+            }}
           />
-        </div>
+          {/* OTP hint */}
+          <Typography sx={{ fontSize: "0.72rem", color: "#4a4a5a", mt: 0.75, fontFamily: "'Outfit', sans-serif" }}>
+            Enter the 6-digit code sent to your email.
+          </Typography>
+        </Box>
+      )}
 
-        {/* OTP */}
-        {sellerAuth.otpSent && (
-          <div>
-            <label className='block text-xs font-semibold text-[#64748B] mb-1.5 tracking-wide'>
-              One-Time Password
-            </label>
-            <TextField
-              fullWidth
-              id='otp'
-              name='otp'
-              placeholder='Enter 6-digit OTP'
-              value={formik.values.otp}
-              onChange={formik.handleChange}
-              inputProps={{ maxLength: 6, letterSpacing: "0.3em" }}
-              error={formik.touched.otp && Boolean(formik.errors.otp)}
-              helperText={
-                formik.touched.otp && typeof formik.errors.otp === "string"
-                  ? formik.errors.otp
-                  : ""
-              }
-              sx={inputSx}
-            />
-          </div>
-        )}
-
-        {/* Submit */}
-        <Button
-          type='submit'
-          fullWidth
-          variant='contained'
-          disabled={sellerAuth.loading}
-          endIcon={
-            sellerAuth.loading ? (
-              <CircularProgress size={16} color='inherit' />
-            ) : (
-              <ArrowForward sx={{ fontSize: "18px !important" }} />
-            )
-          }
-          sx={{
-            mt: 1,
-            py: "12px",
-            textTransform: "none",
-            borderRadius: "10px",
-            background: "#F59E0B",
-            fontWeight: 600,
-            fontSize: "0.9rem",
+      {/* Submit button */}
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        disabled={sellerAuth.loading}
+        endIcon={
+          sellerAuth.loading ? (
+            <CircularProgress size={15} sx={{ color: "#0a0a0a" }} />
+          ) : sellerAuth.otpSent ? (
+            <LockOpen sx={{ fontSize: "17px !important" }} />
+          ) : (
+            <ArrowForward sx={{ fontSize: "17px !important" }} />
+          )
+        }
+        sx={{
+          mt: 0.5,
+          py: 1.4,
+          textTransform: "none",
+          borderRadius: "12px",
+          background: "linear-gradient(135deg, #d4a843 0%, #c9993a 100%)",
+          color: "#0a0a0a",
+          fontWeight: 700,
+          fontSize: "0.9rem",
+          fontFamily: "'Outfit', sans-serif",
+          letterSpacing: 0.3,
+          boxShadow: "0 4px 20px rgba(201,153,58,0.4)",
+          transition: "all 0.2s ease",
+          "&:hover": {
+            background: "linear-gradient(135deg, #e8c06a 0%, #d4a843 100%)",
+            boxShadow: "0 6px 28px rgba(201,153,58,0.55)",
+            transform: "translateY(-1px)",
+          },
+          "&:active": { transform: "translateY(0)" },
+          "&:disabled": {
+            background: "rgba(255,255,255,0.06)",
+            color: "#3a3a4a",
             boxShadow: "none",
-            "&:hover": { background: "#0a42d4", boxShadow: "none" },
-            "&:disabled": {
-              background: "#E2E8F0",
-              color: "#94A3B8",
-              boxShadow: "none",
-            },
-          }}
-        >
-          {sellerAuth.loading
-            ? "Please wait..."
-            : sellerAuth.otpSent
-              ? "Verify & Signin"
-              : "Send OTP"}
-        </Button>
-      </form>
-    </div>
+          },
+        }}
+      >
+        {sellerAuth.loading
+          ? "Please wait..."
+          : sellerAuth.otpSent
+            ? "Verify & Sign In"
+            : "Send OTP"}
+      </Button>
+
+      {/* Step indicator dots */}
+      <Box sx={{ display: "flex", justifyContent: "center", gap: 1, mt: -0.5 }}>
+        {[0, 1].map((i) => {
+          const active = sellerAuth.otpSent ? i === 1 : i === 0;
+          return (
+            <Box
+              key={i}
+              sx={{
+                width: active ? 20 : 6,
+                height: 6,
+                borderRadius: "999px",
+                background: active ? "#c9993a" : "rgba(255,255,255,0.1)",
+                transition: "all 0.3s ease",
+              }}
+            />
+          );
+        })}
+      </Box>
+    </Box>
   );
 };
 

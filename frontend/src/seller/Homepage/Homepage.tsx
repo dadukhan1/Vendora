@@ -119,7 +119,7 @@ const Homepage = () => {
       </Box>
 
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
             title='Total Revenue'
             value='$124,500'
@@ -127,7 +127,7 @@ const Homepage = () => {
             subtitle='Compared to last month'
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
             title='Active Orders'
             value='42'
@@ -135,7 +135,7 @@ const Homepage = () => {
             subtitle='Requires fulfillment'
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
             title='Total Products'
             value='156'
@@ -143,7 +143,7 @@ const Homepage = () => {
             subtitle='Active listings'
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
             title='Store Views'
             value='8,405'
