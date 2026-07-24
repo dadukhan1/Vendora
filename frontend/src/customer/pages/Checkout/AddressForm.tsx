@@ -95,7 +95,7 @@ const AddressForm = ({ onClose }: any) => {
       <form onSubmit={formik.handleSubmit}>
         <Grid container spacing={2.5}>
           {/* Name */}
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <TextField
               fullWidth
               name='name'
@@ -107,7 +107,7 @@ const AddressForm = ({ onClose }: any) => {
           </Grid>
 
           {/* Mobile + PinCode */}
-          <Grid item xs={6}>
+          <Grid size={{ xs: 6 }}>
             <TextField
               fullWidth
               name='mobile'
@@ -126,7 +126,7 @@ const AddressForm = ({ onClose }: any) => {
               sx={fieldSx}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid size={{ xs: 6 }}>
             <TextField
               fullWidth
               name='pinCode'
@@ -147,7 +147,7 @@ const AddressForm = ({ onClose }: any) => {
           </Grid>
 
           {/* Address */}
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <TextField
               fullWidth
               name='address'
@@ -159,7 +159,7 @@ const AddressForm = ({ onClose }: any) => {
           </Grid>
 
           {/* Locality */}
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <TextField
               fullWidth
               name='locality'
@@ -171,7 +171,7 @@ const AddressForm = ({ onClose }: any) => {
           </Grid>
 
           {/* City + State */}
-          <Grid item xs={6}>
+          <Grid size={{ xs: 6 }}>
             <TextField
               fullWidth
               name='city'
@@ -181,7 +181,7 @@ const AddressForm = ({ onClose }: any) => {
               sx={fieldSx}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid size={{ xs: 6 }}>
             <TextField
               fullWidth
               name='state'
@@ -193,7 +193,7 @@ const AddressForm = ({ onClose }: any) => {
           </Grid>
 
           {/* Submit */}
-          <Grid item xs={12} sx={{ mt: 2 }}>
+          <Grid size={{ xs: 12 }} sx={{ mt: 2 }}>
             <Button
               type='submit'
               fullWidth

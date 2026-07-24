@@ -10,7 +10,7 @@ import {
   Stack,
   Avatar,
 } from "@mui/material";
-import { Person, Email, Phone, Edit, Check, Close } from "@mui/icons-material";
+import { Person, Email, Phone, Edit } from "@mui/icons-material";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/store";
 import { updateProfile } from "../../../Redux Toolkit/features/customer/userSlice";

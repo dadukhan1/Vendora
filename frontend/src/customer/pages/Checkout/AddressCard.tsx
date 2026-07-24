@@ -3,7 +3,6 @@
 import { Radio } from "@mui/material";
 
 const GOLD = "#c9993a";
-const DARK = "#0a0a0a";
 
 const AddressCard = ({ address, selectedValue, handleChange }: any) => {
   const isSelected = selectedValue === address?._id;

@@ -19,7 +19,6 @@ import {
 } from "../../../utils/sumCartItemPrice";
 
 const GOLD = "#c9993a";
-const DARK = "#0a0a0a";
 
 const Checkout = () => {
   const navigate = useNavigate();
