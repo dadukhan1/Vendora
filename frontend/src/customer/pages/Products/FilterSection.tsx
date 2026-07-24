@@ -1,7 +1,6 @@
 /** @format */
 
 import {
-  Button,
   Divider,
   FormControl,
   FormControlLabel,

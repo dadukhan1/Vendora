@@ -13,7 +13,7 @@ import {
   Skeleton,
 } from "@mui/material";
 import ProductCard from "./ProductCard";
-import { useLocation, useNavigate, useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/store";
 import { getAllProducts } from "../../../Redux Toolkit/features/customer/productSlice";
 import { price as priceFilters } from "../../../data/filters/prices.ts";
@@ -28,7 +28,6 @@ const Products = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const { categoryId } = useParams();
   const { categories } = useAppSelector((state) => state.category);
-  const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useAppDispatch();
   const topRef = useRef<HTMLDivElement | null>(null);
@@ -141,7 +140,6 @@ const Products = () => {
           const currentCat = categories.find((c) => c.categoryId === categoryId);
           
           let level1Parent: any = null;
-          let level2Context: any = null;
 
           if (currentCat) {
             if (currentCat.level === 1) {
@@ -149,26 +147,13 @@ const Products = () => {
             } else if (currentCat.level === 2) {
               const pId = typeof currentCat.parentCategory === 'object' ? (currentCat.parentCategory as any)?._id : currentCat.parentCategory;
               level1Parent = categories.find((c: any) => c._id === pId);
-              level2Context = currentCat;
             } else if (currentCat.level === 3) {
               const l2Id = typeof currentCat.parentCategory === 'object' ? (currentCat.parentCategory as any)?._id : currentCat.parentCategory;
-              level2Context = categories.find((c: any) => c._id === l2Id);
+              const level2Context = categories.find((c: any) => c._id === l2Id);
               const l1Id = typeof level2Context?.parentCategory === 'object' ? (level2Context.parentCategory as any)?._id : level2Context?.parentCategory;
               level1Parent = categories.find((c: any) => c._id === l1Id);
             }
           }
-
-          const level2Cats = level1Parent ? categories.filter((c: any) => {
-            if (c.isActive === false) return false;
-            const pId = typeof c.parentCategory === 'object' ? (c.parentCategory as any)?._id : c.parentCategory;
-            return pId === level1Parent._id && c.level === 2;
-          }) : [];
-
-          const level3Cats = level2Context ? categories.filter((c: any) => {
-            if (c.isActive === false) return false;
-            const pId = typeof c.parentCategory === 'object' ? (c.parentCategory as any)?._id : c.parentCategory;
-            return pId === level2Context._id && c.level === 3;
-          }) : [];
 
           const pageTitle = isSearchView 
             ? `Search: ${searchTerm}`
