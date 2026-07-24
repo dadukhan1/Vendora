@@ -134,134 +134,70 @@ const Products = () => {
   }, [pageNumber, categoryId]);
 
   return (
-    <div className='pb-20' ref={topRef}>
-      {/* Header */}
-      <div className='text-center py-12 px-9 bg-gray-50'>
-        <p className='text-xs font-semibold tracking-[0.3em] text-gray-400 uppercase mb-2'>
-          Collection
-        </p>
-        <h1 className='text-5xl font-black text-gray-900 uppercase tracking-tighter'>
-          {isSearchView
-            ? `Search: ${searchTerm}`
-            : isAllProductsView
-              ? "All Collections"
-              : categories.find((c) => c.categoryId === categoryId)?.name ||
-                categoryId}
-        </h1>
-        <div className='mt-4 mx-auto w-12 h-1 bg-[#F59E0B] rounded-full' />
-      </div>
+    <div className="pb-20 font-['Outfit'] bg-white">
+      {/* Header & Sub-Navigation */}
+      <div className='max-w-[1600px] mx-auto px-5 lg:px-10 xl:px-14 pt-6 pb-4'>
+        {(() => {
+          const currentCat = categories.find((c) => c.categoryId === categoryId);
+          
+          let level1Parent: any = null;
+          let level2Context: any = null;
 
-      {/* Hierarchical Sub-Navigation (Level 2 & Level 3) */}
-      <div className='bg-white shadow-sm border-b border-gray-100 mb-12'>
-        <div className='max-w-[1600px] mx-auto px-5 lg:px-20 py-8 space-y-8'>
-          {(() => {
-            const currentCat = categories.find((c) => c.categoryId === categoryId);
-            if (!currentCat && !isAllProductsView) return null;
-
-            // 1. Identify context
-            let level1Parent: any = null;
-            let level2Context: any = null;
-
-            if (currentCat) {
-              if (currentCat.level === 1) {
-                level1Parent = currentCat;
-              } else if (currentCat.level === 2) {
-                const pId = typeof currentCat.parentCategory === 'object' ? (currentCat.parentCategory as any)?._id : currentCat.parentCategory;
-                level1Parent = categories.find(c => c._id === pId);
-                level2Context = currentCat;
-              } else if (currentCat.level === 3) {
-                const l2Id = typeof currentCat.parentCategory === 'object' ? (currentCat.parentCategory as any)?._id : currentCat.parentCategory;
-                level2Context = categories.find(c => c._id === l2Id);
-                const l1Id = typeof level2Context?.parentCategory === 'object' ? (level2Context.parentCategory as any)?._id : level2Context?.parentCategory;
-                level1Parent = categories.find(c => c._id === l1Id);
-              }
+          if (currentCat) {
+            if (currentCat.level === 1) {
+              level1Parent = currentCat;
+            } else if (currentCat.level === 2) {
+              const pId = typeof currentCat.parentCategory === 'object' ? (currentCat.parentCategory as any)?._id : currentCat.parentCategory;
+              level1Parent = categories.find((c: any) => c._id === pId);
+              level2Context = currentCat;
+            } else if (currentCat.level === 3) {
+              const l2Id = typeof currentCat.parentCategory === 'object' ? (currentCat.parentCategory as any)?._id : currentCat.parentCategory;
+              level2Context = categories.find((c: any) => c._id === l2Id);
+              const l1Id = typeof level2Context?.parentCategory === 'object' ? (level2Context.parentCategory as any)?._id : level2Context?.parentCategory;
+              level1Parent = categories.find((c: any) => c._id === l1Id);
             }
+          }
 
-            if (!level1Parent) return null;
+          const level2Cats = level1Parent ? categories.filter((c: any) => {
+            if (c.isActive === false) return false;
+            const pId = typeof c.parentCategory === 'object' ? (c.parentCategory as any)?._id : c.parentCategory;
+            return pId === level1Parent._id && c.level === 2;
+          }) : [];
 
-            // 2. Get Level 2 categories for this Level 1
-            const level2Cats = categories.filter(c => {
-              if (c.isActive === false) return false;
-              const pId = typeof c.parentCategory === 'object' ? (c.parentCategory as any)?._id : c.parentCategory;
-              return pId === level1Parent._id && c.level === 2;
-            });
+          const level3Cats = level2Context ? categories.filter((c: any) => {
+            if (c.isActive === false) return false;
+            const pId = typeof c.parentCategory === 'object' ? (c.parentCategory as any)?._id : c.parentCategory;
+            return pId === level2Context._id && c.level === 3;
+          }) : [];
 
-            // 3. Get Level 3 categories if we have a Level 2 context
-            const level3Cats = level2Context ? categories.filter(c => {
-              if (c.isActive === false) return false;
-              const pId = typeof c.parentCategory === 'object' ? (c.parentCategory as any)?._id : c.parentCategory;
-              return pId === level2Context._id && c.level === 3;
-            }) : [];
+          const pageTitle = isSearchView 
+            ? `Search: ${searchTerm}`
+            : isAllProductsView 
+              ? "All Collections"
+              : currentCat?.name || categoryId;
 
-            return (
-              <div className='space-y-8'>
-                {/* Row 1: Level 2 Categories */}
-                <section>
-                   <div className='flex items-center gap-3 mb-5'>
-                      <div className='w-1 h-3 bg-[#F59E0B] rounded-full' />
-                      <h2 className='text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]'>{level1Parent.name} Categories</h2>
-                   </div>
-                   <div className='flex items-center gap-3 overflow-x-auto no-scrollbar'>
-                      <button
-                        onClick={() => navigate(`/products/${level1Parent.categoryId}`)}
-                        className={`px-6 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all border shrink-0 
-                          ${categoryId === level1Parent.categoryId 
-                            ? 'bg-[#1F2937] border-[#1F2937] text-white shadow-lg' 
-                            : 'bg-white border-gray-100 text-gray-500 hover:border-gray-200'}`}
-                      >
-                        All {level1Parent.name}
-                      </button>
-
-                      {level2Cats.map((cat) => {
-                        const isActive = categoryId === cat.categoryId || level2Context?.categoryId === cat.categoryId;
-                        return (
-                          <button
-                            key={cat._id}
-                            onClick={() => navigate(`/products/${cat.categoryId}`)}
-                            className={`px-6 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all border shrink-0 
-                              ${isActive 
-                                ? 'bg-[#F59E0B] border-[#F59E0B] text-white shadow-lg shadow-[#F59E0B]/20' 
-                                : 'bg-white border-gray-100 text-gray-500 hover:border-gray-200'}`}
-                          >
-                            {cat.name}
-                          </button>
-                        );
-                      })}
-                   </div>
-                </section>
-
-                {/* Row 2: Level 3 Subcategories (Only if Level 2 is active) */}
-                {level3Cats.length > 0 && (
-                  <section className='pt-6 border-t border-gray-50 animate-in fade-in slide-in-from-top-2 duration-500'>
-                     <div className='flex items-center gap-3 mb-5'>
-                        <div className='w-1 h-3 bg-gray-300 rounded-full' />
-                        <h2 className='text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]'>Refine {level2Context.name}</h2>
-                     </div>
-                     <div className='flex items-center gap-2 overflow-x-auto no-scrollbar pb-2'>
-                        {level3Cats.map((sub) => (
-                          <button
-                            key={sub._id}
-                            onClick={() => navigate(`/products/${sub.categoryId}`)}
-                            className={`px-5 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wide transition-all border shrink-0 
-                              ${categoryId === sub.categoryId 
-                                ? 'bg-[#F1F5F9] border-[#F59E0B] text-[#F59E0B]' 
-                                : 'bg-white border-gray-100 text-gray-400 hover:border-gray-200'}`}
-                          >
-                            {sub.name}
-                          </button>
-                        ))}
-                     </div>
-                  </section>
-                )}
+          return (
+            <div className='space-y-4'>
+              {/* Premium Title Area */}
+              <div className='flex flex-col gap-1'>
+                <div className='flex items-center gap-2.5'>
+                  <span className='inline-block w-8 h-[3px] bg-[#c9993a] rounded-full' />
+                  <p className='text-[10px] font-[800] tracking-[0.2em] text-[#c9993a] uppercase'>
+                    {level1Parent ? `${level1Parent.name} Collection` : "Collection"}
+                  </p>
+                </div>
+                <h1 className='text-[24px] md:text-[28px] lg:text-[32px] font-[900] text-[#0a0a0a] uppercase tracking-tight leading-none'>
+                  {pageTitle}
+                </h1>
               </div>
-            );
-          })()}
-        </div>
+            </div>
+          );
+        })()}
       </div>
 
-      <div className='lg:flex'>
+      <div className='lg:flex max-w-[1600px] mx-auto'>
           {/* Filter Sidebar */}
-        <section className='hidden lg:block w-[20%] min-h-screen border-r border-gray-100 px-4 pt-4 sticky top-20 self-start'>
+        <section className='hidden lg:block w-[22%] min-h-screen border-r border-[#f0ece6] px-6 pt-4 sticky top-20 self-start'>
             <FilterSection
               selectedColor={selectedColor}
               selectedPrice={selectedPrice}
@@ -279,52 +215,61 @@ const Products = () => {
           </section>
 
           {/* Products Section */}
-        <section className='lg:w-[80%] space-y-8 pt-4'>
+        <section className='lg:w-[78%] space-y-8 pt-4'>
             {/* Sort Bar */}
-          <div className='flex justify-between items-center px-6 pb-4 border-b border-[#F1F5F9] mx-5'>
-            <p className='text-sm text-[#4B5563] font-medium'>
-              Showing <span className='font-bold text-[#1F2937]'>
+          <div className='flex justify-between items-center px-8 pb-4 border-b border-[#f0ece6] mx-2'>
+            <p className='text-[14px] text-[#5d5d5d] font-[600]'>
+              Showing <span className='font-[800] text-[#0a0a0a]'>
                 {displayedProducts.length}
               </span>{" "}
               products
             </p>
-            <FormControl size='small' sx={{ minWidth: 160 }}>
-              <InputLabel id='sort-label' sx={{ fontSize: '0.8rem', color: '#94A3B8' }}>Sort By</InputLabel>
+            <FormControl size='small' sx={{ minWidth: 180 }}>
+              <InputLabel id='sort-label' sx={{ fontSize: '0.85rem', color: '#9ca3af', fontFamily: 'Outfit, sans-serif', fontWeight: 600 }}>Sort By</InputLabel>
                   <Select
                     labelId='sort-label'
                     value={sort}
-                label='Sort By'
+                    label='Sort By'
                     onChange={handleSort}
-                sx={{ borderRadius: "100px", fontSize: "0.8rem", fontWeight: 600, '& fieldset': { borderColor: '#E2E8F0' } }}
+                    sx={{ 
+                      borderRadius: "12px", 
+                      fontSize: "0.85rem", 
+                      fontWeight: 700,
+                      color: "#0a0a0a",
+                      fontFamily: "Outfit, sans-serif",
+                      '& fieldset': { borderColor: '#e5e7eb' },
+                      '&:hover fieldset': { borderColor: '#c9993a !important' },
+                      '&.Mui-focused fieldset': { borderColor: '#c9993a !important', borderWidth: "2px" },
+                    }}
                   >
-                    <MenuItem value='price_low'>Price: Low to High</MenuItem>
-                    <MenuItem value='price_high'>Price: High to Low</MenuItem>
+                    <MenuItem value='price_low' sx={{ fontFamily: "Outfit, sans-serif", fontSize: "14px", fontWeight: 600 }}>Price: Low to High</MenuItem>
+                    <MenuItem value='price_high' sx={{ fontFamily: "Outfit, sans-serif", fontSize: "14px", fontWeight: 600 }}>Price: High to Low</MenuItem>
                   </Select>
                 </FormControl>
               </div>
 
             {/* Active Filters */}
             {hasAnyFilter && (
-            <div className='flex flex-wrap gap-2 px-5'>
+            <div className='flex flex-wrap gap-3 px-10'>
                 {selectedColor && (
                   <Chip
                     label={`Color: ${selectedColor}`}
                     onDelete={() => handleColorChange("")}
-                  sx={{ borderRadius: "999px", fontWeight: 600 }}
+                    sx={{ borderRadius: "12px", fontWeight: 700, fontFamily: "Outfit, sans-serif", bgcolor: "rgba(201,153,58,0.1)", color: "#c9993a", border: "1px solid rgba(201,153,58,0.2)" }}
                   />
                 )}
                 {selectedPrice && (
                   <Chip
                     label={`Price: ${priceLabel}`}
                     onDelete={() => handlePriceChange("")}
-                  sx={{ borderRadius: "999px", fontWeight: 600 }}
+                    sx={{ borderRadius: "12px", fontWeight: 700, fontFamily: "Outfit, sans-serif", bgcolor: "rgba(201,153,58,0.1)", color: "#c9993a", border: "1px solid rgba(201,153,58,0.2)" }}
                   />
                 )}
                 {selectedDiscount && (
                   <Chip
                     label={`Discount: ${discountLabel}`}
                     onDelete={() => handleDiscountChange("")}
-                  sx={{ borderRadius: "999px", fontWeight: 600 }}
+                    sx={{ borderRadius: "12px", fontWeight: 700, fontFamily: "Outfit, sans-serif", bgcolor: "rgba(201,153,58,0.1)", color: "#c9993a", border: "1px solid rgba(201,153,58,0.2)" }}
                   />
                 )}
                 <Chip
@@ -336,28 +281,30 @@ const Products = () => {
                     setPageNumber(1);
                   }}
                   sx={{
-                  borderRadius: "999px",
-                  fontWeight: 700,
+                    borderRadius: "12px",
+                    fontWeight: 800,
+                    fontFamily: "Outfit, sans-serif",
                     bgcolor: "#fff",
-                  border: "1px solid rgba(15,82,255,0.25)",
+                    color: "#f43f5e",
+                    border: "1px solid rgba(244,63,94,0.3)",
                   }}
                 />
               </div>
             )}
 
             {/* Product Grid */}
-          <div className='relative grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8 px-5 mt-5'>
+          <div className='relative grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10 px-10 mt-6'>
             {displayedProducts.length > 0 && (
               <>
                   {displayedProducts.map((item, index) => (
                     <ProductCard key={index} item={item} />
                   ))}
                 {loading && (
-                  <div className='absolute inset-0 z-10 bg-white/85 flex items-center justify-center rounded-xl pointer-events-none'>
-                    <div className='flex items-center gap-3 text-gray-800'>
-                      <CircularProgress size={26} />
-                      <span className='text-sm font-medium'>
-                        Loading products...
+                  <div className='absolute inset-0 z-10 bg-[#fafaf8]/80 backdrop-blur-sm flex items-center justify-center rounded-2xl pointer-events-none'>
+                    <div className='flex items-center gap-4 text-[#0a0a0a] bg-white px-6 py-4 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] border border-[#f0ece6]'>
+                      <CircularProgress size={24} sx={{ color: "#c9993a" }} />
+                      <span className='text-[14px] font-[800] tracking-wide uppercase text-[#0a0a0a]'>
+                        Loading...
                       </span>
                     </div>
                   </div>
@@ -366,30 +313,33 @@ const Products = () => {
               )}
 
             {displayedProducts.length === 0 && (loading || isCategorySwitching) && (
-              <div className='col-span-4 flex flex-col items-center justify-center py-24 text-gray-500'>
+              <div className='col-span-full flex flex-col items-center justify-center py-32 text-[#9ca3af]'>
                 <Skeleton
                   variant='rectangular'
                   width='100%'
-                  height={280}
-                  sx={{ borderRadius: "16px" }}
+                  height={320}
+                  sx={{ borderRadius: "24px", bgcolor: "#fafaf8" }}
                 />
-                <div className='flex items-center gap-3 mt-4'>
-                  <CircularProgress size={22} />
-                  <p className='text-sm font-medium'>Loading products...</p>
+                <div className='flex items-center gap-4 mt-8'>
+                  <CircularProgress size={24} sx={{ color: "#c9993a" }} />
+                  <p className='text-[14px] font-[800] tracking-wide uppercase text-[#0a0a0a]'>Preparing Collection...</p>
                 </div>
                   </div>
             )}
 
             {displayedProducts.length === 0 && !loading && !isCategorySwitching && (
-              <div className='col-span-4 flex flex-col items-center justify-center py-24 text-gray-400'>
-                <p className='text-lg font-semibold text-gray-700'>No products found</p>
-                <p className='text-sm mt-1'>Try adjusting filters or sorting</p>
+              <div className='col-span-full flex flex-col items-center justify-center py-32'>
+                <div className="w-20 h-20 mb-6 rounded-full bg-[#fafaf8] border border-[#f0ece6] flex items-center justify-center">
+                  <span className="text-[32px]">🔍</span>
+                </div>
+                <p className='text-[20px] font-[800] text-[#0a0a0a] uppercase tracking-wider mb-2'>No products found</p>
+                <p className='text-[14px] text-[#9ca3af] font-[500]'>Try adjusting your filters or searching for something else.</p>
                 </div>
               )}
             </div>
 
             {/* Pagination */}
-          <div className='flex justify-center py-10'>
+          <div className='flex justify-center pt-16 pb-8'>
             {!isCategorySwitching &&
               !loading &&
               totalElements > 0 && (
@@ -401,12 +351,19 @@ const Products = () => {
                   shape='rounded'
                   sx={{
                     "& .MuiPaginationItem-root": {
-                      borderRadius: "8px",
-                      fontWeight: 500,
+                      borderRadius: "12px",
+                      fontWeight: 700,
+                      fontFamily: "Outfit, sans-serif",
+                      color: "#5d5d5d",
+                      border: "1px solid transparent",
+                    },
+                    "& .MuiPaginationItem-root:hover": {
+                      backgroundColor: "#fafaf8",
                     },
                     "& .Mui-selected": {
-                      backgroundColor: "#111 !important",
+                      backgroundColor: "#0a0a0a !important",
                       color: "#fff",
+                      boxShadow: "0 4px 12px rgba(10,10,10,0.15)",
                     },
                   }}
                 />
