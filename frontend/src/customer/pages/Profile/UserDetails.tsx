@@ -15,10 +15,13 @@ import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../Redux Toolkit/store";
 import { updateProfile } from "../../../Redux Toolkit/features/customer/userSlice";
 
+const GOLD = "#c9993a";
+const DARK = "#0a0a0a";
+
 const keyIconMap: Record<string, React.ReactNode> = {
-  Name: <Person sx={{ fontSize: 20, color: "#F59E0B" }} />,
-  Email: <Email sx={{ fontSize: 20, color: "#F59E0B" }} />,
-  Mobile: <Phone sx={{ fontSize: 20, color: "#F59E0B" }} />,
+  Name: <Person sx={{ fontSize: 20, color: GOLD }} />,
+  Email: <Email sx={{ fontSize: 20, color: GOLD }} />,
+  Mobile: <Phone sx={{ fontSize: 20, color: GOLD }} />,
 };
 
 interface Field {
@@ -71,19 +74,21 @@ const UserDetails = () => {
 
   return (
     <Card
-      elevation={2}
+      elevation={0}
       sx={{
-        borderRadius: 3,
-        background: "linear-gradient(135deg, #ffffff 0%, #f5f7ff 100%)",
-        border: "1px solid #e8eef7",
+        borderRadius: "24px",
+        background: "white",
+        border: "1px solid #f0ece6",
+        boxShadow: "0 4px 40px rgba(0, 0, 0, 0.04)",
         overflow: "hidden",
+        fontFamily: "Outfit, sans-serif",
       }}
     >
       {/* Header Section */}
       <Box
         sx={{
-          px: 3,
-          py: 2.5,
+          px: 4,
+          py: 3.5,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -91,17 +96,18 @@ const UserDetails = () => {
         }}
       >
         {/* Left Section: Avatar + Text */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2, flex: 1 }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 3, flex: 1 }}>
           {/* Avatar */}
           <Avatar
             sx={{
-              width: 60,
-              height: 60,
-              background: "#F59E0B",
-              fontSize: "1.3rem",
-              fontWeight: "bold",
+              width: 72,
+              height: 72,
+              background: DARK,
+              color: GOLD,
+              fontSize: "1.5rem",
+              fontWeight: 800,
               flexShrink: 0,
-              boxShadow: "0 4px 12px rgba(245, 158, 11, 0.2)",
+              fontFamily: "Outfit, sans-serif",
             }}
           >
             {initials}
@@ -111,16 +117,17 @@ const UserDetails = () => {
           <Box>
             <Box
               sx={{
-                fontSize: "1.2rem",
-                fontWeight: 700,
-                color: "#1F2937",
-                mb: 0.25,
+                fontSize: "1.5rem",
+                fontWeight: 800,
+                color: DARK,
+                mb: 0.5,
+                fontFamily: "Outfit, sans-serif",
               }}
             >
               Personal Information
             </Box>
-            <Box sx={{ fontSize: "0.8rem", color: "#64748b" }}>
-              {isEditing ? "Editing Profile" : "Your account details"}
+            <Box sx={{ fontSize: "0.9rem", color: "#9ca3af", fontWeight: 500 }}>
+              {isEditing ? "Update your details below." : "Manage your account details and preferences."}
             </Box>
           </Box>
         </Box>
@@ -133,26 +140,28 @@ const UserDetails = () => {
             onClick={() => setIsEditing(true)}
             sx={{
               textTransform: "none",
-              borderRadius: 2,
-              background: "#F59E0B",
-              boxShadow: "0 2px 8px rgba(245, 158, 11, 0.2)",
-              px: 2,
-              py: 1,
-              fontSize: "0.875rem",
-              fontWeight: 600,
+              borderRadius: "12px",
+              background: "linear-gradient(135deg, #d4a348 0%, #c9993a 100%)",
+              color: "white",
+              px: 3,
+              py: 1.25,
+              fontSize: "0.85rem",
+              fontWeight: 700,
+              fontFamily: "Outfit, sans-serif",
               whiteSpace: "nowrap",
+              boxShadow: "0 4px 12px rgba(201, 153, 58, 0.3)",
               "&:hover": {
-                background: "#D97706",
-                boxShadow: "0 4px 12px rgba(245, 158, 11, 0.3)",
+                opacity: 0.95,
+                boxShadow: "0 4px 16px rgba(201, 153, 58, 0.4)",
               },
             }}
           >
-            Edit
+            Edit Profile
           </Button>
         )}
       </Box>
 
-      <Divider sx={{ opacity: 0.5 }} />
+      <Divider sx={{ borderColor: "#f0ece6" }} />
 
       <CardContent sx={{ p: 0 }}>
         {/* View Mode */}
@@ -162,34 +171,35 @@ const UserDetails = () => {
               <Box
                 key={field.key}
                 sx={{
-                  px: 3,
-                  py: 2.5,
+                  px: 4,
+                  py: 3,
                   display: "flex",
-                  gap: 2.5,
-                  alignItems: "flex-start",
+                  gap: 3,
+                  alignItems: "center",
                   borderBottom:
                     fieldIndex < fields.length - 1
-                      ? "1px solid #e2e8f0"
+                      ? "1px solid #f0ece6"
                       : "none",
-                  transition: "background 0.2s",
+                  transition: "background 0.2s ease",
                   background: "#fff",
                   "&:hover": {
-                    background: "#fafbff",
+                    background: "#fafaf8",
                   },
                 }}
               >
                 {/* Icon */}
                 <Box
                   sx={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: 2,
-                    background:
-                      "linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)",
+                    width: 48,
+                    height: 48,
+                    borderRadius: "14px",
+                    background: "linear-gradient(135deg, #fffcf5 0%, #fff6e5 100%)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     flexShrink: 0,
+                    border: "1px solid #fde6b3",
+                    boxShadow: "inset 0 2px 4px rgba(255,255,255,0.5)",
                   }}
                 >
                   {keyIconMap[field.key]}
@@ -199,21 +209,23 @@ const UserDetails = () => {
                 <Box sx={{ flex: 1 }}>
                   <Box
                     sx={{
-                      fontSize: "0.7rem",
+                      fontSize: "0.75rem",
                       fontWeight: 700,
-                      color: "#94a3b8",
-                      letterSpacing: 0.8,
-                      mb: 0.75,
+                      color: "#9ca3af",
+                      letterSpacing: 1,
+                      mb: 0.5,
                       textTransform: "uppercase",
+                      fontFamily: "Outfit, sans-serif",
                     }}
                   >
                     {field.key}
                   </Box>
                   <Box
                     sx={{
-                      fontSize: "0.95rem",
+                      fontSize: "1.05rem",
                       fontWeight: 600,
-                      color: saved[field.name] ? "#1F2937" : "#cbd5e1",
+                      color: saved[field.name] ? DARK : "#d1d5db",
+                      fontFamily: "Outfit, sans-serif",
                     }}
                   >
                     {saved[field.name] || "Not set"}
@@ -226,21 +238,22 @@ const UserDetails = () => {
 
         {/* Edit Mode */}
         {isEditing && (
-          <Box sx={{ p: 3 }}>
-            <Stack spacing={2.5}>
+          <Box sx={{ p: 4 }}>
+            <Stack spacing={3}>
               {fields.map((field) => (
                 <Box key={field.key}>
                   <Box
                     sx={{
                       display: "flex",
                       alignItems: "center",
-                      gap: 1,
-                      mb: 1.2,
-                      color: "#F59E0B",
-                      fontSize: "0.75rem",
+                      gap: 1.5,
+                      mb: 1.5,
+                      color: DARK,
+                      fontSize: "0.8rem",
                       fontWeight: 700,
-                      letterSpacing: 0.8,
+                      letterSpacing: 1,
                       textTransform: "uppercase",
+                      fontFamily: "Outfit, sans-serif",
                     }}
                   >
                     {keyIconMap[field.key]}
@@ -256,28 +269,30 @@ const UserDetails = () => {
                     variant='outlined'
                     sx={{
                       "& .MuiOutlinedInput-root": {
-                        borderRadius: "8px",
+                        borderRadius: "12px",
                         fontSize: "0.95rem",
                         fontWeight: 500,
-                        color: "#1F2937",
-                        background: "#FAFAF9",
-                        transition: "all 0.3s ease",
+                        color: DARK,
+                        fontFamily: "Outfit, sans-serif",
+                        background: "#fafaf8",
+                        transition: "all 0.2s ease",
                         "& fieldset": {
-                          borderColor: "#e2e8f0",
+                          borderColor: "transparent",
                         },
                         "&:hover fieldset": {
-                          borderColor: "#cbd5e1",
+                          borderColor: "#e5e7eb",
                         },
                         "&.Mui-focused fieldset": {
-                          borderColor: "#F59E0B",
+                          borderColor: GOLD,
                           borderWidth: "2px",
                         },
                         "&.Mui-focused": {
-                          background: "#fffbeb",
+                          background: "#fff",
+                          boxShadow: "0 4px 20px rgba(201,153,58,0.1)",
                         },
                       },
                       "& .MuiInputBase-input": {
-                        padding: "11px 13px",
+                        padding: "12px 14px",
                         fontWeight: 500,
                       },
                     }}
@@ -288,27 +303,31 @@ const UserDetails = () => {
 
             {/* Action Buttons */}
             <Box
-              sx={{
+               sx={{
                 display: "flex",
                 gap: 2,
                 justifyContent: "flex-end",
-                mt: 4,
-                pt: 3,
-                borderTop: "1px solid #e2e8f0",
+                mt: 5,
+                pt: 4,
+                borderTop: "1px solid #f0ece6",
               }}
             >
               <Button
                 variant='outlined'
-                startIcon={<Close sx={{ fontSize: 16 }} />}
                 onClick={handleCancel}
                 sx={{
                   textTransform: "none",
-                  borderRadius: 2,
-                  borderColor: "#e2e8f0",
-                  color: "#64748b",
+                  borderRadius: "12px",
+                  borderColor: "#e5e7eb",
+                  color: "#5d5d5d",
+                  fontFamily: "Outfit, sans-serif",
+                  fontWeight: 600,
+                  px: 4,
+                  py: 1.25,
                   "&:hover": {
-                    borderColor: "#cbd5e1",
-                    background: "#FAFAF9",
+                    borderColor: "#d1d5db",
+                    background: "#fafaf8",
+                    color: DARK,
                   },
                 }}
               >
@@ -316,20 +335,24 @@ const UserDetails = () => {
               </Button>
               <Button
                 variant='contained'
-                startIcon={<Check sx={{ fontSize: 16 }} />}
                 onClick={handleSave}
                 sx={{
                   textTransform: "none",
-                  borderRadius: 2,
-                  background: "#F59E0B",
-                  boxShadow: "0 4px 12px rgba(245, 158, 11, 0.3)",
+                  borderRadius: "12px",
+                  background: "linear-gradient(135deg, #d4a348 0%, #c9993a 100%)",
+                  color: "white",
+                  fontFamily: "Outfit, sans-serif",
+                  fontWeight: 600,
+                  px: 4,
+                  py: 1.25,
+                  boxShadow: "0 4px 12px rgba(201, 153, 58, 0.3)",
                   "&:hover": {
-                    background: "#D97706",
-                    boxShadow: "0 6px 16px rgba(245, 158, 11, 0.4)",
+                    opacity: 0.95,
+                    boxShadow: "0 4px 16px rgba(201, 153, 58, 0.4)",
                   },
                 }}
               >
-                Save Changes
+                Save Details
               </Button>
             </Box>
           </Box>

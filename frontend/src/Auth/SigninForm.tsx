@@ -29,14 +29,34 @@ const SigninForm = () => {
     },
   });
 
+  const inputSx = {
+    "& .MuiOutlinedInput-root": {
+      borderRadius: "16px",
+      fontSize: "0.95rem",
+      backgroundColor: "#fafaf8",
+      transition: "all 0.2s ease",
+      "& fieldset": { borderColor: "transparent" },
+      "&:hover fieldset": { borderColor: "#e5e7eb" },
+      "&.Mui-focused fieldset": { borderColor: "#c9993a", borderWidth: "2px" },
+      "&.Mui-focused": { backgroundColor: "#fff", boxShadow: "0 4px 20px rgba(201,153,58,0.1)" },
+    },
+    "& .MuiInputLabel-root": { fontSize: "0.95rem", color: "#9ca3af", fontFamily: "Outfit, sans-serif" },
+    "& .MuiInputLabel-root.Mui-focused": { color: "#c9993a", fontWeight: 600 },
+    "& .MuiInputBase-input": { fontFamily: "Outfit, sans-serif", padding: "16px 14px" },
+  };
+
   return (
     <div>
-      <p className="section-eyebrow text-[#9ca3af] mb-1">Welcome back</p>
-      <h2 className="text-[20px] font-[800] font-[Outfit] text-[#0a0a0a] mb-6">
-        Sign in to your account
-      </h2>
+      <div className="mb-8">
+        <h2 className="text-[32px] font-[800] font-[Playfair_Display] text-[#0a0a0a] mb-2 leading-tight">
+          Welcome back
+        </h2>
+        <p className="text-[#9ca3af] text-[15px] font-[Outfit]">
+          Enter your details to access your premium account.
+        </p>
+      </div>
 
-      <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4">
+      <form onSubmit={formik.handleSubmit} className="flex flex-col gap-5">
         {/* Email */}
         <TextField
           fullWidth
@@ -53,17 +73,7 @@ const SigninForm = () => {
               : ""
           }
           disabled={auth.otpSent}
-          sx={{
-            "& .MuiOutlinedInput-root": {
-              borderRadius: "14px",
-              fontSize: "0.85rem",
-              "& fieldset": { borderColor: "#f0ece6" },
-              "&:hover fieldset": { borderColor: "#d4c4a8" },
-              "&.Mui-focused fieldset": { borderColor: "#c9993a" },
-            },
-            "& .MuiInputLabel-root": { fontSize: "0.85rem", color: "#9ca3af" },
-            "& .MuiInputLabel-root.Mui-focused": { color: "#c9993a" },
-          }}
+          sx={inputSx}
         />
 
         {/* OTP field — slides in when sent */}
@@ -71,29 +81,28 @@ const SigninForm = () => {
           <div className="animate-fade-up">
             <TextField
               fullWidth
-              label="Enter OTP"
+              label="Enter 6-digit OTP"
               id="otp"
               name="otp"
               value={formik.values.otp}
               onChange={formik.handleChange}
+              autoFocus
+              disabled={auth.loading}
               inputProps={{ maxLength: 6 }}
               error={formik.touched.otp && Boolean(formik.errors.otp)}
               helperText={
                 formik.touched.otp && typeof formik.errors.otp === "string"
                   ? formik.errors.otp
-                  : "Check your inbox for the 6-digit code"
+                  : "We've sent a code to your email."
               }
               sx={{
+                ...inputSx,
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: "14px",
-                  fontSize: "0.85rem",
-                  letterSpacing: "0.2em",
-                  "& fieldset": { borderColor: "#f0ece6" },
-                  "&:hover fieldset": { borderColor: "#d4c4a8" },
-                  "&.Mui-focused fieldset": { borderColor: "#c9993a" },
+                  ...inputSx["& .MuiOutlinedInput-root"],
+                  letterSpacing: "0.5em",
+                  textAlign: "center",
                 },
-                "& .MuiInputLabel-root": { fontSize: "0.85rem", color: "#9ca3af" },
-                "& .MuiInputLabel-root.Mui-focused": { color: "#c9993a" },
+                "& .MuiInputBase-input": { ...inputSx["& .MuiInputBase-input"], textAlign: "center", fontSize: "1.2rem", fontWeight: 700, color: "#0a0a0a" },
               }}
             />
           </div>
@@ -103,32 +112,32 @@ const SigninForm = () => {
         <button
           type="submit"
           disabled={auth.loading}
-          className="w-full py-3.5 mt-2 rounded-xl bg-[#0a0a0a] text-white text-[13px] font-[700] font-[Outfit] tracking-wider uppercase shadow-md hover:bg-[#c9993a] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-250 flex items-center justify-center gap-2"
+          className="w-full py-4 mt-4 rounded-full bg-[#0a0a0a] text-white text-[14px] font-[700] font-[Outfit] tracking-wide shadow-[0_8px_20px_rgba(10,10,10,0.15)] hover:bg-[#c9993a] hover:shadow-[0_8px_24px_rgba(201,153,58,0.3)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-3"
         >
           {auth.loading ? (
             <>
-              <CircularProgress size={14} thickness={5} sx={{ color: "#fff" }} />
-              <span>Verifying...</span>
+              <CircularProgress size={18} thickness={5} sx={{ color: "#fff" }} />
+              <span>Please wait...</span>
             </>
           ) : auth.otpSent ? (
-            "Verify & Continue"
+            "Verify & Sign In"
           ) : (
-            "Send verification code"
+            "Continue with Email"
           )}
         </button>
 
         {/* Resend hint */}
         {auth.otpSent && (
-          <p className="text-center text-[12px] text-[#9ca3af] font-[500] font-[Outfit]">
+          <p className="text-center text-[13px] text-[#9ca3af] font-[500] font-[Outfit] mt-2">
             Didn't receive it?{" "}
             <button
               type="button"
               onClick={() =>
                 dispatch(sendSigninSignupOTP({ email: formik.values.email }))
               }
-              className="text-[#c9993a] font-[700] hover:underline"
+              className="text-[#c9993a] font-[700] hover:underline transition-all"
             >
-              Resend OTP
+              Resend Code
             </button>
           </p>
         )}
