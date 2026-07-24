@@ -17,39 +17,26 @@ import {
 } from "../../../Redux Toolkit/features/customer/orderSlice";
 import { useNavigate, useParams } from "react-router";
 
+const GOLD = "#c9993a";
+const DARK = "#0a0a0a";
+
 // Order status color mapping
 const orderStatusColors: Record<
   string,
   { bg: string; text: string; icon: any }
 > = {
-  PENDING: { bg: "rgba(245,158,11,0.08)", text: "#d97706", icon: AccessAlarm },
-  CONFIRMED: {
-    bg: "rgba(59,130,246,0.08)",
-    text: "#3b82f6",
-    icon: CheckCircle,
-  },
-  PROCESSING: {
-    bg: "rgba(245,158,11,0.08)",
-    text: "#f59e0b",
-    icon: AccessAlarm,
-  },
-  SHIPPED: { bg: "rgba(59,130,246,0.08)", text: "#3b82f6", icon: CheckCircle },
-  DELIVERED: {
-    bg: "rgba(16,184,129,0.08)",
-    text: "#10b981",
-    icon: CheckCircle,
-  },
-  CANCELLED: {
-    bg: "rgba(239,68,68,0.08)",
-    text: "#ef4444",
-    icon: TrendingDown,
-  },
+  PENDING: { bg: "rgba(201,153,58,0.12)", text: GOLD, icon: AccessAlarm },
+  CONFIRMED: { bg: "rgba(201,153,58,0.12)", text: GOLD, icon: CheckCircle },
+  PROCESSING: { bg: "rgba(201,153,58,0.12)", text: GOLD, icon: AccessAlarm },
+  SHIPPED: { bg: "rgba(225,29,72,0.08)", text: "#e11d48", icon: CheckCircle },
+  DELIVERED: { bg: "rgba(5,150,105,0.08)", text: "#059669", icon: CheckCircle },
+  CANCELLED: { bg: "rgba(244,63,94,0.08)", text: "#f43f5e", icon: TrendingDown },
 };
 
 const paymentStatusColors: Record<string, { bg: string; text: string }> = {
-  PENDING: { bg: "rgba(245,158,11,0.08)", text: "#f59e0b" },
-  COMPLETED: { bg: "rgba(16,184,129,0.08)", text: "#10b981" },
-  FAILED: { bg: "rgba(239,68,68,0.08)", text: "#ef4444" },
+  PENDING: { bg: "rgba(201,153,58,0.12)", text: GOLD },
+  COMPLETED: { bg: "rgba(5,150,105,0.08)", text: "#059669" },
+  FAILED: { bg: "rgba(244,63,94,0.08)", text: "#f43f5e" },
 };
 
 const OrderDetails = () => {
@@ -76,6 +63,7 @@ const OrderDetails = () => {
   const orderCancelHanlder = (orderId: string) => {
     dispatch(cancelOrder(orderId));
   };
+
   const itemQuantity = Number(orderItem?.quantity ?? 1);
   const itemSellingTotal = Number(orderItem?.sellingPrice ?? 0) * itemQuantity;
   const orderShippingPrice = Number(currentOrder?.shippingPrice ?? 0);
@@ -106,302 +94,325 @@ const OrderDetails = () => {
   };
 
   return (
-    <Box style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-      {/* Product snapshot */}
+    <Box style={{ display: "flex", flexDirection: "column", gap: 32, fontFamily: "Outfit, sans-serif" }}>
+      {/* Product snapshot (Editorial Layout) */}
       <section
         style={{
           display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 16,
-          paddingBottom: 20,
-          borderBottom: "1px solid #E2E8F0",
+          gap: 32,
+          paddingBottom: 32,
+          borderBottom: "1px solid #f0ece6",
+          alignItems: "flex-start",
         }}
       >
         <div
+          onClick={() => navigate(`/product-details/${orderItem?.product?.category}/${orderItem?.product?.title}/${orderItem?.product?._id}`)}
           style={{
-            width: 120,
-            height: 140,
-            borderRadius: 12,
+            width: 160,
+            height: 200,
+            borderRadius: "20px",
             overflow: "hidden",
-            border: "1px solid #E2E8F0",
+            border: "1px solid #f0ece6",
+            background: "#fafaf8",
+            cursor: "pointer",
+            flexShrink: 0,
           }}
         >
           <img
-            onClick={() => navigate(`/product-details/${orderItem?.product?.category}/${orderItem?.product?.title}/${orderItem?.product?._id}`)}
             src={orderItem?.product?.images[0]}
             alt='Product'
-            style={{ width: "100%", height: "100%", objectFit: "cover", cursor: 'pointer' }}
+            style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.4s ease" }}
+            onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.05)"}
+            onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
           />
         </div>
-        <div style={{ textAlign: "center" }}>
+        
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 12, paddingTop: 8 }}>
+          <p
+            style={{
+              fontSize: 12,
+              fontWeight: 800,
+              color: "#9ca3af",
+              textTransform: "uppercase",
+              letterSpacing: "0.15em",
+              fontFamily: "Outfit, sans-serif",
+            }}
+          >
+            {currentOrder?.seller?.businessDetails?.businessName || currentOrder?.seller?.sellerName}
+          </p>
           <p
             onClick={() => navigate(`/product-details/${orderItem?.product?.category}/${orderItem?.product?.title}/${orderItem?.product?._id}`)}
             style={{
-              fontSize: 18,
+              fontSize: 24,
               fontWeight: 800,
-              color: "#1F2937",
-              lineHeight: 1.3,
-              cursor: 'pointer'
+              color: DARK,
+              lineHeight: 1.2,
+              cursor: "pointer",
+              fontFamily: "Outfit, sans-serif",
+              transition: "color 0.2s ease",
             }}
-            onMouseEnter={(e) => e.currentTarget.style.color = "#F59E0B"}
-            onMouseLeave={(e) => e.currentTarget.style.color = "#1F2937"}
+            onMouseEnter={(e) => e.currentTarget.style.color = GOLD}
+            onMouseLeave={(e) => e.currentTarget.style.color = DARK}
           >
             {orderItem?.product?.title}
           </p>
-          <p
-            style={{
-              fontSize: 13,
-              fontWeight: 600,
-              color: "#1F2937",
-              marginBottom: 4,
-            }}
-          >
-            {currentOrder?.seller?.businessDetails?.businessName}
-          </p>
-          <p style={{ fontSize: 13, color: "#64748B", marginBottom: 4 }}>
+          <p style={{ fontSize: 14, color: "#5d5d5d", lineHeight: 1.6, fontFamily: "Outfit, sans-serif" }}>
             {orderItem?.product?.description}
           </p>
-          <span
-            style={{
-              display: "inline-block",
-              fontSize: 11,
-              fontWeight: 600,
-              color: "#F59E0B",
-              background: "rgba(15,82,255,0.08)",
-              padding: "2px 10px",
-              borderRadius: 99,
-            }}
-          >
-            Size: {orderItem?.size}
-          </span>
+          
+          <div style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 16 }}>
+             <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                fontSize: 12,
+                fontWeight: 700,
+                color: GOLD,
+                background: "linear-gradient(135deg, #fffcf5 0%, #fff6e5 100%)",
+                border: "1px solid #fde6b3",
+                padding: "6px 16px",
+                borderRadius: "99px",
+                fontFamily: "Outfit, sans-serif",
+                height: 32,
+              }}
+            >
+              Size: {orderItem?.size}
+            </span>
+            
+            <Button
+              onClick={() => navigate(`/product-details/${orderItem?.product?.category}/${orderItem?.product?.title}/${orderItem?.product?._id}`)}
+              variant="contained"
+              sx={{
+                background: DARK,
+                color: "white",
+                textTransform: "none",
+                fontSize: "0.85rem",
+                fontWeight: 700,
+                fontFamily: "Outfit, sans-serif",
+                borderRadius: "99px",
+                px: 3,
+                height: 32,
+                boxShadow: "0 4px 12px rgba(10,10,10,0.15)",
+                "&:hover": {
+                  background: GOLD,
+                  boxShadow: "0 4px 16px rgba(201,153,58,0.3)",
+                }
+              }}
+            >
+              View Product
+            </Button>
+          </div>
         </div>
       </section>
 
       {/* Stepper */}
-      <section style={{ paddingBottom: 20, borderBottom: "1px solid #E2E8F0" }}>
+      <section style={{ paddingBottom: 32, borderBottom: "1px dashed #e5e7eb" }}>
         <OrderStepper orderStatus={currentOrder?.orderStatus} />
       </section>
 
-      {/* Delivery address */}
-      <section style={{ paddingBottom: 20, borderBottom: "1px solid #E2E8F0" }}>
-        <h2
-          style={{
-            fontSize: 14,
-            fontWeight: 700,
-            color: "#1F2937",
-            marginBottom: 12,
-          }}
-        >
-          Delivery Address
-        </h2>
-        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <Divider flexItem orientation='vertical' />
-            <p style={{ fontSize: 13, fontWeight: 500, color: "#1F2937" }}>
-              {currentOrder?.shippingAddress?.mobile}
-            </p>
-          </div>
-          <p style={{ fontSize: 13, color: "#64748B", lineHeight: 1.6 }}>
-            {currentOrder?.shippingAddress?.address}{" "}
-            {currentOrder?.shippingAddress?.locality}{" "}
-            {currentOrder?.shippingAddress?.city}{" "}
-            {currentOrder?.shippingAddress?.state}{" "}
-            {currentOrder?.shippingAddress?.pinCode}
-          </p>
-        </div>
-      </section>
-
-      {/* Price & payment */}
-      <section
-        style={{
-          border: "1px solid #E2E8F0",
-          borderRadius: 14,
-          overflow: "hidden",
-        }}
-      >
-        {/* Order Status */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "16px 18px",
-            borderBottom: "1px solid #E2E8F0",
-            background: getOrderStatusColor(currentOrder?.orderStatus).bg,
-          }}
-        >
-          <p style={{ fontSize: 13, fontWeight: 700, color: "#1F2937" }}>
-            Order Status
-          </p>
-          <Chip
-            label={currentOrder?.orderStatus}
-            sx={{
-              background: getOrderStatusColor(currentOrder?.orderStatus).bg,
-              color: getOrderStatusColor(currentOrder?.orderStatus).text,
-              fontWeight: 700,
-              fontSize: "0.85rem",
-            }}
-          />
-        </div>
-
-        {/* Price row */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            padding: "16px 18px",
-            borderBottom: "1px solid #E2E8F0",
-          }}
-        >
-          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-            <p style={{ fontSize: 13, fontWeight: 700, color: "#1F2937" }}>
-              Total Paid (Item + Delivery Share)
-            </p>
-            <p style={{ fontSize: 12, color: "#64748B" }}>
-              You saved{" "}
-              <span style={{ color: "#16a34a", fontWeight: 600 }}>
-                ${itemSaved}{" "}
-                on this item
-              </span>
-            </p>
-            <p style={{ fontSize: 12, color: "#64748B" }}>Qty: {itemQuantity}</p>
-            {itemShippingShare > 0 && (
-              <p style={{ fontSize: 12, color: "#64748B" }}>
-                Delivery share: ${itemShippingShare}
-              </p>
-            )}
-          </div>
-          <p style={{ fontSize: 14, fontWeight: 700, color: "#1F2937" }}>
-            ${itemPaidTotalIncludingShipping}
-          </p>
-        </div>
-
-        {/* Shipping Price row */}
-        {orderShippingPrice > 0 && (
-          <div
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32 }}>
+        {/* Delivery address */}
+        <section>
+          <h2
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "flex-start",
-              padding: "16px 18px",
-              borderBottom: "1px solid #E2E8F0",
+              fontSize: 15,
+              fontWeight: 800,
+              color: DARK,
+              marginBottom: 16,
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+              fontFamily: "Outfit, sans-serif",
             }}
           >
-            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-              <p style={{ fontSize: 13, fontWeight: 700, color: "#1F2937" }}>
-                Delivery Price (Order)
+            Delivery Address
+          </h2>
+          <div style={{ 
+            background: "#fafaf8", 
+            border: "1px solid #f0ece6", 
+            borderRadius: "16px", 
+            padding: "24px",
+            display: "flex",
+            flexDirection: "column",
+            gap: 12
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <div style={{ width: 4, height: 16, background: GOLD, borderRadius: 4 }} />
+              <p style={{ fontSize: 15, fontWeight: 700, color: DARK, fontFamily: "Outfit, sans-serif" }}>
+                Phone: {currentOrder?.shippingAddress?.mobile}
               </p>
             </div>
-            <p style={{ fontSize: 14, fontWeight: 700, color: "#1F2937" }}>
-              ${orderShippingPrice}
+            <p style={{ fontSize: 14, color: "#5d5d5d", lineHeight: 1.6, fontFamily: "Outfit, sans-serif" }}>
+              {currentOrder?.shippingAddress?.address} <br/>
+              {currentOrder?.shippingAddress?.locality}, {currentOrder?.shippingAddress?.city} <br/>
+              {currentOrder?.shippingAddress?.state} {currentOrder?.shippingAddress?.pinCode}
             </p>
           </div>
-        )}
+        </section>
 
-        {/* Payment method & status */}
-        <div
-          style={{ padding: "12px 18px", borderBottom: "1px solid #E2E8F0" }}
-        >
-          <div
+        {/* Order Summary & Payment */}
+        <section>
+          <h2
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              background: getPaymentStatusColor(currentOrder?.paymentStatus).bg,
-              border: `1px solid ${getPaymentStatusColor(currentOrder?.paymentStatus).text}33`,
-              borderRadius: 10,
-              padding: "10px 14px",
+              fontSize: 15,
+              fontWeight: 800,
+              color: DARK,
+              marginBottom: 16,
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+              fontFamily: "Outfit, sans-serif",
             }}
           >
-            <Payment
-              sx={{
-                fontSize: 18,
-                color: getPaymentStatusColor(currentOrder?.paymentStatus).text,
-              }}
-            />
-            <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              {/* Show payment method based on paymentMethod field */}
-
-              {/* Show status message based on paymentStatus */}
-              <p style={{ fontSize: 11, color: "#64748B" }}>
-                {
-                  <>
-                    Payment Status:{" "}
-                    <span
-                      style={{
-                        fontWeight: 700,
-                        color: getPaymentStatusColor(
-                          currentOrder?.paymentStatus,
-                        ).text,
-                      }}
-                    >
-                      {currentOrder?.paymentStatus === "COMPLETED"
-                        ? "Payment Successful"
-                        : currentOrder?.paymentStatus === "PENDING" &&
-                        "Pay on Delivery"}
-                    </span>
-                  </>
-                }
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Sold by */}
-        <div
-          style={{ padding: "12px 18px", borderBottom: "1px solid #E2E8F0" }}
-        >
-          <p style={{ fontSize: 12, color: "#64748B" }}>
-            <span style={{ fontWeight: 700, color: "#1F2937" }}>Sold by: </span>
-            {currentOrder?.seller?.sellerName}
-          </p>
-        </div>
-
-        {/* Cancel button - only show if order can be cancelled */}
-        {canCancelOrder() && (
-          <div style={{ padding: "16px 18px" }}>
-            <Button
-              onClick={() => orderId && orderCancelHanlder(orderId)}
-              fullWidth
-              variant='outlined'
-              sx={{
-                textTransform: "none",
-                borderRadius: "99px",
-                borderColor: "#FF4F00",
-                color: "#FF4F00",
-                fontSize: 13,
-                fontWeight: 600,
-                py: 1,
-                "&:hover": {
-                  borderColor: "#FF4F00",
-                  background: "rgba(255,79,0,0.05)",
-                },
+            Order Summary
+          </h2>
+          <div
+            style={{
+              border: "1px solid #f0ece6",
+              borderRadius: "16px",
+              overflow: "hidden",
+              background: "#fff",
+            }}
+          >
+            {/* Status Row */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "20px 24px",
+                borderBottom: "1px solid #f0ece6",
+                background: getOrderStatusColor(currentOrder?.orderStatus).bg,
               }}
             >
-              Cancel Order
-            </Button>
-          </div>
-        )}
+              <p style={{ fontSize: 14, fontWeight: 800, color: DARK, fontFamily: "Outfit, sans-serif" }}>
+                Status
+              </p>
+              <div
+                style={{
+                  background: "transparent",
+                  color: getOrderStatusColor(currentOrder?.orderStatus).text,
+                  fontWeight: 800,
+                  fontSize: "13px",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                  fontFamily: "Outfit, sans-serif",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6
+                }}
+              >
+                <div style={{ width: 6, height: 6, borderRadius: "50%", background: getOrderStatusColor(currentOrder?.orderStatus).text }} />
+                {currentOrder?.orderStatus}
+              </div>
+            </div>
 
-        {/* Info message if order cannot be cancelled */}
-        {!canCancelOrder() && (
-          <div
-            style={{
-              padding: "16px 18px",
-              background: "rgba(59,130,246,0.05)",
-              color: "#3b82f6",
-              fontSize: 12,
-              fontWeight: 500,
-              textAlign: "center",
-            }}
-          >
-            This order cannot be cancelled as it is already{" "}
-            {currentOrder?.orderStatus}
+            {/* Price Details */}
+            <div style={{ padding: "20px 24px", borderBottom: "1px solid #f0ece6" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
+                 <p style={{ fontSize: 14, color: "#5d5d5d", fontFamily: "Outfit, sans-serif" }}>Item Total (Qty: {itemQuantity})</p>
+                 <p style={{ fontSize: 14, fontWeight: 700, color: DARK, fontFamily: "Outfit, sans-serif" }}>${itemPaidTotal}</p>
+              </div>
+              
+              {itemShippingShare > 0 && (
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
+                   <p style={{ fontSize: 14, color: "#5d5d5d", fontFamily: "Outfit, sans-serif" }}>Delivery Share</p>
+                   <p style={{ fontSize: 14, fontWeight: 700, color: DARK, fontFamily: "Outfit, sans-serif" }}>${itemShippingShare}</p>
+                </div>
+              )}
+
+              {itemSaved > 0 && (
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16 }}>
+                   <p style={{ fontSize: 14, color: "#059669", fontWeight: 600, fontFamily: "Outfit, sans-serif" }}>Savings</p>
+                   <p style={{ fontSize: 14, fontWeight: 700, color: "#059669", fontFamily: "Outfit, sans-serif" }}>-${itemSaved}</p>
+                </div>
+              )}
+
+              <div style={{ paddingTop: 16, borderTop: "1px dashed #e5e7eb", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                 <p style={{ fontSize: 15, fontWeight: 800, color: DARK, fontFamily: "Outfit, sans-serif" }}>Total Paid</p>
+                 <p style={{ fontSize: 20, fontWeight: 800, color: DARK, fontFamily: "Outfit, sans-serif" }}>${itemPaidTotalIncludingShipping}</p>
+              </div>
+            </div>
+
+            {/* Payment Info */}
+            <div style={{ padding: "20px 24px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  background: getPaymentStatusColor(currentOrder?.paymentStatus).bg,
+                  borderRadius: "12px",
+                  padding: "12px 16px",
+                }}
+              >
+                <Payment
+                  sx={{
+                    fontSize: 20,
+                    color: getPaymentStatusColor(currentOrder?.paymentStatus).text,
+                  }}
+                />
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <p style={{ fontSize: 12, color: "#5d5d5d", fontFamily: "Outfit, sans-serif" }}>Payment Status</p>
+                  <p style={{ 
+                    fontSize: 14, 
+                    fontWeight: 700, 
+                    color: getPaymentStatusColor(currentOrder?.paymentStatus).text,
+                    fontFamily: "Outfit, sans-serif"
+                  }}>
+                    {currentOrder?.paymentStatus === "COMPLETED"
+                        ? "Successful"
+                        : currentOrder?.paymentStatus === "PENDING" &&
+                        "Pay on Delivery"}
+                  </p>
+                </div>
+              </div>
+            </div>
+
           </div>
-        )}
-      </section>
+          
+          {/* Actions */}
+          <div style={{ marginTop: 24 }}>
+            {canCancelOrder() ? (
+              <Button
+                onClick={() => orderId && orderCancelHanlder(orderId)}
+                fullWidth
+                variant='outlined'
+                sx={{
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                  borderRadius: "12px",
+                  borderColor: "#f43f5e",
+                  color: "#f43f5e",
+                  fontSize: 13,
+                  fontWeight: 800,
+                  fontFamily: "Outfit, sans-serif",
+                  py: 1.5,
+                  "&:hover": {
+                    borderColor: "#e11d48",
+                    background: "rgba(244, 63, 94, 0.08)",
+                  },
+                }}
+              >
+                Cancel Order
+              </Button>
+            ) : (
+              <div
+                style={{
+                  padding: "16px",
+                  background: "#f3f4f6",
+                  color: "#9ca3af",
+                  borderRadius: "12px",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  textAlign: "center",
+                  fontFamily: "Outfit, sans-serif",
+                }}
+              >
+                Cancellation unavailable (Order is {currentOrder?.orderStatus})
+              </div>
+            )}
+          </div>
+        </section>
+      </div>
     </Box>
   );
 };

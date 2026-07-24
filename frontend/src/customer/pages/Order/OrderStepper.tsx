@@ -5,6 +5,9 @@ import { useEffect, useState } from "react";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
+const GOLD = "#c9993a";
+const ROSE = "#f43f5e";
+
 const steps = [
   {
     name: "Order Placed",
@@ -58,11 +61,11 @@ const OrderStepper = ({ orderStatus = "PENDING" }: OrderStepperProps) => {
   }, [orderStatus]);
 
   const isCancelled = orderStatus === "CANCELLED";
-  const activeColor = isCancelled ? "#FF4F00" : "#F59E0B";
-  const activeBg = isCancelled ? "rgba(255,79,0,0.08)" : "rgba(15,82,255,0.08)";
+  const activeColor = isCancelled ? ROSE : GOLD;
+  const activeBg = isCancelled ? "rgba(244,63,94,0.12)" : "rgba(201,153,58,0.12)";
 
   return (
-    <Box style={{ margin: "8px 0" }}>
+    <Box style={{ margin: "16px 0", fontFamily: "Outfit, sans-serif" }}>
       {statusStep.map((step, index) => {
         const isActive = step.value === orderStatus;
         const isComplete = index < currentStep;
@@ -71,7 +74,7 @@ const OrderStepper = ({ orderStatus = "PENDING" }: OrderStepperProps) => {
         return (
           <div
             key={step.value}
-            style={{ display: "flex", gap: 16, padding: "0 4px" }}
+            style={{ display: "flex", gap: 24, padding: "0 8px" }}
           >
             {/* Icon + line */}
             <div
@@ -83,22 +86,24 @@ const OrderStepper = ({ orderStatus = "PENDING" }: OrderStepperProps) => {
             >
               <div
                 style={{
-                  width: 32,
-                  height: 32,
+                  width: 36,
+                  height: 36,
                   borderRadius: "50%",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  background: isComplete || isActive ? activeColor : "#E2E8F0",
-                  color: isComplete || isActive ? "#fff" : "#94A3B8",
+                  background: isComplete || isActive ? activeColor : "#f0ece6",
+                  color: isComplete || isActive ? "#fff" : "#9ca3af",
                   flexShrink: 0,
-                  transition: "background 0.2s",
+                  boxShadow: (isComplete || isActive) ? `0 4px 16px ${activeBg}` : "none",
+                  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                  border: `2px solid ${isComplete || isActive ? "transparent" : "#e5e7eb"}`,
                 }}
               >
                 {isComplete ? (
-                  <CheckCircleIcon sx={{ fontSize: 18 }} />
+                  <CheckCircleIcon sx={{ fontSize: 20 }} />
                 ) : (
-                  <FiberManualRecordIcon sx={{ fontSize: 12 }} />
+                  <FiberManualRecordIcon sx={{ fontSize: 14 }} />
                 )}
               </div>
 
@@ -108,45 +113,50 @@ const OrderStepper = ({ orderStatus = "PENDING" }: OrderStepperProps) => {
                     width: 2,
                     height: 56,
                     borderRadius: 99,
-                    background: isComplete ? activeColor : "#E2E8F0",
+                    background: isComplete ? activeColor : "#f0ece6",
                     margin: "4px 0",
-                    transition: "background 0.2s",
+                    transition: "background 0.3s ease",
                   }}
                 />
               )}
             </div>
 
             {/* Content */}
-            <div style={{ paddingBottom: isLast ? 0 : 8, flex: 1 }}>
+            <div style={{ paddingBottom: isLast ? 0 : 8, flex: 1, paddingTop: 4 }}>
               <div
                 style={{
                   display: "inline-block",
-                  padding: "4px 12px",
+                  padding: isActive ? "6px 16px" : "4px 0",
                   borderRadius: 99,
                   fontSize: 13,
-                  fontWeight: isActive ? 700 : 500,
+                  fontWeight: isActive ? 800 : (isComplete ? 700 : 500),
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
                   background: isActive
                     ? activeColor
-                    : isComplete
-                      ? activeBg
-                      : "transparent",
+                    : "transparent",
                   color: isActive
                     ? "#fff"
                     : isComplete
                       ? activeColor
-                      : "#94A3B8",
-                  marginBottom: 4,
-                  transition: "all 0.2s",
+                      : "#9ca3af",
+                  marginBottom: 6,
+                  boxShadow: isActive ? `0 4px 12px ${activeBg}` : "none",
+                  transition: "all 0.3s ease",
+                  fontFamily: "Outfit, sans-serif",
                 }}
               >
                 {step.name}
               </div>
               <p
                 style={{
-                  fontSize: 11,
-                  color: isActive ? "#64748B" : "#94A3B8",
-                  paddingLeft: 4,
+                  fontSize: 14,
+                  fontWeight: isActive || isComplete ? 600 : 400,
+                  color: isActive ? "#5d5d5d" : (isComplete ? "#5d5d5d" : "#9ca3af"),
+                  paddingLeft: isActive ? 16 : 0,
                   margin: 0,
+                  fontFamily: "Outfit, sans-serif",
+                  transition: "all 0.3s ease",
                 }}
               >
                 {step.description}

@@ -1,18 +1,20 @@
 /** @format */
 
-import { ElectricBolt, ChevronRight } from "@mui/icons-material";
-import { Avatar } from "@mui/material";
+import { ChevronRight } from "@mui/icons-material";
 import { useNavigate } from "react-router";
 
+const GOLD = "#c9993a";
+const DARK = "#0a0a0a";
+
 const statusColors: Record<string, { color: string; bg: string }> = {
-  PENDING: { color: "#F59E0B", bg: "rgba(15,82,255,0.08)" },
-  PLACED: { color: "#F59E0B", bg: "rgba(15,82,255,0.08)" },
-  CONFIRMED: { color: "#F59E0B", bg: "rgba(15,82,255,0.08)" },
-  PROCESSING: { color: "#F59E0B", bg: "rgba(15,82,255,0.08)" },
-  SHIPPED: { color: "#FF4F00", bg: "rgba(255,79,0,0.08)" },
-  ARRIVING: { color: "#FF4F00", bg: "rgba(255,79,0,0.08)" },
-  DELIVERED: { color: "#16a34a", bg: "rgba(22,163,74,0.08)" },
-  CANCELLED: { color: "#dc2626", bg: "rgba(220,38,38,0.08)" },
+  PENDING: { color: GOLD, bg: "rgba(201,153,58,0.12)" },
+  PLACED: { color: GOLD, bg: "rgba(201,153,58,0.12)" },
+  CONFIRMED: { color: GOLD, bg: "rgba(201,153,58,0.12)" },
+  PROCESSING: { color: GOLD, bg: "rgba(201,153,58,0.12)" },
+  SHIPPED: { color: "#e11d48", bg: "rgba(225,29,72,0.08)" },
+  ARRIVING: { color: "#e11d48", bg: "rgba(225,29,72,0.08)" },
+  DELIVERED: { color: "#059669", bg: "rgba(5,150,105,0.08)" },
+  CANCELLED: { color: "#f43f5e", bg: "rgba(244,63,94,0.08)" },
 };
 
 type OrderItemCardProps = {
@@ -50,152 +52,180 @@ const OrderItemCard = ({ orderItem, order }: OrderItemCardProps) => {
       }
       style={{
         background: "#fff",
-        border: "1px solid #E2E8F0",
-        borderRadius: 18,
+        border: "1px solid #f0ece6",
+        borderRadius: "24px",
         overflow: "hidden",
         cursor: "pointer",
-        transition: "border-color 0.15s, box-shadow 0.15s",
+        transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+        fontFamily: "Outfit, sans-serif",
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "stretch",
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.borderColor = status.color;
-        e.currentTarget.style.boxShadow = `0 0 0 3px ${status.bg}`;
+        e.currentTarget.style.boxShadow = "0 12px 40px rgba(0,0,0,0.06)";
+        e.currentTarget.style.transform = "translateY(-4px)";
+        e.currentTarget.style.borderColor = "#e5e7eb";
+        const img = e.currentTarget.querySelector("img");
+        if (img) img.style.transform = "scale(1.05)";
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = "#E2E8F0";
         e.currentTarget.style.boxShadow = "none";
+        e.currentTarget.style.transform = "translateY(0)";
+        e.currentTarget.style.borderColor = "#f0ece6";
+        const img = e.currentTarget.querySelector("img");
+        if (img) img.style.transform = "scale(1)";
       }}
     >
-      {/* Status strip */}
+      {/* Product Image Section */}
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "14px 20px",
-          background: status.bg,
-          borderBottom: "1px solid #E2E8F0",
+          width: 130,
+          flexShrink: 0,
+          background: "#fafaf8",
+          borderRight: "1px solid #f0ece6",
+          overflow: "hidden",
+          position: "relative",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <Avatar sx={{ bgcolor: status.color, width: 36, height: 36 }}>
-            <ElectricBolt sx={{ fontSize: 18 }} />
-          </Avatar>
-          <div>
-            <p
-              style={{
-                fontSize: 13,
-                fontWeight: 700,
-                color: status.color,
-                lineHeight: 1.3,
-              }}
-            >
-              {order?.orderStatus}
-            </p>
-            <p style={{ fontSize: 12, color: "#64748B", marginTop: 1 }}>
-              Arriving by {deliveryLabel}
-            </p>
-          </div>
-        </div>
-        <ChevronRight sx={{ fontSize: 20, color: "#94A3B8" }} />
+        <img
+          src={orderItem.product?.images[0]}
+          alt=''
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            transition: "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
+          }}
+        />
       </div>
 
-      {/* Product row */}
+      {/* Main Content Area */}
       <div
         style={{
+          flex: 1,
+          padding: "24px",
           display: "flex",
-          gap: 16,
-          padding: "16px 20px",
-          alignItems: "center",
+          flexDirection: "column",
+          justifyContent: "center",
+          position: "relative",
         }}
       >
-        {/* Image */}
-        <div
-          style={{
-            width: 76,
-            height: 88,
-            borderRadius: 12,
-            overflow: "hidden",
-            border: "1px solid #E2E8F0",
-            flexShrink: 0,
-            background: "#FAFAF9",
-          }}
-        >
-          <img
-            src={orderItem.product?.images[0]}
-            alt=''
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-          />
-        </div>
-
-        {/* Info */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 6,
-            flex: 1,
-            minWidth: 0,
-          }}
-        >
+        {/* Top Row: Brand & Status */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
           <p
             style={{
               fontSize: 12,
-              fontWeight: 600,
-              color: "#94A3B8",
+              fontWeight: 800,
+              color: "#9ca3af",
               textTransform: "uppercase",
-              letterSpacing: "0.06em",
+              letterSpacing: "0.15em",
+              fontFamily: "Outfit, sans-serif",
             }}
           >
             {order?.seller?.sellerName}
           </p>
-          <p
-            style={{
-              fontSize: 14,
-              fontWeight: 600,
-              color: "#1F2937",
-              lineHeight: 1.4,
-              overflow: "hidden",
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-            }}
-          >
-            {orderItem?.product?.title}
-          </p>
+
+          {/* Status Badge */}
           <div
             style={{
               display: "flex",
               alignItems: "center",
-              gap: 10,
-              marginTop: 2,
+              gap: 6,
+              background: status.bg,
+              padding: "4px 10px",
+              borderRadius: "99px",
             }}
           >
+            <div
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: status.color,
+                boxShadow: `0 0 6px ${status.color}`,
+              }}
+            />
             <span
               style={{
-                fontSize: 12,
-                fontWeight: 600,
+                fontSize: 11,
+                fontWeight: 800,
                 color: status.color,
-                background: status.bg,
-                padding: "3px 12px",
-                borderRadius: 99,
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+                fontFamily: "Outfit, sans-serif",
               }}
             >
-              Size: {orderItem?.size}
+              {order?.orderStatus}
             </span>
+          </div>
+        </div>
+
+        {/* Product Title */}
+        <p
+          style={{
+            fontSize: 18,
+            fontWeight: 800,
+            color: DARK,
+            lineHeight: 1.3,
+            marginBottom: 6,
+            fontFamily: "Outfit, sans-serif",
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            paddingRight: 32, // Leave space for chevron
+          }}
+        >
+          {orderItem?.product?.title}
+        </p>
+
+        {/* Delivery Info */}
+        <p style={{ fontSize: 13, color: "#5d5d5d", fontWeight: 500, fontFamily: "Outfit, sans-serif", marginBottom: 20 }}>
+          Arriving by {deliveryLabel}
+        </p>
+
+        {/* Bottom Row: Details & Price */}
+        <div
+          style={{
+            marginTop: "auto",
+            paddingTop: 16,
+            borderTop: "1px dashed #e5e7eb",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-end",
+          }}
+        >
+          <div style={{ display: "flex", gap: 16 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <span style={{ fontSize: 11, color: "#9ca3af", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>Size</span>
+              <span style={{ fontSize: 14, color: DARK, fontWeight: 700 }}>{orderItem?.size}</span>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <span style={{ fontSize: 11, color: "#9ca3af", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>Qty</span>
+              <span style={{ fontSize: 14, color: DARK, fontWeight: 700 }}>{quantity}</span>
+            </div>
+          </div>
+
+          <div style={{ textAlign: "right" }}>
             {orderItem?.sellingPrice && (
               <>
-                <span style={{ fontSize: 14, fontWeight: 600, color: "#1F2937" }}>
-                  ${paidItemTotalIncludingShipping}{" "}
-                  {quantity > 1 ? `(x${quantity})` : ""}
-                </span>
+                <div style={{ fontSize: 18, fontWeight: 800, color: DARK, fontFamily: "Outfit, sans-serif" }}>
+                  ${paidItemTotalIncludingShipping}
+                </div>
                 {itemShippingShare > 0 && (
-                  <span style={{ fontSize: 12, fontWeight: 600, color: "#64748B" }}>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: "#9ca3af", fontFamily: "Outfit, sans-serif" }}>
                     + ${itemShippingShare} delivery
-                  </span>
+                  </div>
                 )}
               </>
             )}
           </div>
+        </div>
+
+        {/* Chevron */}
+        <div style={{ position: "absolute", right: 24, top: "50%", transform: "translateY(-50%)", color: "#d1d5db" }}>
+          <ChevronRight sx={{ fontSize: 28 }} />
         </div>
       </div>
     </div>
