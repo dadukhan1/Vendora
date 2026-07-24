@@ -6,17 +6,21 @@ import { useFormik } from "formik";
 import { useAppDispatch } from "../../../Redux Toolkit/store";
 import { addAddress } from "../../../Redux Toolkit/features/customer/addressSlice";
 
+const GOLD = "#c9993a";
+const DARK = "#0a0a0a";
+
 const fieldSx = {
   "& .MuiOutlinedInput-root": {
-    borderRadius: "12px",
-    fontSize: 14,
-    backgroundColor: "#fff",
-    "& fieldset": { borderColor: "#E2E8F0" },
-    "&:hover fieldset": { borderColor: "#94A3B8" },
-    "&.Mui-focused fieldset": { borderColor: "#F59E0B", borderWidth: "1.5px" },
+    borderRadius: "14px",
+    fontSize: 15,
+    fontFamily: "Outfit, sans-serif",
+    backgroundColor: "#fafaf8",
+    "& fieldset": { borderColor: "#f0ece6" },
+    "&:hover fieldset": { borderColor: "#e5e7eb" },
+    "&.Mui-focused fieldset": { borderColor: GOLD, borderWidth: "1.5px" },
   },
-  "& .MuiInputLabel-root.Mui-focused": { color: "#F59E0B" },
-  "& .MuiInputLabel-root": { fontSize: 14, color: "#64748B" },
+  "& .MuiInputLabel-root.Mui-focused": { color: GOLD },
+  "& .MuiInputLabel-root": { fontSize: 15, color: "#9ca3af", fontFamily: "Outfit, sans-serif" },
 };
 
 const AddressForm = ({ onClose }: any) => {
@@ -34,11 +38,12 @@ const AddressForm = ({ onClose }: any) => {
     },
     onSubmit: (value) => {
       dispatch(addAddress(value));
+      if (onClose) onClose();
     },
   });
 
   return (
-    <Box sx={{ maxWidth: 600, mx: "auto" }}>
+    <Box sx={{ width: "100%", fontFamily: "Outfit, sans-serif" }}>
       {/* Heading */}
       <Box
         sx={{
@@ -48,21 +53,22 @@ const AddressForm = ({ onClose }: any) => {
           mb: 4,
         }}
       >
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
           <Box
             sx={{
               width: 4,
-              height: 24,
-              background: "linear-gradient(180deg, #F59E0B 0%, #FF4F00 100%)",
-              borderRadius: 0.5,
+              height: 20,
+              background: GOLD,
+              borderRadius: 1,
             }}
           />
           <Box
             sx={{
-              fontSize: "1.125rem",
-              fontWeight: 700,
-              color: "#1F2937",
-              letterSpacing: "-0.3px",
+              fontSize: "1.25rem",
+              fontWeight: 800,
+              color: DARK,
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
             }}
           >
             Contact Details
@@ -73,10 +79,10 @@ const AddressForm = ({ onClose }: any) => {
             onClick={onClose}
             size='small'
             sx={{
-              color: "#94A3B8",
+              color: "#9ca3af",
               "&:hover": {
-                color: "#FF4F00",
-                background: "rgba(255,79,0,0.08)",
+                color: "#f43f5e",
+                background: "rgba(244,63,94,0.08)",
               },
               transition: "all 0.2s",
             }}
@@ -89,7 +95,7 @@ const AddressForm = ({ onClose }: any) => {
       <form onSubmit={formik.handleSubmit}>
         <Grid container spacing={2.5}>
           {/* Name */}
-          <Grid size={{ xs: 12 }}>
+          <Grid item xs={12}>
             <TextField
               fullWidth
               name='name'
@@ -101,11 +107,11 @@ const AddressForm = ({ onClose }: any) => {
           </Grid>
 
           {/* Mobile + PinCode */}
-          <Grid size={{ xs: 6 }}>
+          <Grid item xs={6}>
             <TextField
               fullWidth
               name='mobile'
-              label='Mobile'
+              label='Mobile Number'
               inputMode='numeric'
               value={formik.values.mobile}
               onChange={(e) =>
@@ -120,7 +126,7 @@ const AddressForm = ({ onClose }: any) => {
               sx={fieldSx}
             />
           </Grid>
-          <Grid size={{ xs: 6 }}>
+          <Grid item xs={6}>
             <TextField
               fullWidth
               name='pinCode'
@@ -141,7 +147,7 @@ const AddressForm = ({ onClose }: any) => {
           </Grid>
 
           {/* Address */}
-          <Grid size={{ xs: 12 }}>
+          <Grid item xs={12}>
             <TextField
               fullWidth
               name='address'
@@ -153,7 +159,7 @@ const AddressForm = ({ onClose }: any) => {
           </Grid>
 
           {/* Locality */}
-          <Grid size={{ xs: 12 }}>
+          <Grid item xs={12}>
             <TextField
               fullWidth
               name='locality'
@@ -165,7 +171,7 @@ const AddressForm = ({ onClose }: any) => {
           </Grid>
 
           {/* City + State */}
-          <Grid size={{ xs: 6 }}>
+          <Grid item xs={6}>
             <TextField
               fullWidth
               name='city'
@@ -175,7 +181,7 @@ const AddressForm = ({ onClose }: any) => {
               sx={fieldSx}
             />
           </Grid>
-          <Grid size={{ xs: 6 }}>
+          <Grid item xs={6}>
             <TextField
               fullWidth
               name='state'
@@ -187,31 +193,30 @@ const AddressForm = ({ onClose }: any) => {
           </Grid>
 
           {/* Submit */}
-          <Grid size={{ xs: 12 }}>
+          <Grid item xs={12} sx={{ mt: 2 }}>
             <Button
-              onClick={() => onClose()}
               type='submit'
               fullWidth
               variant='contained'
               sx={{
-                background: "linear-gradient(135deg, #F59E0B 0%, #0D3ABF 100%)",
+                background: "linear-gradient(135deg, #d4a348 0%, #c9993a 100%)",
                 color: "white",
                 py: 1.75,
                 fontSize: "0.95rem",
-                fontWeight: 700,
-                textTransform: "none",
-                borderRadius: 2,
-                boxShadow: "0 4px 20px rgba(15, 82, 255, 0.28)",
-                letterSpacing: "0.5px",
+                fontWeight: 800,
+                textTransform: "uppercase",
+                letterSpacing: "0.1em",
+                borderRadius: "14px",
+                fontFamily: "Outfit, sans-serif",
+                boxShadow: "0 8px 24px rgba(201,153,58,0.25)",
                 transition: "all 0.3s ease",
                 "&:hover": {
-                  background:
-                    "linear-gradient(135deg, #0D3ABF 0%, #0A2885 100%)",
-                  boxShadow: "0 6px 24px rgba(15, 82, 255, 0.35)",
+                  background: "linear-gradient(135deg, #c9993a 0%, #b88a34 100%)",
+                  boxShadow: "0 12px 32px rgba(201,153,58,0.35)",
                   transform: "translateY(-2px)",
                 },
                 "&:active": {
-                  transform: "scale(0.98)",
+                  transform: "translateY(0)",
                 },
               }}
             >

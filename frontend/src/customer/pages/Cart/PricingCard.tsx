@@ -36,31 +36,31 @@ const PricingCard = ({ cart: cartProp }: PricingCardProps) => {
     {
       label: "Discount",
       value: `-$${productDiscount}`,
-      color: "text-[#2d6a4f]",
+      color: "text-[#c9993a]",
     },
     ...(couponDiscount > 0
       ? [
           {
-            label: "Coupon Discount",
+            label: "Coupon",
             value: `-$${couponDiscount}`,
-            color: "text-[#2d6a4f]",
+            color: "text-[#c9993a]",
           },
         ]
       : []),
-    { label: "Shipping", value: shipping === 0 ? "Free" : `$${shipping}`, color: shipping === 0 ? "text-[#2d6a4f]" : "text-[#0a0a0a]" },
-    { label: "Platform Fee", value: "Free", color: "text-[#2d6a4f]" },
+    { label: "Shipping", value: shipping === 0 ? "FREE" : `$${shipping}`, color: shipping === 0 ? "text-[#c9993a]" : "text-[#0a0a0a]" },
+    { label: "Platform Fee", value: "FREE", color: "text-[#c9993a]" },
   ];
 
   return (
-    <div>
+    <div className="font-['Outfit']">
       {/* Rows */}
       <div className="py-2 space-y-3.5">
         {rows.map(({ label, value, color }) => (
           <div
             key={label}
-            className="flex justify-between items-center text-[13px] font-[500] font-[Outfit]"
+            className="flex justify-between items-center text-[13px] font-[500]"
           >
-            <span className="text-[#9ca3af]">{label}</span>
+            <span className="text-[#9ca3af] tracking-wide">{label}</span>
             <span className={`font-[700] ${color}`}>{value}</span>
           </div>
         ))}
@@ -69,12 +69,12 @@ const PricingCard = ({ cart: cartProp }: PricingCardProps) => {
       <div className="my-4 border-t border-[#f0ece6] border-dashed" />
 
       {/* Total */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-4">
         <div>
-          <span className="text-[14px] font-[700] font-[Outfit] text-[#0a0a0a]">Total Amount</span>
-          <p className="text-[10px] text-[#c4bdb4]">Includes all taxes and platform fees</p>
+          <span className="text-[14px] font-[700] text-[#0a0a0a] block">Total Amount</span>
+          <p className="text-[10px] text-[#c4bdb4]">Includes taxes & fees</p>
         </div>
-        <span className="text-[18px] font-[800] font-[Outfit] text-[#0a0a0a]">
+        <span className="text-[18px] font-[800] text-[#0a0a0a]">
           ${total}
         </span>
       </div>
